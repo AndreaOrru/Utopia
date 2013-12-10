@@ -3,9 +3,14 @@ gdtr:
     .limit:  resw 1
     .base:   resd 1
 
+idtr:
+    .limit:  resw 1
+    .base:   resd 1
+
 section .text
-global gdt_flush
-gdt_flush:
+; void gdt_load(u32 base, u16 limit)
+global gdt_load
+gdt_load:
     mov eax, [esp + 4]
     mov [gdtr.base], eax
     mov ax, [esp + 8]
@@ -21,3 +26,13 @@ gdt_flush:
     jmp 0x08:.reloadCS
     .reloadCS:
         ret
+
+; void idt_load(u32 base, u16 limit)
+global idt_load
+idt_load:
+    mov eax, [esp + 4]
+    mov [idtr.base], eax
+    mov ax, [esp + 8]
+    mov [idtr.limit], ax
+    lidt [idtr]
+    ret

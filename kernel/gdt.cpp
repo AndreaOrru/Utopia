@@ -28,11 +28,11 @@ GdtEntry gdt[] =
     { 0xFFFF, 0, 0,   USER | DATA, 0xF, 0xC, 0 }
 };
 
-extern "C" void gdt_flush(GdtEntry* base, uint16_t limit);
+extern "C" void gdt_load(GdtEntry* base, uint16_t limit);
 
 void init()
 {
-    gdt_flush(gdt, sizeof(gdt));
+    gdt_load(gdt, sizeof(gdt));
 }
 
 }
