@@ -1,6 +1,6 @@
 from os import environ
 
-CCFLAGS = '-ffreestanding -g '
+CCFLAGS = '-ffreestanding -ggdb '
 
 env = Environment(ENV       = {'PATH': environ['PATH']},
 
