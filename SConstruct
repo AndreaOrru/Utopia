@@ -3,6 +3,7 @@ from os import environ
 CCFLAGS = '-ffreestanding -ggdb '
 
 env = Environment(ENV       = {'PATH': environ['PATH']},
+                  CPPPATH   = 'kernel/include',
 
                   AS        = 'nasm',
                   ASFLAGS   = '-f elf ',
@@ -18,5 +19,6 @@ env = Environment(ENV       = {'PATH': environ['PATH']},
                   LINKFLAGS = CCFLAGS + '-nostdlib -T kernel/link.ld ',
                   LIBS      = 'gcc')
 
-kernel = env.Program('kernel/kernel.bin', Glob('kernel/*.cpp') + Glob('kernel/*.asm'))
+kernel = env.Program('kernel/kernel.bin', Glob('kernel/*.cpp')   + Glob('kernel/*.s') +
+                                          Glob('kernel/*/*.cpp') + Glob('kernel/*/*.s'))
 Depends(kernel, 'kernel/link.ld')

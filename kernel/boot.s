@@ -13,7 +13,8 @@ align 4
 section .text
 global _start
 _start:
-    mov esp, 0x7C00
+    cli
+    mov esp, 0x7FFF0
 
     extern kmain
     call kmain
