@@ -1,9 +1,9 @@
 #include <stdarg.h>
 #include "machine.hpp"
 #include "string.h"
-#include "text.hpp"
+#include "term.hpp"
 
-namespace Text
+namespace Term
 {
 
 uint16_t* const VRAM = (uint16_t*)0xB8000;

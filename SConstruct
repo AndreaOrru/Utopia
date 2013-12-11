@@ -3,23 +3,28 @@ from os import environ
 DEBUG = int(ARGUMENTS.get('debug', 1))
 CCFLAGS = '-ffreestanding ' + ('-gdwarf-2 ' if DEBUG else '')
 
-env = Environment(ENV       = {'PATH': environ['PATH']},
-                  CPPPATH   = 'kernel/include',
+env = Environment(ENV        = {'PATH': environ['PATH']},
+                  CPPPATH    = 'kernel/include',
 
-                  AS        = 'nasm',
-                  ASFLAGS   = '-f elf ' + ('-F dwarf -g ' if DEBUG else ''),
+                  AS         = 'nasm',
+                  ASFLAGS    = '-f elf ' + ('-F dwarf -g ' if DEBUG else ''),
 
-                  CC        = 'i586-elf-gcc',
-                  CFLAGS    = '-std=gnu11 ',
-                  CCFLAGS   = CCFLAGS,
-                  CPPFLAGS  = '-Wall -Wextra ',
+                  CC         = 'i586-elf-gcc',
+                  CFLAGS     = '-std=gnu11 ',
+                  CCFLAGS    = CCFLAGS,
+                  CPPFLAGS   = '-Wall -Wextra ',
 
-                  CXX       = 'i586-elf-g++',
-                  CXXFLAGS  = '-std=gnu++11 -fno-exceptions -fno-rtti ',
+                  CXX        = 'i586-elf-g++',
+                  CXXFLAGS   = '-std=gnu++11 -fno-exceptions -fno-rtti ',
 
-                  LINKFLAGS = CCFLAGS + '-nostdlib -T kernel/link.ld ',
-                  LIBS      = 'gcc')
+                  LINKFLAGS  = CCFLAGS + '-nostdlib -T kernel/link.ld ',
+                  LIBS       = 'gcc',
 
-kernel = env.Program('kernel/kernel.bin', Glob('kernel/*.c')   + Glob('kernel/*.cpp')   + Glob('kernel/*.s') +
-                                          Glob('kernel/*/*.c') + Glob('kernel/*/*.cpp') + Glob('kernel/*/*.s'))
+                  ASCOMSTR   =  'AS\t$SOURCES -> $TARGETS',
+                  CCCOMSTR   =  'CC\t$SOURCES -> $TARGETS',
+                  CXXCOMSTR  = 'CXX\t$SOURCES -> $TARGETS',
+                  LINKCOMSTR =  'LD\t$SOURCES -> $TARGETS')
+
+kernel = env.Program('kernel/kernel.bin', Glob('kernel/*.c')   + Glob('kernel/*.cpp')   + Glob('kernel/*.asm') +
+                                          Glob('kernel/*/*.c') + Glob('kernel/*/*.cpp') + Glob('kernel/*/*.asm'))
 Depends(kernel, 'kernel/link.ld')

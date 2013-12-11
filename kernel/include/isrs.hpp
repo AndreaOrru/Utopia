@@ -1,6 +1,12 @@
 #pragma once
+#include <stdint.h>
 
-typedef void (*IsrStub)(void);
+struct InterruptStack
+{
+    uint32_t regs[8];
+    uint32_t num, error;
+    uint32_t eip, cs, eflags, esp, ss;
+} __attribute__((packed));
 
 extern "C"
 {

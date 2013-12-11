@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Text
+namespace Term
 {
 
 void printf(const char* format, ...);

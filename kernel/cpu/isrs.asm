@@ -1,7 +1,6 @@
-section .text
-exception_common:
-    jmp $
+extern exceptionsHandler
 
+section .text
 %macro exception 1
     global exception%1
     exception%1:
@@ -10,11 +9,18 @@ exception_common:
             push 0
         %endif
         push %1
-        jmp exception_common
+
+        pusha
+        call exceptionsHandler
+        popa
+
+        add esp, 8
+        iret
 %endmacro
 
 %assign i 0
 %rep 32
+    align 4
     exception i
     %assign i i+1
 %endrep

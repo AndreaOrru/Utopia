@@ -1,14 +1,16 @@
 #include "gdt.hpp"
 #include "idt.hpp"
-#include "text.hpp"
+#include "term.hpp"
 
 extern "C" void main(void)
 {
     GDT::init();
     IDT::init();
 
-    Text::clear();
-    Text::printf("%d", -0x1000);
+    Term::clear();
+    Term::printf("Hello world!\n");
+
+    int a = 5 / 0;
 
     while (true);
 }
