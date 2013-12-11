@@ -79,56 +79,41 @@ size_t strlen(const char* s)
     return s - p;
 }
 
-char* reverse(char* s)
-{
-    char c;
-    int i = 0, j = strlen(s) - 1;
-
-    while (j > i)
-    {
-        c = s[i];
-        s[i++] = s[j];
-        s[j--] = c;
-    }
-
-    return s;
-}
-
 char* itoa(int val, char* buf, int base)
 {
-    if (base < 2 && base != -10)
-        return NULL;
+    if ((base < 2 || base > 36) && base != -10)
+    {
+        *buf = '\0';
+        return buf;
+    }
 
-    char* prefix = "";
-    char digit;
-    int i = 0;
-    
+    char *ptr = buf;
     switch (base)
     {
-        case   2:  prefix = "b0"; break;
-        case   8:  prefix = "0";  break;
-        case  16:  prefix = "x0"; break;
-        case -10:  if (val < 0) prefix = "-"; break;
+        case   2:  strcpy(ptr, "0b"); ptr += 2; break;
+        case   8:  strcpy(ptr, "0");  ptr += 1; break;
+        case  16:  strcpy(ptr, "0x"); ptr += 2; break;
+        case -10:  base = -base; if (val < 0) *ptr++ = '-'; break;
     }
+    char* low = ptr;
 
     if (val != 0)
-    {
-        if (base == -10)
+        do
         {
-            base = -base;
-            if (val < 0)
-                val = -val;
+            *ptr++ = "ZYXWVUTSRQPONMLKJIHGFEDCBA9876543210123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[35 + val % base];
+            val /= base;
         }
-
-        for (; val > 0; val /= base)
-        {
-            digit = val % base;
-            buf[i++] = digit + (digit < 10 ? 0x30 : 0x37);
-        }
-    }
+        while (val);
     else
-        buf[i++] = '0';
-    
-    strcpy(buf + i, prefix);
-    return reverse(buf);
+        *ptr++ = '0';
+
+    *ptr-- = '\0';
+    while (low < ptr)
+    {
+        char c = *low;
+        *low++ = *ptr;
+        *ptr-- = c;
+    }
+
+    return buf;
 }
