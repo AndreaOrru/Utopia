@@ -1,3 +1,4 @@
+#include "machine.hpp"
 #include "gdt.hpp"
 
 namespace GDT
@@ -28,11 +29,9 @@ GdtEntry gdt[] =
     { 0xFFFF, 0, 0,   USER | DATA, 0xF, 0xC, 0 }
 };
 
-extern "C" void gdt_load(GdtEntry* base, uint16_t limit);
-
 void init()
 {
-    gdt_load(gdt, sizeof(gdt));
+    gdt_load((uintptr_t)gdt, sizeof(gdt));
 }
 
 }

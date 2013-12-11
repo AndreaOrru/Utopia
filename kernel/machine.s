@@ -8,7 +8,6 @@ idtr:
     .base:   resd 1
 
 section .text
-; void gdt_load(u32 base, u16 limit)
 global gdt_load
 gdt_load:
     mov eax, [esp + 4]
@@ -27,7 +26,6 @@ gdt_load:
     .reloadCS:
         ret
 
-; void idt_load(u32 base, u16 limit)
 global idt_load
 idt_load:
     mov eax, [esp + 4]

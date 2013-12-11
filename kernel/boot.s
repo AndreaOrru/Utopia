@@ -16,8 +16,8 @@ _start:
     cli
     mov esp, 0x7FFF0
 
-    extern kmain
-    call kmain
+    extern main
+    call main
 
     cli
     hlt
