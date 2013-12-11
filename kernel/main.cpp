@@ -8,7 +8,7 @@ extern "C" void main(void)
     IDT::init();
 
     Text::clear();
-    Text::printf("%x", 0x1000);
+    Text::printf("%d", -0x1000);
 
     while (true);
 }

@@ -59,7 +59,7 @@ void clear()
 
 void printf(const char* format, ...)
 {
-    static char buf[67];
+    static char buf[35];
 
     if (!format)
         return;
@@ -91,9 +91,9 @@ void printf(const char* format, ...)
                     case 'i':  write(itoa(va_arg(args, int), buf, -10)); break;
                     case 'o':  write(itoa(va_arg(args, int), buf, 8));   break;
                     case 'b':  write(itoa(va_arg(args, int), buf, 2));   break;
-                    case 'c':  put(va_arg(args, int));                   break;
+                    case 'c':  put  (va_arg(args, int));                 break;
                     case 's':  write(va_arg(args, char*));               break;
-                    case '%':  put('%');                                 break;
+                    case '%':  put  ('%');                               break;
                 }
                 break;
 

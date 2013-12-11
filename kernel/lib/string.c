@@ -1,13 +1,14 @@
+#include <stdint.h>
 #include "string.h"
 
 int memcmp(const void* s1, const void* s2, size_t n)
 {
-    const unsigned char *p1 = (const unsigned char*)s1;
-    const unsigned char *p2 = (const unsigned char*)s2;
+    const uint8_t* p1 = (const uint8_t*)s1;
+    const uint8_t* p2 = (const uint8_t*)s2;
 
     for (; n--; p1++, p2++)
     {
-	    unsigned char u1 = *p1, u2 = *p2;
+	    uint8_t u1 = *p1, u2 = *p2;
 
 	    if (u1 != u2)
 	        return (u1 - u2);
@@ -18,48 +19,38 @@ int memcmp(const void* s1, const void* s2, size_t n)
 
 void* memcpy(void* dest, const void* src, size_t n)
 {
-    const char* sp = src;
-          char* dp = dest;
+    const char* s = src;
+          char* d = dest;
 
     while (n--)
-        *dp++ = *sp++;
+        *d++ = *s++;
 
     return dest;
 }
 
 void* memmove(void* dest, const void* src, size_t n)
 {
-    const unsigned char* ps = src;
-          unsigned char* pd = dest;
+    const uint8_t* s = src;
+          uint8_t* d = dest;
 
-    if (ps < pd)
-        for (pd += n, ps += n; n--;)
-            *--pd = *--ps;
+    if (s < d)
+        for (d += n, s += n; n--;)
+            *--d = *--s;
     else
         while (n--)
-            *pd++ = *ps++;
+            *d++ = *s++;
 
     return dest;
 }
 
 void* memset(void* s, int c, size_t n)
 {
-    unsigned char* p = s;
+    uint8_t* p = s;
 
     while (n--)
-        *p++ = (unsigned char)c;
+        *p++ = (uint8_t)c;
 
     return s;
-}
-
-char* strcat(char* dest, const char* src)
-{
-    char* ret = dest;
-    dest += strlen(dest);
-
-    while ((*dest++ = *src++));
-
-    return ret;
 }
 
 int strcmp(const char* s1, const char* s2)
@@ -81,7 +72,7 @@ char* strcpy(char* dest, const char* src)
 
 size_t strlen(const char* s)
 {
-    const char *p = s;
+    const char* p = s;
 
     while (*s) ++s;
 
@@ -111,7 +102,7 @@ char* itoa(int val, char* buf, int base)
     char* prefix = "";
     char digit;
     int i = 0;
-
+    
     switch (base)
     {
         case   2:  prefix = "b0"; break;
@@ -120,7 +111,7 @@ char* itoa(int val, char* buf, int base)
         case -10:  if (val < 0) prefix = "-"; break;
     }
 
-    if (val > 0)
+    if (val != 0)
     {
         if (base == -10)
         {
@@ -132,14 +123,12 @@ char* itoa(int val, char* buf, int base)
         for (; val > 0; val /= base)
         {
             digit = val % base;
-            buf[i++] = digit + (digit < 0xA ? 0x30 : 0x37);
+            buf[i++] = digit + (digit < 10 ? 0x30 : 0x37);
         }
     }
     else
         buf[i++] = '0';
-
+    
     strcpy(buf + i, prefix);
-    reverse(buf);
-
-    return buf;
+    return reverse(buf);
 }
