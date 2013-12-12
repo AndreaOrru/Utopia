@@ -1,5 +1,4 @@
 #include "idt.hpp"
-#include "isrs.hpp"
 #include "machine.hpp"
 #include "term.hpp"
 #include "irqs.hpp"
@@ -9,22 +8,39 @@ namespace IRQs
 
 extern "C" { IsrHandler irqHandlers[16]; }
 
-void unhandled_irq(InterruptStack stack)
+void unhandled(InterruptStack stack)
 {
     Term::printf("\n*** IRQ %u raised ***\n", stack.num);
     hlt();
 }
 
+const uint16_t PIC1_CMD  = 0x20, PIC2_CMD  = 0xA0;
+const uint16_t PIC1_DATA = 0x21, PIC2_DATA = 0xA1;
+
 void pic_init()
 {
-    const uint16_t PIC1_CMD  = 0x20, PIC2_CMD  = 0xA0;
-    const uint16_t PIC1_DATA = 0x21, PIC2_DATA = 0xA1;
-
     outb(PIC1_CMD,   0x11);  outb(PIC2_CMD,  0x11);
     outb(PIC1_DATA,    32);  outb(PIC2_DATA,   40);
     outb(PIC1_DATA, 0b100);  outb(PIC2_DATA, 0b10);
     outb(PIC1_DATA,  0x01);  outb(PIC2_DATA, 0x01);
-    outb(PIC1_DATA,  0x00);  outb(PIC2_DATA, 0x00);
+    outb(PIC1_DATA,  0xFF);  outb(PIC2_DATA, 0xFF);
+}
+
+void mask(uint8_t irq)
+{
+    uint16_t port = (irq < 8) ? PIC1_DATA : PIC2_DATA;
+    outb(port, inb(port) | (1 << irq % 8));
+}
+
+void unmask(uint8_t irq)
+{
+    uint16_t port = (irq < 8) ? PIC1_DATA : PIC2_DATA;
+    outb(port, inb(port) & ~(1 << irq % 8));
+}
+
+void register_handler(uint8_t n, IsrHandler handler)
+{
+    irqHandlers[n] = handler;
 }
 
 void init()
@@ -51,7 +67,7 @@ void init()
     set_gate(47, irq15);
 
     for (int i = 0; i < 32; i++)
-        irqHandlers[i] = unhandled_irq;
+        irqHandlers[i] = unhandled;
 }
 
 }

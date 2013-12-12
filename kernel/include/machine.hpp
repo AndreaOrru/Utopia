@@ -14,6 +14,30 @@ alwaysinline void hlt()
     asm volatile ("hlt");
 }
 
+alwaysinline void cli()
+{
+    asm volatile ("cli");
+}
+
+alwaysinline void sti()
+{
+    asm volatile ("sti");
+}
+
+alwaysinline uint8_t inb(uint16_t port)
+{
+    uint8_t ret;
+    asm volatile ("inb %1, %0" : "=a" (ret) : "Nd" (port) );
+    return ret;
+}
+
+alwaysinline uint16_t inw(uint16_t port)
+{
+    uint16_t ret;
+    asm volatile ("inb %1, %0" : "=a" (ret) : "Nd" (port) );
+    return ret;
+}
+
 alwaysinline void outb(uint16_t port, uint8_t val)
 {
     asm volatile ("outb %0, %1" : : "a" (val), "Nd" (port));

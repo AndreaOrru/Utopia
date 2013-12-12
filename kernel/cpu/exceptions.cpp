@@ -1,5 +1,4 @@
 #include "idt.hpp"
-#include "isrs.hpp"
 #include "machine.hpp"
 #include "term.hpp"
 #include "exceptions.hpp"
@@ -7,7 +6,7 @@
 namespace Exceptions
 {
 
-const char* exceptionNames[] =
+const char* names[] =
 {
     "Division By Zero",
     "Debug",
@@ -39,10 +38,15 @@ const char* exceptionNames[] =
 
 extern "C" { IsrHandler exceptionHandlers[32]; }
 
-void unhandled_exception(InterruptStack stack)
+void unhandled(InterruptStack stack)
 {
-    Term::printf("\n*** %s ***\n", exceptionNames[stack.num]);
+    Term::printf("\n*** %s ***\n", names[stack.num]);
     hlt();
+}
+
+void register_handler(uint8_t n, IsrHandler handler)
+{
+    exceptionHandlers[n] = handler;
 }
 
 void init()
@@ -83,7 +87,7 @@ void init()
     set_gate(31, exception31);
 
     for (int i = 0; i < 32; i++)
-        exceptionHandlers[i] = unhandled_exception;
+        exceptionHandlers[i] = unhandled;
 }
 
 }
