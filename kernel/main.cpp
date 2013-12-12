@@ -2,13 +2,15 @@
 #include "idt.hpp"
 #include "term.hpp"
 
+using namespace Term;
+
 extern "C" void main(void)
 {
     GDT::init();
     IDT::init();
 
-    Term::clear();
-    Term::printf("Hello world!\n");
+    clear();
+    printf("Hello world!\n");
 
     while (true);
 }

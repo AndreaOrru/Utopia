@@ -1,6 +1,6 @@
 #include "idt.hpp"
-#include "machine.hpp"
 #include "term.hpp"
+#include "x86.hpp"
 #include "exceptions.hpp"
 
 namespace Exceptions {

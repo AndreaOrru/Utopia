@@ -1,7 +1,7 @@
 #include "exceptions.hpp"
 #include "gdt.hpp"
 #include "irqs.hpp"
-#include "machine.hpp"
+#include "x86.hpp"
 #include "idt.hpp"
 
 namespace IDT {

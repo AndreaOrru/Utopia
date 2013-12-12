@@ -1,4 +1,4 @@
-#include "machine.hpp"
+#include "x86.hpp"
 #include "gdt.hpp"
 
 namespace GDT {

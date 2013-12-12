@@ -47,3 +47,9 @@ alwaysinline void outw(uint16_t port, uint16_t val)
 {
     asm volatile ("outw %0, %1" : : "a" (val), "Nd" (port));
 }
+
+alwaysinline uint32_t ffz(uint32_t word)
+{
+    asm volatile ("rep; bsf %1, %0" : "=r" (word) : "r" (~word));
+    return word;
+}

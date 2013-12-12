@@ -1,6 +1,6 @@
 #include <stdarg.h>
-#include "machine.hpp"
 #include "string.h"
+#include "x86.hpp"
 #include "term.hpp"
 
 namespace Term {
