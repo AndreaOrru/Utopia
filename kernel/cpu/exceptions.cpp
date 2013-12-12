@@ -37,7 +37,9 @@ const char* exceptionNames[] =
     "Reserved"
 };
 
-extern "C" void exceptionsHandler(InterruptStack stack)
+extern "C" { IsrHandler exceptionHandlers[32]; }
+
+void unhandled_exception(InterruptStack stack)
 {
     Term::printf("\n*** %s ***\n", exceptionNames[stack.num]);
     hlt();
@@ -47,16 +49,16 @@ void init()
 {
     using IDT::set_gate;
 
-    set_gate( 0, exception0);
-    set_gate( 1, exception1);
-    set_gate( 2, exception2);
-    set_gate( 3, exception3);
-    set_gate( 4, exception4);
-    set_gate( 5, exception5);
-    set_gate( 6, exception6);
-    set_gate( 7, exception7);
-    set_gate( 8, exception8);
-    set_gate( 9, exception9);
+    set_gate(0,  exception0);
+    set_gate(1,  exception1);
+    set_gate(2,  exception2);
+    set_gate(3,  exception3);
+    set_gate(4,  exception4);
+    set_gate(5,  exception5);
+    set_gate(6,  exception6);
+    set_gate(7,  exception7);
+    set_gate(8,  exception8);
+    set_gate(9,  exception9);
     set_gate(10, exception10);
     set_gate(11, exception11);
     set_gate(12, exception12);
@@ -79,6 +81,9 @@ void init()
     set_gate(29, exception29);
     set_gate(30, exception30);
     set_gate(31, exception31);
+
+    for (int i = 0; i < 32; i++)
+        exceptionHandlers[i] = unhandled_exception;
 }
 
 }

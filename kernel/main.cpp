@@ -10,7 +10,5 @@ extern "C" void main(void)
     Term::clear();
     Term::printf("Hello world!\n");
 
-    int a = 5 / 0;
-
     while (true);
 }

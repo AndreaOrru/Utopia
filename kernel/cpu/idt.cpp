@@ -1,5 +1,6 @@
-#include "gdt.hpp"
 #include "exceptions.hpp"
+#include "gdt.hpp"
+#include "irqs.hpp"
 #include "machine.hpp"
 #include "idt.hpp"
 
@@ -17,7 +18,7 @@ struct IdtEntry
 
 IdtEntry idt[256];
 
-void set_gate(uint8_t i, void (*offset)(void))
+void set_gate(uint8_t i, IsrStub offset)
 {
     idt[i].offsetLow  = (uintptr_t)offset  & 0xFFFF;
     idt[i].offsetHigh = (uintptr_t)offset >> 16;
@@ -29,6 +30,7 @@ void set_gate(uint8_t i, void (*offset)(void))
 void init()
 {
     Exceptions::init();
+    IRQs::init();
 
     idt_load((uintptr_t)idt, sizeof(idt));
 }
