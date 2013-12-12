@@ -4,8 +4,7 @@
 #include "machine.hpp"
 #include "idt.hpp"
 
-namespace IDT
-{
+namespace IDT {
 
 struct IdtEntry
 {

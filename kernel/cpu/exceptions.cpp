@@ -3,8 +3,7 @@
 #include "term.hpp"
 #include "exceptions.hpp"
 
-namespace Exceptions
-{
+namespace Exceptions {
 
 const char* names[] =
 {
@@ -40,7 +39,7 @@ extern "C" { IsrHandler exceptionHandlers[32]; }
 
 void unhandled(InterruptStack stack)
 {
-    Term::printf("\n*** %s ***\n", names[stack.num]);
+    Term::printf("\n*** %s ***", names[stack.num]);
     hlt();
 }
 

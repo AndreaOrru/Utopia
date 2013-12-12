@@ -1,8 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-namespace GDT
-{
+namespace GDT {
 
 const uint8_t KERNEL_CODE = 0x08;
 const uint8_t KERNEL_DATA = 0x10;

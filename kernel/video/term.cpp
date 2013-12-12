@@ -3,8 +3,7 @@
 #include "string.h"
 #include "term.hpp"
 
-namespace Term
-{
+namespace Term {
 
 uint16_t* const VRAM = (uint16_t*)0xB8000;
 const int SIZE_X = 80;
@@ -23,21 +22,17 @@ inline void update_cursor()
     outw(0x3D4, l);
 }
 
-inline void scroll()
-{
-    cursor -= SIZE_X;
-
-    for (int i = 0; i < cursor; i++)
-        VRAM[i] = VRAM[i + SIZE_X];
-
-    for (int i = 0; i < SIZE_X; i++)
-        VRAM[i + cursor] = ' ';
-}
-
 inline void put(char c)
 {
     if (cursor == SIZE_X * SIZE_Y)
-        scroll();
+    {
+        cursor -= SIZE_X;
+
+        memmove(&VRAM[0], &VRAM[SIZE_X], cursor);
+
+        for (int i = 0; i < SIZE_X; i++)
+            VRAM[i + cursor] = ' ';
+    }
 
     VRAM[cursor++] = (bg << 12) | (fg << 8) | c;
 }

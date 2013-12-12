@@ -1,8 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-namespace IDT
-{
+namespace IDT {
 
 typedef void (*IsrStub)();
 

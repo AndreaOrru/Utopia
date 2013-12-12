@@ -3,15 +3,13 @@
 #include "term.hpp"
 #include "irqs.hpp"
 
-namespace IRQs
-{
+namespace IRQs {
 
 extern "C" { IsrHandler irqHandlers[16]; }
 
 void unhandled(InterruptStack stack)
 {
-    Term::printf("\n*** IRQ %u raised ***\n", stack.num);
-    hlt();
+    Term::printf("\n*** IRQ %u raised ***", stack.num);
 }
 
 const uint16_t PIC1_CMD  = 0x20, PIC2_CMD  = 0xA0;

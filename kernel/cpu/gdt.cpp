@@ -1,8 +1,7 @@
 #include "machine.hpp"
 #include "gdt.hpp"
 
-namespace GDT
-{
+namespace GDT {
 
 struct GdtEntry
 {

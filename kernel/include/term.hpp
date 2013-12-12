@@ -1,7 +1,6 @@
 #pragma once
 
-namespace Term
-{
+namespace Term {
 
 void printf(const char* format, ...);
 void clear();
