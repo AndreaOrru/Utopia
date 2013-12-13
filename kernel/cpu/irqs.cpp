@@ -64,7 +64,7 @@ void init()
     set_gate(46, irq14);
     set_gate(47, irq15);
 
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 16; i++)
         irqHandlers[i] = unhandled;
 }
 

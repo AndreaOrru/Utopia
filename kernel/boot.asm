@@ -1,3 +1,5 @@
+extern main
+
 MODALIGN  equ  (1 << 0)
 MEMINFO   equ  (1 << 1)
 FLAGS     equ  (MODALIGN | MEMINFO)
@@ -16,7 +18,7 @@ _start:
     cli
     mov esp, 0x7FFF0
 
-    extern main
+    push ebx
     call main
 
     cli

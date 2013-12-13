@@ -3,6 +3,10 @@
 
 #define alwaysinline inline __attribute__((always_inline))
 
+#define PAGE_SIZE      0x1000
+#define PAGE_BASE(x)  ((void*)  ((uintptr_t)(x) & -PAGE_SIZE))
+#define PAGE_ALIGN(x) ((void*) (((uintptr_t)(x) +  PAGE_SIZE - 1) & -PAGE_SIZE))
+
 extern "C"
 {
     void gdt_load(uintptr_t base, uint16_t limit);
@@ -46,10 +50,4 @@ alwaysinline void outb(uint16_t port, uint8_t val)
 alwaysinline void outw(uint16_t port, uint16_t val)
 {
     asm volatile ("outw %0, %1" : : "a" (val), "Nd" (port));
-}
-
-alwaysinline uint32_t ffz(uint32_t word)
-{
-    asm volatile ("rep; bsf %1, %0" : "=r" (word) : "r" (~word));
-    return word;
 }

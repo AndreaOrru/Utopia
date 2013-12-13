@@ -31,4 +31,6 @@ SECTIONS
         *(.comment)
         *(.eh_frame)
     }
+
+    _end = .;
 }

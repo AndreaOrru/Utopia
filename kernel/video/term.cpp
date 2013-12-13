@@ -80,15 +80,15 @@ void printf(const char* format, ...)
             case '%':
                 switch (format[++i])
                 {
-                    case 'x':  write(itoa(va_arg(args, int), buf, 16));  break;
-                    case 'u':  write(itoa(va_arg(args, int), buf, 10));  break;
+                    case 'x':  write(itoa(va_arg(args, uint32_t), buf, 16));  break;
+                    case 'u':  write(itoa(va_arg(args, uint32_t), buf, 10));  break;
                     case 'd':
-                    case 'i':  write(itoa(va_arg(args, int), buf, -10)); break;
-                    case 'o':  write(itoa(va_arg(args, int), buf, 8));   break;
-                    case 'b':  write(itoa(va_arg(args, int), buf, 2));   break;
-                    case 'c':  put  (va_arg(args, int));                 break;
-                    case 's':  write(va_arg(args, char*));               break;
-                    case '%':  put  ('%');                               break;
+                    case 'i':  write(itoa(va_arg(args, uint32_t), buf, -10)); break;
+                    case 'o':  write(itoa(va_arg(args, uint32_t), buf, 8));   break;
+                    case 'b':  write(itoa(va_arg(args, uint32_t), buf, 2));   break;
+                    case 'c':  put  (va_arg(args, uint32_t));                 break;
+                    case 's':  write(va_arg(args, char*));                    break;
+                    case '%':  put  ('%');                                    break;
                 }
                 break;
 
