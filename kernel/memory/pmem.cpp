@@ -1,12 +1,12 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "x86.hpp"
-#include "physmem.hpp"
+#include "pmem.hpp"
 
-namespace PhysMem {
+namespace PMem {
 
 extern "C" void* _end;
-void** stack;
+void** stack = &_end;
 size_t stackSize;
 size_t ram = 0;
 
@@ -36,7 +36,7 @@ void calculate_ram(multiboot_info_t* info)
 
 void init_stack(multiboot_info_t* info)
 {
-    auto stackEnd = (uintptr_t)PAGE_ALIGN(stack + (ram / 0x1000) * sizeof(void*));
+    auto stackEnd = (uintptr_t)PAGE_ALIGN(stack + (ram / PAGE_SIZE) * sizeof(void*));
 
     auto map = info->mmap_addr;
     while (map < info->mmap_addr + info->mmap_length)
@@ -48,7 +48,7 @@ void init_stack(multiboot_info_t* info)
         start = (start > stackEnd) ? start : stackEnd;
 
         if (entry->type == MULTIBOOT_MEMORY_AVAILABLE)
-            for (auto i = start; i < end; i += 0x1000)
+            for (auto i = start; i < end; i += PAGE_SIZE)
                 free((void*)i);
 
         map += entry->size + sizeof(entry->size);
@@ -58,8 +58,6 @@ void init_stack(multiboot_info_t* info)
 void init(multiboot_info_t* info)
 {
     calculate_ram(info);
-
-    stack = (void**)PAGE_ALIGN(&_end);
 
     init_stack(info);
 }

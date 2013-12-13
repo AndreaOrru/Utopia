@@ -13,7 +13,7 @@ const uint8_t fg = 7;
 
 int cursor = 0;
 
-inline void update_cursor()
+void update_cursor()
 {
     uint16_t h =  (cursor & 0xFF00)       | 0x0E;
     uint16_t l = ((cursor & 0x00FF) << 8) | 0x0F;
@@ -37,7 +37,7 @@ inline void put(char c)
     VRAM[cursor++] = (bg << 12) | (fg << 8) | c;
 }
 
-inline void write(const char* s)
+void write(const char* s)
 {
     for (int i = 0; s[i] != '\0'; i++)
         put(s[i]);

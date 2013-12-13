@@ -32,5 +32,5 @@ SECTIONS
         *(.eh_frame)
     }
 
-    _end = .;
+    _end = ALIGN(4K);
 }
