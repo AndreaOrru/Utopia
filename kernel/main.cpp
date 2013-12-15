@@ -1,4 +1,3 @@
-
 #include "gdt.hpp"
 #include "idt.hpp"
 #include "pmem.hpp"

@@ -90,8 +90,6 @@ void init()
     physPD[1023] = (PEntry)physPD | PRESENT | WRITABLE;
 
     enable_paging((uintptr_t)physPD);
-
-    map((void*)0xC0000000, NULL, 0);
 }
 
 }
