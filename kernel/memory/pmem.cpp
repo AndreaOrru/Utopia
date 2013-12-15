@@ -1,23 +1,22 @@
 #include <stddef.h>
-#include <stdint.h>
 #include "x86.hpp"
 #include "pmem.hpp"
 
 namespace PMem {
 
 extern "C" void* _end;
-void** stack = &_end;
+uint16_t* stack = (uint16_t*)&_end;
 size_t stackSize;
 size_t ram = 0;
 
 void* alloc()
 {
-    return *(--stack);
+    return (void*) (*(--stack) * PAGE_SIZE);
 }
 
 void free(void* address)
 {
-    *(stack++) = PAGE_BASE(address);
+    *(stack++) = (uintptr_t)address / PAGE_SIZE;
 }
 
 void calculate_ram(multiboot_info_t* info)
@@ -58,7 +57,6 @@ void init_stack(multiboot_info_t* info)
 void init(multiboot_info_t* info)
 {
     calculate_ram(info);
-
     init_stack(info);
 }
 

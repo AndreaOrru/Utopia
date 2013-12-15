@@ -3,14 +3,23 @@
 
 #define alwaysinline inline __attribute__((always_inline))
 
-#define PAGE_SIZE      0x1000
-#define PAGE_BASE(x)  ((void*)  ((uintptr_t)(x) & -PAGE_SIZE))
-#define PAGE_ALIGN(x) ((void*) (((uintptr_t)(x) +  PAGE_SIZE - 1) & -PAGE_SIZE))
+const uint16_t PAGE_SIZE = 0x1000;
+
+constexpr void* PAGE_BASE(void* addr)
+{
+    return (void*) ((uintptr_t)addr & -PAGE_SIZE);
+}
+
+constexpr void* PAGE_ALIGN(void* addr)
+{
+    return (void*) (((uintptr_t)addr + PAGE_SIZE - 1) & -PAGE_SIZE);
+}
 
 extern "C"
 {
-    void gdt_load(uintptr_t base, uint16_t limit);
-    void idt_load(uintptr_t base, uint16_t limit);
+    void load_gdt(uintptr_t base, uint16_t limit);
+    void load_idt(uintptr_t base, uint16_t limit);
+    void enable_paging(uintptr_t pd);
 }
 
 alwaysinline void hlt()
@@ -50,4 +59,9 @@ alwaysinline void outb(uint16_t port, uint8_t val)
 alwaysinline void outw(uint16_t port, uint16_t val)
 {
     asm volatile ("outw %0, %1" : : "a" (val), "Nd" (port));
+}
+
+alwaysinline void invlpg(uintptr_t vAddr)
+{
+    asm volatile ("invlpg (%0)" : : "r" (vAddr) : "memory");
 }

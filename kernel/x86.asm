@@ -8,8 +8,8 @@ idtr:
     .base:   resd 1
 
 section .text
-global gdt_load
-gdt_load:
+global load_gdt
+load_gdt:
     mov eax, [esp + 4]
     mov [gdtr.base], eax
     mov ax, [esp + 8]
@@ -26,11 +26,27 @@ gdt_load:
     .reloadCS:
         ret
 
-global idt_load
-idt_load:
+global load_idt
+load_idt:
     mov eax, [esp + 4]
     mov [idtr.base], eax
     mov ax, [esp + 8]
     mov [idtr.limit], ax
+
     lidt [idtr]
+    ret
+
+global enable_paging
+enable_paging:
+    mov eax, [esp + 4]
+    mov cr3, eax
+
+    mov eax, cr4
+    or eax, 0b10010000
+    mov cr4, eax
+
+    mov eax, cr0
+    or eax, 0x80000000
+    mov cr0, eax
+
     ret

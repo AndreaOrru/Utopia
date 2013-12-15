@@ -3,8 +3,8 @@ extern irqHandlers
 
 section .text
 %macro exception 1
-    global exception%1
-    exception%1:
+    global _exception%1
+    _exception%1:
         cli
         %if (%1 != 8 && !(%1 >= 10 && %1 <= 14) && %1 != 17)
             push 0
@@ -20,8 +20,8 @@ section .text
 %endmacro
 
 %macro irq 1
-    global irq%1
-    irq%1:
+    global _irq%1
+    _irq%1:
         cli
         push 0
         push %1

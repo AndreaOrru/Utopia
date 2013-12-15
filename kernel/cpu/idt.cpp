@@ -31,7 +31,7 @@ void init()
     Exceptions::init();
     IRQs::init();
 
-    idt_load((uintptr_t)idt, sizeof(idt));
+    load_idt((uintptr_t)idt, sizeof(idt));
 }
 
 }

@@ -30,7 +30,7 @@ GdtEntry gdt[] =
 
 void init()
 {
-    gdt_load((uintptr_t)gdt, sizeof(gdt));
+    load_gdt((uintptr_t)gdt, sizeof(gdt));
 }
 
 }
