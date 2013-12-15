@@ -1,8 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-namespace Heap
-{
+namespace Heap {
 
 void  init(size_t size);
 void* alloc(size_t size);

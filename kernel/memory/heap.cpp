@@ -1,8 +1,7 @@
 #include "pmem.hpp"
 #include "heap.hpp"
 
-namespace Heap
-{
+namespace Heap {
 
 struct Header
 {

@@ -4,6 +4,8 @@
 #include "pmem.hpp"
 #include "vmem.hpp"
 #include "term.hpp"
+#include "timer.hpp"
+#include "x86.hpp"
 
 using namespace Term;
 
@@ -14,9 +16,11 @@ extern "C" void main(multiboot_info_t* info)
     PMem::init(info);
     VMem::init();
     Heap::init(0x100000);
+    Timer::init(100);
 
     clear();
     printf("Hello world!\n");
 
+    sti();
     while (true);
 }
