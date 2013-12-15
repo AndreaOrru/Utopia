@@ -5,12 +5,12 @@
 
 const uint16_t PAGE_SIZE = 0x1000;
 
-constexpr void* PAGE_BASE(void* addr)
+constexpr void* PAGE_BASE(const void* addr)
 {
     return (void*) ((uintptr_t)addr & -PAGE_SIZE);
 }
 
-constexpr void* PAGE_ALIGN(void* addr)
+constexpr void* PAGE_ALIGN(const void* addr)
 {
     return (void*) (((uintptr_t)addr + PAGE_SIZE - 1) & -PAGE_SIZE);
 }
@@ -64,4 +64,11 @@ alwaysinline void outw(uint16_t port, uint16_t val)
 alwaysinline void invlpg(uintptr_t vAddr)
 {
     asm volatile ("invlpg (%0)" : : "r" (vAddr) : "memory");
+}
+
+alwaysinline uintptr_t read_cr2()
+{
+    uintptr_t ret;
+    asm volatile ("mov %%cr2, %0" : "=r" (ret));
+    return ret;
 }

@@ -9,7 +9,7 @@ extern "C" { IsrHandler irqHandlers[16]; }
 
 void unhandled(InterruptStack stack)
 {
-    Term::printf("\n*** IRQ %u raised ***", stack.num);
+    Term::printf("\n>>> IRQ %u raised.", stack.num);
 }
 
 const uint16_t PIC1_CMD  = 0x20, PIC2_CMD  = 0xA0;

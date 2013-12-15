@@ -5,7 +5,7 @@
 
 namespace Exceptions {
 
-const char* names[] =
+const char* const names[] =
 {
     "Division By Zero",
     "Debug",
@@ -39,7 +39,7 @@ extern "C" { IsrHandler exceptionHandlers[32]; }
 
 void unhandled(InterruptStack stack)
 {
-    Term::printf("\n*** %s ***", names[stack.num]);
+    Term::printf("\n>>> %s.", names[stack.num]);
     hlt();
 }
 
