@@ -1,4 +1,5 @@
 #include "gdt.hpp"
+#include "heap.hpp"
 #include "idt.hpp"
 #include "pmem.hpp"
 #include "vmem.hpp"
@@ -12,6 +13,7 @@ extern "C" void main(multiboot_info_t* info)
     IDT::init();
     PMem::init(info);
     VMem::init();
+    Heap::init(0x100000);
 
     clear();
     printf("Hello world!\n");
