@@ -112,8 +112,9 @@ void init()
     auto physPD = (PEntry*)PMem::alloc();
     memset(physPD, 0, PAGE_SIZE);
 
-    physPD[0]    = (PEntry)0x0000 | PRESENT | WRITE | SIZE_4MB;
-    physPD[1023] = (PEntry)physPD | PRESENT | WRITE;
+    physPD[0]    = (PEntry)0x000000 | PRESENT | WRITE | SIZE_4MB;
+    physPD[1]    = (PEntry)0x400000 | PRESENT | WRITE | SIZE_4MB;
+    physPD[1023] = (PEntry)physPD   | PRESENT | WRITE;
 
     Exceptions::register_handler(14, page_fault);
     enable_paging((uintptr_t)physPD);

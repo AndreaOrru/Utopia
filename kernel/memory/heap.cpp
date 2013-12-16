@@ -9,7 +9,7 @@ struct Header
     size_t units;
 };
 
-auto freeList = (Header*)0x2000;
+auto freeList = (Header*)0x600000;
 
 void* alloc(size_t size)
 {
@@ -66,7 +66,7 @@ void free(void* addr)
 void init()
 {
     freeList->next  = freeList;
-    freeList->units = (0x80000 - (uintptr_t)freeList) / sizeof(Header);
+    freeList->units = 0x200000 / sizeof(Header);
 }
 
 }

@@ -16,7 +16,7 @@ section .text
 global _start
 _start:
     cli
-    mov esp, 0x2000
+    mov esp, 0x7FFF0
 
     push ebx
     call main
