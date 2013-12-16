@@ -3,7 +3,7 @@
 
 namespace Heap {
 
-void  init(size_t size);
+void  init();
 void* alloc(size_t size);
 void  free(void* addr);
 

@@ -4,9 +4,7 @@
 
 namespace PMem {
 
-extern "C" void* _end;
-uint16_t* stack = (uint16_t*)&_end;
-uintptr_t stackEnd;
+auto stack = (uint16_t*)0x200000;
 size_t ram = 0;
 
 void* alloc()
@@ -17,11 +15,6 @@ void* alloc()
 void free(void* address)
 {
     *(stack++) = (uintptr_t)address / PAGE_SIZE;
-}
-
-void* kernel_end()
-{
-    return (void*)stackEnd;
 }
 
 void calculate_ram(multiboot_info_t* info)
@@ -40,7 +33,7 @@ void calculate_ram(multiboot_info_t* info)
 
 void init_stack(multiboot_info_t* info)
 {
-    stackEnd = (uintptr_t)PAGE_ALIGN(stack + (ram / PAGE_SIZE));
+    auto stackEnd = (uintptr_t)PAGE_ALIGN(stack + (ram / PAGE_SIZE));
 
     auto map = info->mmap_addr;
     while (map < info->mmap_addr + info->mmap_length)

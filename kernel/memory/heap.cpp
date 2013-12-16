@@ -1,4 +1,4 @@
-#include "pmem.hpp"
+#include <stdint.h>
 #include "heap.hpp"
 
 namespace Heap {
@@ -9,7 +9,7 @@ struct Header
     size_t units;
 };
 
-Header* freeList;
+auto freeList = (Header*)0x2000;
 
 void* alloc(size_t size)
 {
@@ -63,11 +63,10 @@ void free(void* addr)
     freeList = curr;
 }
 
-void init(size_t size)
+void init()
 {
-    freeList = (Header*)PMem::kernel_end();
     freeList->next  = freeList;
-    freeList->units = (size + sizeof(Header) - 1) / sizeof(Header) + 1;
+    freeList->units = (0x80000 - (uintptr_t)freeList) / sizeof(Header);
 }
 
 }

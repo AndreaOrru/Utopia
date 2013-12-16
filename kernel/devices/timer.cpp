@@ -26,7 +26,6 @@ void init(uint32_t hz)
     set_frequency(hz);
 
     IRQs::register_handler(0, tick);
-    IRQs::unmask(0);
 }
 
 }

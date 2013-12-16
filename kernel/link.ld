@@ -31,6 +31,4 @@ SECTIONS
         *(.comment)
         *(.eh_frame)
     }
-
-    _end = ALIGN(4K);
 }

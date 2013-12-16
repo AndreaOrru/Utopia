@@ -36,9 +36,10 @@ void unmask(uint8_t irq)
     outb(port, inb(port) & ~(1 << irq % 8));
 }
 
-void register_handler(uint8_t n, IsrHandler handler)
+void register_handler(uint8_t n, IsrHandler handler, bool unmask)
 {
     irqHandlers[n] = handler;
+    if (unmask) IRQs::unmask(n);
 }
 
 void init()

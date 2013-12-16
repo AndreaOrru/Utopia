@@ -15,12 +15,11 @@ extern "C" void main(multiboot_info_t* info)
     IDT::init();
     PMem::init(info);
     VMem::init();
-    Heap::init(0x100000);
+    Heap::init();
     Timer::init(100);
 
     clear();
     printf("Hello world!\n");
 
-    sti();
     while (true);
 }
