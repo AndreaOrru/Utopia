@@ -79,7 +79,7 @@ size_t strlen(const char* s)
     return s - p;
 }
 
-char* itoa(int val, char* buf, int base)
+char* itoa(uint32_t val, char* buf, int base)
 {
     if ((base < 2 || base > 36) && base != -10)
     {
@@ -93,14 +93,14 @@ char* itoa(int val, char* buf, int base)
         case   2:  strcpy(ptr, "0b"); ptr += 2; break;
         case   8:  strcpy(ptr, "0");  ptr += 1; break;
         case  16:  strcpy(ptr, "0x"); ptr += 2; break;
-        case -10:  base = -base; if (val < 0) *ptr++ = '-'; break;
+        case -10:  base = -base; if ((int32_t)val < 0) { val = -val; *ptr++ = '-'; } break;
     }
     char* low = ptr;
 
     if (val != 0)
         do
         {
-            *ptr++ = "ZYXWVUTSRQPONMLKJIHGFEDCBA9876543210123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[35 + val % base];
+            *ptr++ = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[val % base];
             val /= base;
         }
         while (val);

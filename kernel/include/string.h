@@ -1,5 +1,6 @@
 #pragma once
 #include <stddef.h>
+#include <stdint.h>
 
 #if defined(__cplusplus)
 extern "C"
@@ -13,7 +14,7 @@ void*  memset (void* s, int c, size_t n);
 int    strcmp (const char* s1, const char* s2);
 char*  strcpy (char* dest, const char* src);
 size_t strlen (const char* s);
-char*  itoa   (int val, char* buf, int base);
+char*  itoa   (uint32_t val, char* buf, int base);
 
 #if defined(__cplusplus)
 }

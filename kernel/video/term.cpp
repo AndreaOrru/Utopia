@@ -28,7 +28,8 @@ inline void put(char c)
     {
         cursor -= SIZE_X;
 
-        memmove(&VRAM[0], &VRAM[SIZE_X], cursor);
+        for (int i = 0; i < cursor; i++)
+            VRAM[i] = VRAM[i + SIZE_X];
 
         for (int i = 0; i < SIZE_X; i++)
             VRAM[i + cursor] = ' ';

@@ -8,7 +8,7 @@ struct InterruptStack
     uint32_t eip, cs, eflags, esp, ss;
 } __attribute__((packed));
 
-typedef void (*IsrHandler)(InterruptStack);
+typedef void (*IsrHandler)(InterruptStack*);
 
 extern "C"
 {

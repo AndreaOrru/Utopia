@@ -37,9 +37,9 @@ const char* const names[] =
 
 extern "C" { IsrHandler exceptionHandlers[32]; }
 
-void unhandled(InterruptStack stack)
+void unhandled(InterruptStack* stack)
 {
-    Term::printf("\n>>> %s.", names[stack.num]);
+    Term::printf("\n>>> %s.", names[stack->num]);
     hlt();
 }
 

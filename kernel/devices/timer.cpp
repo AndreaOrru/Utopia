@@ -8,7 +8,7 @@ namespace Timer {
 const uint16_t PIT_CMD  = 0x43;
 const uint16_t PIT_CH_0 = 0x40;
 
-void tick(InterruptStack)
+void tick(InterruptStack*)
 {
     Term::printf("Tick!\n");
 }

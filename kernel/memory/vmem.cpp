@@ -84,22 +84,22 @@ void unmap(void* vAddr)
     invlpg((uintptr_t)vAddr);
 }
 
-void page_fault(InterruptStack stack)
+void page_fault(InterruptStack* stack)
 {
     using Term::printf;
     printf("\n>>> Page Fault at address %x.\n", read_cr2());
 
-    if (stack.error & USER)
+    if (stack->error & USER)
         printf(">>> An user process ");
     else
         printf(">>> The kernel ");
 
-    if (stack.error & WRITE)
+    if (stack->error & WRITE)
         printf("tried to write ");
     else
         printf("tried to read ");
 
-    if (stack.error & PRESENT)
+    if (stack->error & PRESENT)
         printf("causing a protection fault.");
     else
         printf("a non-present page.");

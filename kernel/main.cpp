@@ -21,6 +21,8 @@ extern "C" void main(multiboot_info_t* info)
     clear();
     printf("Hello world!\n");
 
-    sti();
+    for (int i = 0; i < 25; i++)
+        printf("%d\n", i);
+
     while (true);
 }

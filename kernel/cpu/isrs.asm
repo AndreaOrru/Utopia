@@ -11,7 +11,11 @@ section .text
         push %1
         pusha
 
+        mov ebx, esp
+        mov esp, 0x7FFF0
+        push ebx
         call [exceptionHandlers + (%1 * 4)]
+        mov esp, ebx
 
         popa
         add esp, 8
@@ -25,7 +29,11 @@ section .text
         push %1
         pusha
 
+        mov ebx, esp
+        mov esp, 0x7FFF0
+        push ebx
         call [irqHandlers + (%1 * 4)]
+        mov esp, ebx
 
         mov al, 0x20
         %if (%1 >= 8)
