@@ -2,9 +2,9 @@
 #include "heap.hpp"
 #include "idt.hpp"
 #include "pmem.hpp"
-#include "vmem.hpp"
 #include "term.hpp"
 #include "timer.hpp"
+#include "vmem.hpp"
 #include "x86.hpp"
 
 using namespace Term;
@@ -21,5 +21,6 @@ extern "C" void main(multiboot_info_t* info)
     clear();
     printf("Hello world!\n");
 
+    sti();
     while (true);
 }

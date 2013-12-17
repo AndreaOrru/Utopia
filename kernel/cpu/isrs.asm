@@ -5,16 +5,15 @@ section .text
 %macro exception 1
     global _exception%1
     _exception%1:
-        cli
         %if (%1 != 8 && !(%1 >= 10 && %1 <= 14) && %1 != 17)
             push 0
         %endif
         push %1
-
         pusha
-        call [exceptionHandlers + (%1 * 4)]
-        popa
 
+        call [exceptionHandlers + (%1 * 4)]
+
+        popa
         add esp, 8
         iret
 %endmacro
@@ -22,15 +21,11 @@ section .text
 %macro irq 1
     global _irq%1
     _irq%1:
-        cli
         push 0
         push %1
-
         pusha
-        call [irqHandlers + (%1 * 4)]
-        popa
 
-        add esp, 8
+        call [irqHandlers + (%1 * 4)]
 
         mov al, 0x20
         %if (%1 >= 8)
@@ -38,6 +33,8 @@ section .text
         %endif
         out 0x20, al
 
+        popa
+        add esp, 8
         iret
 %endmacro
 

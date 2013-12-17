@@ -25,7 +25,7 @@ class List
         Node* pos;
 
       public:
-        Iterator(Node* n = NULL) : pos(n) {}
+        Iterator(Node* n = NULL)     : pos(n) {}
         Iterator(const Iterator& it) : pos(it.pos) {}
 
         Iterator& operator++()    { pos = pos->next; return *this; }
@@ -93,8 +93,8 @@ class List
         }
     }
 
-    void pop_front() { erase(begin()); }
-    void pop_back()  { erase(Iterator(backNode)); }
+    T pop_front() { T data = front(); erase(begin());            return data; }
+    T pop_back()  { T data = back();  erase(Iterator(backNode)); return data; }
 
     void insert(const Iterator& it, const T& data)
     {
