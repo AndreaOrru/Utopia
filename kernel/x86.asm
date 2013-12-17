@@ -26,6 +26,12 @@ load_gdt:
     .reloadCS:
         ret
 
+global load_tss
+load_tss:
+    mov ax, [esp + 4]
+    ltr ax
+    ret
+
 global load_idt
 load_idt:
     mov eax, [esp + 4]

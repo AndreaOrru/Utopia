@@ -51,7 +51,7 @@ void map(void* vAddr, void* pAddr, uint16_t flags)
         *pdEntry = (PEntry)PMem::alloc() | flags | PRESENT | WRITE;
         invlpg((uintptr_t)ptEntry);
 
-        memset(ptEntry, 0, PAGE_SIZE);
+        memset(PAGE_BASE(ptEntry), 0, PAGE_SIZE);
     }
 
     if (pAddr == NULL)

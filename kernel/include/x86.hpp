@@ -19,6 +19,7 @@ extern "C"
 {
     void load_gdt(uintptr_t base, uint16_t limit);
     void load_idt(uintptr_t base, uint16_t limit);
+    void load_tss(uint8_t segment);
     void enable_paging(uintptr_t pd);
 }
 
