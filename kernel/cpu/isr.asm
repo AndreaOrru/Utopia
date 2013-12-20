@@ -10,19 +10,19 @@ section .text
         %endif
         push %1
         pusha
+        push ds
+        push es
+
         mov ax, 0x10
         mov ds, ax
         mov es, ax
 
-        mov ebx, esp
-        mov esp, 0x7FFF0
-        push ebx
+        push esp
         call [exceptionHandlers + (%1 * 4)]
-        mov esp, ebx
+        mov esp, eax
 
-        mov ax, 0x23
-        mov ds, ax
-        mov es, ax
+        pop es
+        pop ds
         popa
         add esp, 8
         iret
@@ -34,15 +34,16 @@ section .text
         push 0
         push %1
         pusha
+        push ds
+        push es
+
         mov ax, 0x10
         mov ds, ax
         mov es, ax
 
-        mov ebx, esp
-        mov esp, 0x7FFF0
-        push ebx
+        push esp
         call [irqHandlers + (%1 * 4)]
-        mov esp, ebx
+        mov esp, eax
 
         mov al, 0x20
         %if (%1 >= 8)
@@ -50,9 +51,8 @@ section .text
         %endif
         out 0x20, al
 
-        mov ax, 0x23
-        mov ds, ax
-        mov es, ax
+        pop es
+        pop ds
         popa
         add esp, 8
         iret

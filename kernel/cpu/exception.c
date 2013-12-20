@@ -33,10 +33,12 @@ static const char* const names[] =
     "Reserved"
 };
 
-static void exception_unhandled(State* state)
+static State* exception_unhandled(State* state)
 {
     printf("\n>>> %s.", names[state->num]);
     hlt();
+
+    return state;
 }
 
 IsrHandler exceptionHandlers[32] = { [0 ... 31] = exception_unhandled };

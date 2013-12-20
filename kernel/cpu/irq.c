@@ -8,9 +8,11 @@
 #define PIC1_DATA  0x21
 #define PIC2_DATA  0xA1
 
-static void irq_unhandled(State* state)
+static State* irq_unhandled(State* state)
 {
     printf("\n>>> IRQ %u raised.", state->num);
+
+    return state;
 }
 
 IsrHandler irqHandlers[16] = { [0 ... 15] = irq_unhandled };

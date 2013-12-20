@@ -6,6 +6,7 @@
 #include "timer.h"
 #include "vmem.h"
 #include "x86.h"
+
 void main(multiboot_info_t* info)
 {
     clear_screen();
@@ -17,6 +18,9 @@ void main(multiboot_info_t* info)
     timer_init(100);
 
     printf("Hello world!\n");
+
+    char* a = (char*)0xAAAAAAAA;
+    *a = 1;
 
     while (true);
 }

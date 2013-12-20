@@ -3,12 +3,17 @@
 
 typedef struct
 {
-    uint32_t regs[8];
+    uint32_t es, ds;
+    union
+    {
+        uint32_t regs[8];
+        uint32_t edi, esi, ebp, _esp, ebx, edx, ecx, eax;
+    };
     uint32_t num, error;
     uint32_t eip, cs, eflags, esp, ss;
 } __attribute__((packed)) State;
 
-typedef void (*IsrHandler)(State*);
+typedef State* (*IsrHandler)(State*);
 
 extern void exception0 (void);
 extern void exception1 (void);
