@@ -3,25 +3,14 @@
 
 #define alwaysinline inline __attribute__((always_inline))
 
-const uint16_t PAGE_SIZE = 0x1000;
+#define PAGE_SIZE      0x1000
+#define PAGE_BASE(x)   ((void*) ((uintptr_t)(x) & -PAGE_SIZE))
+#define PAGE_ALIGN(x)  ((void*)(((uintptr_t)(x) +  PAGE_SIZE - 1) & -PAGE_SIZE))
 
-constexpr void* PAGE_BASE(const void* addr)
-{
-    return (void*) ((uintptr_t)addr & -PAGE_SIZE);
-}
-
-constexpr void* PAGE_ALIGN(const void* addr)
-{
-    return (void*) (((uintptr_t)addr + PAGE_SIZE - 1) & -PAGE_SIZE);
-}
-
-extern "C"
-{
-    void load_gdt(uintptr_t base, uint16_t limit);
-    void load_idt(uintptr_t base, uint16_t limit);
-    void load_tss(uint8_t segment);
-    void enable_paging(uintptr_t pd);
-}
+extern void gdt_load(uintptr_t base, uint16_t limit);
+extern void idt_load(uintptr_t base, uint16_t limit);
+extern void tss_load(uint8_t segment);
+extern void enable_paging(uintptr_t pd);
 
 alwaysinline void hlt()
 {

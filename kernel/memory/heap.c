@@ -1,22 +1,20 @@
 #include <stdint.h>
-#include "heap.hpp"
+#include "heap.h"
 
-namespace Heap {
-
-struct Header
+typedef struct header
 {
-    Header* next;
+    struct header* next;
     size_t units;
-};
+} Header;
 
-auto freeList = (Header*)0x600000;
+static Header* freeList = (Header*)0x600000;
 
-void* alloc(size_t size)
+void* malloc(size_t size)
 {
     size_t units = (size + sizeof(Header) - 1) / sizeof(Header) + 1;
-    auto prev = freeList;
+    Header* prev = freeList;
 
-    for (auto curr = prev->next; ; prev = curr, curr = curr->next)
+    for (Header* curr = prev->next; ; prev = curr, curr = curr->next)
         if (curr->units >= units)
         {
             if (curr->units == units)
@@ -35,10 +33,10 @@ void* alloc(size_t size)
 
 void free(void* addr)
 {
-    auto block = (Header*)addr - 1;
-    auto curr = freeList;
+    Header* block = (Header*)addr - 1;
+    Header* curr = freeList;
 
-    while (not (block > curr && block < curr->next))
+    while (!(block > curr && block < curr->next))
         if (curr >= curr->next && (block > curr || block < curr->next))
             break;
         else
@@ -63,10 +61,8 @@ void free(void* addr)
     freeList = curr;
 }
 
-void init()
+void heap_init()
 {
     freeList->next  = freeList;
     freeList->units = 0x200000 / sizeof(Header);
-}
-
 }

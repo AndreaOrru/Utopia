@@ -13,8 +13,8 @@ align 4
     dd CHECKSUM
 
 section .text
-global _start
-_start:
+global start
+start:
     cli
     mov esp, 0x7C00
 

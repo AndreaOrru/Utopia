@@ -8,8 +8,8 @@ idtr:
     .base:   resd 1
 
 section .text
-global load_gdt
-load_gdt:
+global gdt_load
+gdt_load:
     mov eax, [esp + 4]
     mov [gdtr.base], eax
     mov ax, [esp + 8]
@@ -26,14 +26,14 @@ load_gdt:
     .reloadCS:
         ret
 
-global load_tss
-load_tss:
+global tss_load
+tss_load:
     mov ax, [esp + 4]
     ltr ax
     ret
 
-global load_idt
-load_idt:
+global idt_load
+idt_load:
     mov eax, [esp + 4]
     mov [idtr.base], eax
     mov ax, [esp + 8]

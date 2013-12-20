@@ -1,38 +1,34 @@
 #include <stddef.h>
-#include "x86.hpp"
-#include "pmem.hpp"
+#include "x86.h"
+#include "pmem.h"
 
-namespace PMem {
+static uint16_t* stack = (uint16_t*)0x200000;
 
-auto stack = (uint16_t*)0x200000;
-
-void* alloc()
+void* frame_alloc()
 {
     return (void*) (*(--stack) * PAGE_SIZE);
 }
 
-void free(void* address)
+void frame_free(void* address)
 {
     *(stack++) = (uintptr_t)address / PAGE_SIZE;
 }
 
-void init(multiboot_info_t* info)
+void pmem_init(multiboot_info_t* info)
 {
-    auto map = info->mmap_addr;
+    uintptr_t map = info->mmap_addr;
     while (map < info->mmap_addr + info->mmap_length)
     {
-        auto entry = (multiboot_memory_map_t*)map;
+        multiboot_memory_map_t* entry = (void*)map;
 
         uintptr_t start = entry->addr;
         uintptr_t   end = start + (size_t)entry->len;
         start = (start >= 0x800000) ? start : 0x800000;
 
         if (entry->type == MULTIBOOT_MEMORY_AVAILABLE)
-            for (auto i = start; i < end; i += PAGE_SIZE)
-                free((void*)i);
+            for (uintptr_t i = start; i < end; i += PAGE_SIZE)
+                frame_free((void*)i);
 
         map += entry->size + sizeof(entry->size);
     }
-}
-
 }

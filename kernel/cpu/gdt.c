@@ -1,9 +1,7 @@
-#include "x86.hpp"
-#include "gdt.hpp"
+#include "x86.h"
+#include "gdt.h"
 
-namespace GDT {
-
-struct Tss
+typedef struct
 {
     uint32_t unused1;
     uint32_t esp0;
@@ -11,9 +9,9 @@ struct Tss
     uint32_t unused2[22];
     uint16_t unused3;
     uint16_t iomapBase;
-} __attribute__ ((packed));
+} __attribute__ ((packed)) Tss;
 
-struct GdtEntry
+typedef struct
 {
     unsigned limitLow  : 16;
     unsigned baseLow   : 16;
@@ -22,15 +20,17 @@ struct GdtEntry
     unsigned limitHigh : 4;
     unsigned flags     : 4;
     unsigned baseHigh  : 8;
-} __attribute__((packed));
+} __attribute__((packed)) GdtEntry;
 
-const uint8_t KERNEL = 0x90;
-const uint8_t   USER = 0xF0;
-const uint8_t   CODE = 0x0A;
-const uint8_t   DATA = 0x02;
-const uint8_t    TSS = 0x89;
+#define KERNEL  0x90
+#define USER    0xF0
+#define CODE    0x0A
+#define DATA    0x02
 
-GdtEntry gdt[] =
+#define TSS       0x89
+#define TSS_DESC  0x28
+
+static GdtEntry gdt[] =
 {
     {      0, 0, 0,             0,   0,   0, 0 },
     { 0xFFFF, 0, 0, KERNEL | CODE, 0xF, 0xC, 0 },
@@ -40,13 +40,13 @@ GdtEntry gdt[] =
     {      0, 0, 0,           TSS,   0, 0x4, 0 },
 };
 
-Tss tss;
+static Tss tss;
 
-void init_tss()
+static void tss_init()
 {
-    auto base  = (uintptr_t)&tss;
-    auto limit = sizeof(tss) - 1;
-    auto desc  = TSS_DESC >> 3;
+    uintptr_t base = (uintptr_t)&tss;
+    uint32_t limit = sizeof(tss) - 1;
+    uint16_t  desc = TSS_DESC >> 3;
 
     gdt[desc].baseLow  =  base & 0xFFFF;
     gdt[desc].baseMid  = (base >> 16) & 0xFF;
@@ -64,12 +64,10 @@ void set_kernel_stack(uint32_t esp0)
     tss.esp0 = esp0;
 }
 
-void init()
+void gdt_init()
 {
-    init_tss();
+    tss_init();
 
-    load_gdt((uintptr_t)gdt, sizeof(gdt));
-    load_tss(TSS_DESC);
-}
-
+    gdt_load((uintptr_t)gdt, sizeof(gdt));
+    tss_load(TSS_DESC);
 }

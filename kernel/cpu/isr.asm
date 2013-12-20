@@ -1,11 +1,10 @@
 extern exceptionHandlers
 extern irqHandlers
-extern currentThread
 
 section .text
 %macro exception 1
-    global _exception%1
-    _exception%1:
+    global exception%1
+    exception%1:
         %if (%1 != 8 && !(%1 >= 10 && %1 <= 14) && %1 != 17)
             push 0
         %endif
@@ -15,11 +14,11 @@ section .text
         mov ds, ax
         mov es, ax
 
-        mov eax, esp
+        mov ebx, esp
         mov esp, 0x7FFF0
-        push eax
+        push ebx
         call [exceptionHandlers + (%1 * 4)]
-        mov esp, [currentThread]
+        mov esp, ebx
 
         mov ax, 0x23
         mov ds, ax
@@ -30,8 +29,8 @@ section .text
 %endmacro
 
 %macro irq 1
-    global _irq%1
-    _irq%1:
+    global irq%1
+    irq%1:
         push 0
         push %1
         pusha
@@ -43,7 +42,7 @@ section .text
         mov esp, 0x7FFF0
         push ebx
         call [irqHandlers + (%1 * 4)]
-        mov esp, [currentThread]
+        mov esp, ebx
 
         mov al, 0x20
         %if (%1 >= 8)

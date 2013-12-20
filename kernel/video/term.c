@@ -1,19 +1,17 @@
 #include <stdarg.h>
 #include "string.h"
-#include "x86.hpp"
-#include "term.hpp"
+#include "x86.h"
+#include "term.h"
 
-namespace Term {
+#define SIZE_X  80
+#define SIZE_Y  25
+#define BG      0
+#define FG      7
 
-uint16_t* const VRAM = (uint16_t*)0xB8000;
-const int SIZE_X = 80;
-const int SIZE_Y = 25;
-const uint8_t bg = 0;
-const uint8_t fg = 7;
+static uint16_t* const VRAM = (uint16_t*)0xB8000;
+static int cursor = 0;
 
-int cursor = 0;
-
-void update_cursor()
+static void update_cursor()
 {
     uint16_t h =  (cursor & 0xFF00)       | 0x0E;
     uint16_t l = ((cursor & 0x00FF) << 8) | 0x0F;
@@ -22,7 +20,7 @@ void update_cursor()
     outw(0x3D4, l);
 }
 
-inline void put(char c)
+static inline void put(char c)
 {
     if (cursor == SIZE_X * SIZE_Y)
     {
@@ -35,16 +33,16 @@ inline void put(char c)
             VRAM[i + cursor] = ' ';
     }
 
-    VRAM[cursor++] = (bg << 12) | (fg << 8) | c;
+    VRAM[cursor++] = (BG << 12) | (FG << 8) | c;
 }
 
-void write(const char* s)
+static void write(const char* s)
 {
     for (int i = 0; s[i] != '\0'; i++)
         put(s[i]);
 }
 
-void clear()
+void clear_screen()
 {
     for (int i = 0; i < SIZE_X * SIZE_Y; i++)
         VRAM[i] = ' ';
@@ -101,6 +99,4 @@ void printf(const char* format, ...)
     update_cursor();
 
     va_end(args);
-}
-
 }
