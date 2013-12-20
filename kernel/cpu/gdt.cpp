@@ -44,12 +44,16 @@ Tss tss;
 
 void init_tss()
 {
-    gdt[5].baseLow  =  (uintptr_t)&tss        & 0xFFFF;
-    gdt[5].baseMid  = ((uintptr_t)&tss >> 16) & 0xFF;
-    gdt[5].baseHigh = ((uintptr_t)&tss >> 24) & 0xFF;
+    auto base  = (uintptr_t)&tss;
+    auto limit = sizeof(tss) - 1;
+    auto desc  = TSS_DESC >> 3;
 
-    gdt[5].limitLow  =  sizeof(tss)        & 0xFFFF;
-    gdt[5].limitHigh = (sizeof(tss) >> 16) & 0xF;
+    gdt[desc].baseLow  =  base & 0xFFFF;
+    gdt[desc].baseMid  = (base >> 16) & 0xFF;
+    gdt[desc].baseHigh = (base >> 24) & 0xFF;
+
+    gdt[desc].limitLow  =  limit        & 0xFFFF;
+    gdt[desc].limitHigh = (limit >> 16) & 0xF;
 
     tss.ss0 = KERNEL_DATA;
     tss.iomapBase = sizeof(tss);
@@ -65,7 +69,7 @@ void init()
     init_tss();
 
     load_gdt((uintptr_t)gdt, sizeof(gdt));
-    load_tss(0x28);
+    load_tss(TSS_DESC);
 }
 
 }

@@ -1,4 +1,3 @@
-#include "irqs.hpp"
 #include "term.hpp"
 #include "x86.hpp"
 #include "timer.hpp"
@@ -7,11 +6,6 @@ namespace Timer {
 
 const uint16_t PIT_CMD  = 0x43;
 const uint16_t PIT_CH_0 = 0x40;
-
-void tick(InterruptStack*)
-{
-    Term::printf("Tick!\n");
-}
 
 void set_frequency(uint32_t hz)
 {
@@ -24,8 +18,6 @@ void set_frequency(uint32_t hz)
 void init(uint32_t hz)
 {
     set_frequency(hz);
-
-    IRQs::register_handler(0, tick);
 }
 
 }

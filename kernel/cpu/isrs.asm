@@ -1,5 +1,6 @@
 extern exceptionHandlers
 extern irqHandlers
+extern currentThread
 
 section .text
 %macro exception 1
@@ -10,13 +11,19 @@ section .text
         %endif
         push %1
         pusha
+        mov ax, 0x10
+        mov ds, ax
+        mov es, ax
 
-        mov ebx, esp
+        mov eax, esp
         mov esp, 0x7FFF0
-        push ebx
+        push eax
         call [exceptionHandlers + (%1 * 4)]
-        mov esp, ebx
+        mov esp, [currentThread]
 
+        mov ax, 0x23
+        mov ds, ax
+        mov es, ax
         popa
         add esp, 8
         iret
@@ -28,12 +35,15 @@ section .text
         push 0
         push %1
         pusha
+        mov ax, 0x10
+        mov ds, ax
+        mov es, ax
 
         mov ebx, esp
         mov esp, 0x7FFF0
         push ebx
         call [irqHandlers + (%1 * 4)]
-        mov esp, ebx
+        mov esp, [currentThread]
 
         mov al, 0x20
         %if (%1 >= 8)
@@ -41,6 +51,9 @@ section .text
         %endif
         out 0x20, al
 
+        mov ax, 0x23
+        mov ds, ax
+        mov es, ax
         popa
         add esp, 8
         iret
