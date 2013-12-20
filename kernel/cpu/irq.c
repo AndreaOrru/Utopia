@@ -3,17 +3,17 @@
 #include "x86.h"
 #include "irq.h"
 
+#define PIC1_CMD   0x20
+#define PIC2_CMD   0xA0
+#define PIC1_DATA  0x21
+#define PIC2_DATA  0xA1
+
 static void irq_unhandled(State* state)
 {
     printf("\n>>> IRQ %u raised.", state->num);
 }
 
 IsrHandler irqHandlers[16] = { [0 ... 15] = irq_unhandled };
-
-#define PIC1_CMD   0x20
-#define PIC2_CMD   0xA0
-#define PIC1_DATA  0x21
-#define PIC2_DATA  0xA1
 
 static void pic_remap()
 {

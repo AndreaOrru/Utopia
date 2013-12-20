@@ -1,6 +1,14 @@
 #include "x86.h"
 #include "gdt.h"
 
+#define KERNEL  0x90
+#define USER    0xF0
+#define CODE    0x0A
+#define DATA    0x02
+
+#define TSS       0x89
+#define TSS_DESC  0x28
+
 typedef struct
 {
     uint32_t unused1;
@@ -21,14 +29,6 @@ typedef struct
     unsigned flags     : 4;
     unsigned baseHigh  : 8;
 } __attribute__((packed)) GdtEntry;
-
-#define KERNEL  0x90
-#define USER    0xF0
-#define CODE    0x0A
-#define DATA    0x02
-
-#define TSS       0x89
-#define TSS_DESC  0x28
 
 static GdtEntry gdt[] =
 {

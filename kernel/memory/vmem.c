@@ -12,18 +12,11 @@ typedef uintptr_t PEntry;
 #define PD   ((PEntry*)0xFFFFF000)
 #define PTs  ((PEntry*)0xFFC00000)
 
-static inline PEntry* PD_ENTRY(const void* vAddr)
-{
-    unsigned pdIndex = (uintptr_t)vAddr >> 22;
-    return PD + pdIndex;
-}
+#define PD_INDEX(x) ((uintptr_t)(x) >> 22)
+#define PT_INDEX(x) ((uintptr_t)(x) >> 12 & 0x3FF)
 
-static inline PEntry* PT_ENTRY(const void* vAddr)
-{
-    unsigned pdIndex = (uintptr_t)vAddr >> 22;
-    unsigned ptIndex = (uintptr_t)vAddr >> 12 & 0x3FF;
-    return PTs + (pdIndex * 0x400) + ptIndex;
-}
+#define PD_ENTRY(x) (PD  +  PD_INDEX(x))
+#define PT_ENTRY(x) (PTs + (PD_INDEX(x) * 0x400) + PT_INDEX(x))
 
 void* vmem_to_phys(const void* vAddr)
 {

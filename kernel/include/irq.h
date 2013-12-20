@@ -1,5 +1,4 @@
 #pragma once
-#include <stdbool.h>
 #include "isr.h"
 
 void irq_init();
