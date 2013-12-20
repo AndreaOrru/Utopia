@@ -1,13 +1,11 @@
 #include <stdbool.h>
 #include "gdt.h"
-#include "heap.h"
 #include "idt.h"
 #include "pmem.h"
 #include "term.h"
 #include "timer.h"
 #include "vmem.h"
 #include "x86.h"
-
 void main(multiboot_info_t* info)
 {
     clear_screen();
@@ -16,10 +14,9 @@ void main(multiboot_info_t* info)
     idt_init();
     pmem_init(info);
     vmem_init();
-    heap_init();
     timer_init(100);
 
-    printf("Hello world!");
+    printf("Hello world!\n");
 
     while (true);
 }
