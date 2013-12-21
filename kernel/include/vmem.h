@@ -11,3 +11,4 @@ void  vmem_init(void);
 void* vmem_to_phys(const void* vAddr);
 void  map(void* vAddr, void* pAddr, uint16_t flags);
 void  unmap(void* vAddr);
+void* new_address_space(void);

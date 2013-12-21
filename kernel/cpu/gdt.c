@@ -59,15 +59,15 @@ static void tss_init(void)
     tss.iomapBase = sizeof(tss);
 }
 
-void set_kernel_stack(uint32_t esp0)
+void set_kernel_stack(void* esp0)
 {
-    tss.esp0 = esp0;
+    tss.esp0 = (uint32_t)esp0;
 }
 
 void gdt_init(void)
 {
     tss_init();
 
-    gdt_load((uintptr_t)gdt, sizeof(gdt));
+    gdt_load(gdt, sizeof(gdt));
     tss_load(TSS_DESC);
 }

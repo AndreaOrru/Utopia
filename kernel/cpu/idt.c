@@ -29,5 +29,5 @@ void idt_init(void)
     exception_init();
     irq_init();
 
-    idt_load((uintptr_t)idt, sizeof(idt));
+    idt_load(idt, sizeof(idt));
 }

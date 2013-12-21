@@ -43,3 +43,5 @@ typedef struct
     uint32_t p_flags;
     uint32_t p_align;
 } __attribute__((packed)) ElfProgHeader;
+
+void* elf_load(const ElfHeader* elf);

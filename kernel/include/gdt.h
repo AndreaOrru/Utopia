@@ -8,4 +8,4 @@
 #define   USER_DATA   0x20
 
 void gdt_init(void);
-void set_kernel_stack(uint32_t esp0);
+void set_kernel_stack(void* esp0);

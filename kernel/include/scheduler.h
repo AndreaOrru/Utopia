@@ -1,5 +1,6 @@
 #pragma once
 #include "isr.h"
+#include "elf.h"
 #include "list.h"
 #include "x86.h"
 
@@ -9,6 +10,11 @@ typedef union
     {
         uint16_t tid;
         Link queueLink;
+        Link childLink;
+
+        union Thread* parent;
+        List childs;
+        void* PD;
     };
     struct
     {
@@ -18,4 +24,5 @@ typedef union
 } Thread;
 
 void scheduler_init(void);
-void create_thread(void* entry);
+void create_process(ElfHeader* elf);
+Thread* create_thread(const void* entry);

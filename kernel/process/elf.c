@@ -4,11 +4,11 @@
 #include "x86.h"
 #include "elf.h"
 
-void* elf_load(ElfHeader* file)
+void* elf_load(const ElfHeader* elf)
 {
-    ElfProgHeader* phTbl = (void*)file + file->e_phoff;
+    ElfProgHeader* phTbl = (void*)elf + elf->e_phoff;
 
-    for (int i = 0; i < file->e_phnum; i++)
+    for (int i = 0; i < elf->e_phnum; i++)
     {
         if (phTbl[i].p_type == PT_LOAD)
         {
@@ -23,10 +23,10 @@ void* elf_load(ElfHeader* file)
             for (void* i = base; i < base + memsz; i += PAGE_SIZE)
                 map(i, NULL, flags);
 
-            memcpy(base, (void*)file + phTbl[i].p_offset, filesz);
+            memcpy(base, (void*)elf + phTbl[i].p_offset, filesz);
             memset(base + filesz, 0, memsz - filesz);
         }
     }
 
-    return (void*)file->e_entry;
+    return (void*)elf->e_entry;
 }

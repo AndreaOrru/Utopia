@@ -7,8 +7,9 @@
 
 typedef uintptr_t PEntry;
 
-static PEntry* PD  = (PEntry*)0xFFFFF000;
-static PEntry* PTs = (PEntry*)0xFFC00000;
+static PEntry* PD    = (PEntry*)0xFFFFF000;
+static PEntry* PTs   = (PEntry*)0xFFC00000;
+static PEntry* extPD = (PEntry*)0xFFBFF000;
 
 #define PAGE_ALLOCATED  (1 << 9)
 
@@ -39,7 +40,7 @@ void map(void* vAddr, void* pAddr, uint16_t flags)
     if (! *pdEntry)
     {
         *pdEntry = (PEntry)frame_alloc() | flags | PAGE_PRESENT | PAGE_WRITE;
-        invlpg((uintptr_t)ptEntry);
+        invlpg(ptEntry);
 
         memset(PAGE_BASE(ptEntry), 0, PAGE_SIZE);
     }
@@ -57,7 +58,7 @@ void map(void* vAddr, void* pAddr, uint16_t flags)
         *ptEntry = (PEntry)PAGE_BASE(pAddr) | flags | PAGE_PRESENT;
     }
 
-    invlpg((uintptr_t)vAddr);
+    invlpg(vAddr);
 }
 
 void unmap(void* vAddr)
@@ -71,7 +72,7 @@ void unmap(void* vAddr)
         frame_free((void*) *ptEntry);
 
     *ptEntry = 0;
-    invlpg((uintptr_t)vAddr);
+    invlpg(vAddr);
 }
 
 static State* page_fault(State* state)
@@ -97,6 +98,24 @@ static State* page_fault(State* state)
     return state;
 }
 
+void* new_address_space(void)
+{
+    PEntry* newPD = frame_alloc();
+    map(extPD, newPD, PAGE_WRITE);
+
+    memset(extPD, 0, PAGE_SIZE);
+
+    unsigned kernelLow = PD_INDEX(0);
+    extPD[kernelLow] = PD[kernelLow];
+
+    unsigned kernelHigh = PD_INDEX(0xF0000000);
+    memcpy(&extPD[kernelHigh], &PD[kernelHigh], (1024 - kernelHigh) * sizeof(PEntry));
+
+    extPD[1023] = (PEntry)newPD | PAGE_PRESENT | PAGE_WRITE;
+
+    return newPD;
+}
+
 void vmem_init(void)
 {
     PEntry* physPD = frame_alloc();
@@ -106,5 +125,5 @@ void vmem_init(void)
     physPD[1023] = (PEntry)physPD   | PAGE_PRESENT | PAGE_WRITE;
 
     exception_register(14, page_fault);
-    enable_paging((uintptr_t)physPD);
+    enable_paging(physPD);
 }

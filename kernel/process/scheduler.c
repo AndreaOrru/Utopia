@@ -4,21 +4,40 @@
 #include "vmem.h"
 #include "scheduler.h"
 
-static uint16_t last_tid = 0;
+static uint16_t lastID = 0;
 static Thread*    TCBs =  (Thread*)0xF0000000;
 static uint8_t* stacks = (uint8_t*)0xE0000000;
 
 static LIST(activeQueue);
 Thread* currentThread = NULL;
 
-void create_thread(void* entry)
+void create_process(ElfHeader* elf)
 {
-    Thread* thread = &TCBs[++last_tid];
-    uint8_t* stack = stacks + (last_tid * PAGE_SIZE);
+    void* PD = new_address_space();
+    write_cr3(PD);
+
+    Thread* process = create_thread(elf_load(elf));
+    process->parent = (union Thread*)process;
+    process->PD     = PD;
+}
+
+Thread* create_thread(const void* entry)
+{
+    Thread* thread = &TCBs[++lastID];
+    uint8_t* stack = stacks + (lastID * PAGE_SIZE) - 4;
 
     map(thread, NULL, PAGE_WRITE | PAGE_GLOBAL);
     map(stack,  NULL, PAGE_WRITE | PAGE_USER);
-    thread->tid = last_tid;
+
+    thread->tid = lastID;
+    list_init(&thread->childs);
+    if (currentThread)
+    {
+        thread->PD = currentThread->PD;
+        Thread* parent = (Thread*)currentThread->parent;
+        thread->parent = (union Thread*)parent;
+        list_append(&parent->childs, &thread->childLink);
+    }
 
     memset(&thread->state, 0, sizeof(State));
     thread->state.cs = USER_CODE | USER_RPL;
@@ -30,16 +49,19 @@ void create_thread(void* entry)
     thread->state.esp = (uint32_t)stack;
 
     list_append(&activeQueue, &thread->queueLink);
+    return thread;
 }
 
 static State* schedule(unused State* state)
 {
     if (currentThread)
         list_append(&activeQueue, &currentThread->queueLink);
-
     currentThread = list_item(list_pop(&activeQueue), Thread, queueLink);
 
-    set_kernel_stack((uint32_t)(&currentThread->state + 1));
+    if (read_cr3() != currentThread->PD)
+        write_cr3(currentThread->PD);
+
+    set_kernel_stack(&currentThread->state + 1);
     return &currentThread->state;
 }
 
