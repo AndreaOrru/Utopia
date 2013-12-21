@@ -18,4 +18,5 @@ env = Environment(ENV        = {'PATH': environ['PATH']},
                   LINKCOMSTR = 'LD\t$SOURCES -> $TARGETS')
 Export('env')
 
-SConscript('kernel/SConscript')
+kernel  = SConscript('kernel/SConscript')
+servers = SConscript('servers/SConscript')

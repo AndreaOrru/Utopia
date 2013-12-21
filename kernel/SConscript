@@ -7,4 +7,6 @@ kenv.Append(CPPPATH   = ['include'],
 
 kernel = kenv.Program('kernel.bin', Glob('*.c')   + Glob('*.asm') +
                                     Glob('*/*.c') + Glob('*/*.asm'))
+
 Depends(kernel, 'link.ld')
+Return('kernel')

@@ -1,0 +1,13 @@
+Import('env')
+
+senv = env.Clone()
+senv.Append(CCFLAGS   = ['-ffreestanding'],
+            LINKFLAGS = ['-nostdlib', '-Tservers/link.ld'])
+Export('senv')
+
+servers = []
+for server in Glob('*/SConscript'):
+    servers += SConscript(server)
+
+Depends(servers, 'link.ld')
+Return('servers')
