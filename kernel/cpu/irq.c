@@ -17,7 +17,7 @@ static State* irq_unhandled(State* state)
 
 IsrHandler irqHandlers[16] = { [0 ... 15] = irq_unhandled };
 
-static void pic_remap()
+static void pic_remap(void)
 {
     outb(PIC1_CMD,   0x11);  outb(PIC2_CMD,  0x11);
     outb(PIC1_DATA,    32);  outb(PIC2_DATA,   40);
@@ -44,7 +44,7 @@ void irq_register(uint8_t n, IsrHandler handler)
     irq_unmask(n);
 }
 
-void irq_init()
+void irq_init(void)
 {
     pic_remap();
 

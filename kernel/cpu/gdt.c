@@ -42,7 +42,7 @@ static GdtEntry gdt[] =
 
 static Tss tss;
 
-static void tss_init()
+static void tss_init(void)
 {
     uintptr_t base = (uintptr_t)&tss;
     uint32_t limit = sizeof(tss) - 1;
@@ -64,7 +64,7 @@ void set_kernel_stack(uint32_t esp0)
     tss.esp0 = esp0;
 }
 
-void gdt_init()
+void gdt_init(void)
 {
     tss_init();
 

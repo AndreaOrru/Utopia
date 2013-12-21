@@ -24,7 +24,7 @@ void idt_set_gate(uint8_t i, IsrStub offset)
     idt[i].flags      = 0x8E;
 }
 
-void idt_init()
+void idt_init(void)
 {
     exception_init();
     irq_init();

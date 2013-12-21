@@ -7,10 +7,10 @@
 
 typedef uintptr_t PEntry;
 
-#define PAGE_ALLOCATED  (1 << 9)
+static PEntry* PD  = (PEntry*)0xFFFFF000;
+static PEntry* PTs = (PEntry*)0xFFC00000;
 
-#define PD   ((PEntry*)0xFFFFF000)
-#define PTs  ((PEntry*)0xFFC00000)
+#define PAGE_ALLOCATED  (1 << 9)
 
 #define PD_INDEX(x) ((uintptr_t)(x) >> 22)
 #define PT_INDEX(x) ((uintptr_t)(x) >> 12 & 0x3FF)
@@ -97,13 +97,12 @@ static State* page_fault(State* state)
     return state;
 }
 
-void vmem_init()
+void vmem_init(void)
 {
     PEntry* physPD = frame_alloc();
     memset(physPD, 0, PAGE_SIZE);
 
     physPD[0]    = (PEntry)0x000000 | PAGE_PRESENT | PAGE_WRITE | PAGE_4MB | PAGE_GLOBAL;
-    physPD[1]    = (PEntry)0x400000 | PAGE_PRESENT | PAGE_WRITE | PAGE_4MB | PAGE_GLOBAL;
     physPD[1023] = (PEntry)physPD   | PAGE_PRESENT | PAGE_WRITE;
 
     exception_register(14, page_fault);

@@ -7,7 +7,7 @@
 #define PAGE_4MB      (1 << 7)
 #define PAGE_GLOBAL   (1 << 8)
 
-void  vmem_init();
+void  vmem_init(void);
 void* vmem_to_phys(const void* vAddr);
 void  map(void* vAddr, void* pAddr, uint16_t flags);
 void  unmap(void* vAddr);

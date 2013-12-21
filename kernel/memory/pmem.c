@@ -4,7 +4,7 @@
 
 static uint16_t* stack = (uint16_t*)0x200000;
 
-void* frame_alloc()
+void* frame_alloc(void)
 {
     return (void*) (*(--stack) * PAGE_SIZE);
 }

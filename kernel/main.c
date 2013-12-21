@@ -1,11 +1,10 @@
-#include <stdbool.h>
 #include "gdt.h"
 #include "idt.h"
 #include "pmem.h"
+#include "scheduler.h"
 #include "term.h"
 #include "timer.h"
 #include "vmem.h"
-#include "x86.h"
 
 void main(multiboot_info_t* info)
 {
@@ -16,11 +15,9 @@ void main(multiboot_info_t* info)
     pmem_init(info);
     vmem_init();
     timer_init(100);
+    scheduler_init();
 
     printf("Hello world!\n");
-
-    char* a = (char*)0xAAAAAAAA;
-    *a = 1;
 
     while (true);
 }

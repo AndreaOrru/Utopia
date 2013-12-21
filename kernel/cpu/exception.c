@@ -48,7 +48,7 @@ void exception_register(uint8_t n, IsrHandler handler)
     exceptionHandlers[n] = handler;
 }
 
-void exception_init()
+void exception_init(void)
 {
     idt_set_gate(0,  exception0);
     idt_set_gate(1,  exception1);

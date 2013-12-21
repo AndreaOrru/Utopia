@@ -1,7 +1,6 @@
 #pragma once
 #include <stdint.h>
-
-#define alwaysinline inline __attribute__((always_inline))
+#include "gcc.h"
 
 #define PAGE_SIZE      0x1000
 #define PAGE_BASE(x)   ((void*) ((uintptr_t)(x) & -PAGE_SIZE))
@@ -12,17 +11,17 @@ extern void idt_load(uintptr_t base, uint16_t limit);
 extern void tss_load(uint8_t segment);
 extern void enable_paging(uintptr_t pd);
 
-static alwaysinline void hlt()
+static alwaysinline void hlt(void)
 {
     asm volatile ("hlt");
 }
 
-static alwaysinline void cli()
+static alwaysinline void cli(void)
 {
     asm volatile ("cli");
 }
 
-static alwaysinline void sti()
+static alwaysinline void sti(void)
 {
     asm volatile ("sti");
 }
@@ -56,7 +55,7 @@ static alwaysinline void invlpg(uintptr_t vAddr)
     asm volatile ("invlpg (%0)" : : "r" (vAddr) : "memory");
 }
 
-static alwaysinline uintptr_t read_cr2()
+static alwaysinline uintptr_t read_cr2(void)
 {
     uintptr_t ret;
     asm volatile ("mov %%cr2, %0" : "=r" (ret));

@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 #include <stddef.h>
 
 typedef struct Link
@@ -77,7 +78,7 @@ static inline void list_remove(Link* entry)
 
 static inline Link* list_pop(List* list)
 {
-    Link* first = list_first();
+    Link* first = list_first(list);
     list_remove(first);
 
     return first;

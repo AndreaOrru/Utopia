@@ -11,7 +11,7 @@
 static uint16_t* const VRAM = (uint16_t*)0xB8000;
 static int cursor = 0;
 
-static void update_cursor()
+static void update_cursor(void)
 {
     uint16_t h =  (cursor & 0xFF00)       | 0x0E;
     uint16_t l = ((cursor & 0x00FF) << 8) | 0x0F;
@@ -42,7 +42,7 @@ static void write(const char* s)
         put(s[i]);
 }
 
-void clear_screen()
+void clear_screen(void)
 {
     for (int i = 0; i < SIZE_X * SIZE_Y; i++)
         VRAM[i] = ' ';
