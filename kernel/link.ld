@@ -7,12 +7,12 @@ SECTIONS
     .text BLOCK(4K):
     {
         *(.multiboot)
-        *(.text)
+        *(.text*)
     }
 
     .rodata BLOCK(4K):
     {
-        *(.rodata)
+        *(.rodata*)
     }
 
     .data BLOCK(4K):
