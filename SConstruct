@@ -1,16 +1,18 @@
 from os import environ
 
 DEBUG = int(ARGUMENTS.get('debug', 1))
+CCFLAGS = (['-gdwarf-2'] if DEBUG else ['-flto', '-fno-use-linker-plugin', '-O2']),
 
 env = Environment(ENV        = {'PATH': environ['PATH']},
 
                   AS         = 'nasm',
-                  ASFLAGS    = ['-felf'] + ['-Fdwarf', '-g'] if DEBUG else [],
+                  ASFLAGS    = ['-felf'] + (['-Fdwarf', '-g'] if DEBUG else []),
 
                   CC         = 'i586-elf-gcc',
                   CFLAGS     = ['-std=gnu11'],
-                  CCFLAGS    = ['-gdwarf-2'] if DEBUG else [],
+                  CCFLAGS    = CCFLAGS,
                   CPPFLAGS   = ['-Wall', '-Wextra'],
+                  LINKFLAGS  = CCFLAGS,
                   LIBS       = ['gcc'],
 
                   ASCOMSTR   = 'AS\t$SOURCES -> $TARGETS',

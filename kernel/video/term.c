@@ -20,7 +20,7 @@ static void update_cursor(void)
     outw(0x3D4, l);
 }
 
-static inline void put(char c)
+inline void put(char c)
 {
     if (cursor == SIZE_X * SIZE_Y)
     {

@@ -59,7 +59,7 @@ static void tss_init(void)
     tss.iomapBase = sizeof(tss);
 }
 
-void set_kernel_stack(void* esp0)
+alwaysinline void set_kernel_stack(void* esp0)
 {
     tss.esp0 = (uint32_t)esp0;
 }

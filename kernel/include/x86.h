@@ -69,7 +69,7 @@ static alwaysinline void* read_cr3(void)
     return ret;
 }
 
-static inline void write_cr3(void* cr3)
+static alwaysinline void write_cr3(void* cr3)
 {
     asm volatile ("mov %0, %%cr3" : : "r" (cr3));
 }

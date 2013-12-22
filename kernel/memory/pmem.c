@@ -4,12 +4,12 @@
 
 static uint16_t* stack = (uint16_t*)0x200000;
 
-void* frame_alloc(void)
+alwaysinline void* frame_alloc(void)
 {
     return (void*) (*(--stack) * PAGE_SIZE);
 }
 
-void frame_free(void* address)
+alwaysinline void frame_free(void* address)
 {
     *(stack++) = (uintptr_t)address / PAGE_SIZE;
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stddef.h>
+#include "gcc.h"
 
 typedef struct Link
 {
@@ -20,22 +21,22 @@ typedef Link List;
 #define list_foreach(list, it) \
     for (Link* it = (list)->next; it != (list); it = it->next)
 
-static inline void list_init(List* list)
+static alwaysinline void list_init(List* list)
 {
     list->next = list->prev = list;
 }
 
-static inline Link* list_first(const List* list)
+static alwaysinline Link* list_first(const List* list)
 {
     return list->next;
 }
 
-static inline Link* list_last(const List* list)
+static alwaysinline Link* list_last(const List* list)
 {
     return list->prev;
 }
 
-static inline bool list_empty(const List* list)
+static alwaysinline bool list_empty(const List* list)
 {
     return list->next == list;
 }
@@ -48,22 +49,22 @@ static inline void _list_insert(Link* prev, Link* next, Link* new)
     prev->next = new;
 }
 
-static inline void list_insert(Link* entry, Link* new)
+static alwaysinline void list_insert(Link* entry, Link* new)
 {
     _list_insert(entry, entry->next, new);
 }
 
-static inline void list_insert_before(Link* entry, Link* new)
+static alwaysinline void list_insert_before(Link* entry, Link* new)
 {
     _list_insert(entry->prev, entry, new);
 }
 
-static inline void list_append(List* list, Link* new)
+static alwaysinline void list_append(List* list, Link* new)
 {
     list_insert_before(list, new);
 }
 
-static inline void list_prepend(List* list, Link* new)
+static alwaysinline void list_prepend(List* list, Link* new)
 {
     list_insert(list, new);
 }
