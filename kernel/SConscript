@@ -5,7 +5,7 @@ kenv.Append(CPPPATH   = ['include'],
             CCFLAGS   = ['-ffreestanding'],
             LINKFLAGS = ['-nostdlib', '-Tkernel/link.ld'])
 
-kernel = kenv.Program('kernel.bin', Glob('*.c')   + Glob('*.asm') +
+kernel = kenv.Program('kernel.elf', Glob('*.c')   + Glob('*.asm') +
                                     Glob('*/*.c') + Glob('*/*.asm'))
 
 Depends(kernel, 'link.ld')

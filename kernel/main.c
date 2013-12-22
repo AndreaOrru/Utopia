@@ -17,7 +17,7 @@ void main(multiboot_info_t* info)
     timer_init(50);
     scheduler_init();
 
-    printf("Hello world!\n")
+    printf("Hello world!\n");
 
     multiboot_module_t* mods = (void*)info->mods_addr;
     for (unsigned i = 0; i < info->mods_count; i++)

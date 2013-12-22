@@ -4,17 +4,23 @@
 #include "list.h"
 #include "x86.h"
 
+typedef struct
+{
+    uint16_t pid;
+    void* PD;
+
+    List threads;
+} Process;
+
 typedef union
 {
     struct
     {
         uint16_t tid;
         Link queueLink;
-        Link childLink;
 
-        union Thread* parent;
-        List childs;
-        void* PD;
+        Process* process;
+        Link processLink;
     };
     struct
     {
@@ -25,4 +31,4 @@ typedef union
 
 void scheduler_init(void);
 void create_process(ElfHeader* elf);
-Thread* create_thread(const void* entry);
+void create_thread(const void* entry);

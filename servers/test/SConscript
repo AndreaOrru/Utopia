@@ -1,4 +1,4 @@
 Import('senv')
 
-test = senv.Program('test', 'main.c')
+test = senv.Program('test.elf', 'main.c')
 Return('test')
