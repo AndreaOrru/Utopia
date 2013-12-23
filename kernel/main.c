@@ -2,6 +2,7 @@
 #include "idt.h"
 #include "pmem.h"
 #include "scheduler.h"
+#include "syscall.h"
 #include "term.h"
 #include "timer.h"
 #include "vmem.h"
@@ -16,6 +17,7 @@ void main(multiboot_info_t* info)
     vmem_init();
     timer_init(50);
     scheduler_init();
+    syscall_init();
 
     printf("Hello world!\n");
 

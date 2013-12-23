@@ -61,14 +61,12 @@ static State* isr_unhandled(State* state)
         printf("\n>>> Exception: %s.", interruptNames[state->num]);
     else if (state->num < 32 + 16)
         printf("\n>>> IRQ: %s", interruptNames[state->num]);
-    else
-        printf("\n>>> Invalid interrupt.");
 
     hlt();
     return state;
 }
 
-IsrHandler isrHandlers[256] = { [0 ... 255] = isr_unhandled };
+IsrHandler isrHandlers[32 + 16] = { [0 ... 47] = isr_unhandled };
 
 void isr_register(uint8_t n, IsrHandler handler)
 {
@@ -106,56 +104,53 @@ void isr_init(void)
 {
     pic_remap();
 
-    idt_set_gate(0,  isr0);
-    idt_set_gate(1,  isr1);
-    idt_set_gate(2,  isr2);
-    idt_set_gate(3,  isr3);
-    idt_set_gate(4,  isr4);
-    idt_set_gate(5,  isr5);
-    idt_set_gate(6,  isr6);
-    idt_set_gate(7,  isr7);
-    idt_set_gate(8,  isr8);
-    idt_set_gate(9,  isr9);
-    idt_set_gate(10, isr10);
-    idt_set_gate(11, isr11);
-    idt_set_gate(12, isr12);
-    idt_set_gate(13, isr13);
-    idt_set_gate(14, isr14);
-    idt_set_gate(15, isr15);
-    idt_set_gate(16, isr16);
-    idt_set_gate(17, isr17);
-    idt_set_gate(18, isr18);
-    idt_set_gate(19, isr19);
-    idt_set_gate(20, isr20);
-    idt_set_gate(21, isr21);
-    idt_set_gate(22, isr22);
-    idt_set_gate(23, isr23);
-    idt_set_gate(24, isr24);
-    idt_set_gate(25, isr25);
-    idt_set_gate(26, isr26);
-    idt_set_gate(27, isr27);
-    idt_set_gate(28, isr28);
-    idt_set_gate(29, isr29);
-    idt_set_gate(30, isr30);
-    idt_set_gate(31, isr31);
+    idt_set_gate(0,  INTERRUPT_GATE, isr0);
+    idt_set_gate(1,  INTERRUPT_GATE, isr1);
+    idt_set_gate(2,  INTERRUPT_GATE, isr2);
+    idt_set_gate(3,  INTERRUPT_GATE, isr3);
+    idt_set_gate(4,  INTERRUPT_GATE, isr4);
+    idt_set_gate(5,  INTERRUPT_GATE, isr5);
+    idt_set_gate(6,  INTERRUPT_GATE, isr6);
+    idt_set_gate(7,  INTERRUPT_GATE, isr7);
+    idt_set_gate(8,  INTERRUPT_GATE, isr8);
+    idt_set_gate(9,  INTERRUPT_GATE, isr9);
+    idt_set_gate(10, INTERRUPT_GATE, isr10);
+    idt_set_gate(11, INTERRUPT_GATE, isr11);
+    idt_set_gate(12, INTERRUPT_GATE, isr12);
+    idt_set_gate(13, INTERRUPT_GATE, isr13);
+    idt_set_gate(14, INTERRUPT_GATE, isr14);
+    idt_set_gate(15, INTERRUPT_GATE, isr15);
+    idt_set_gate(16, INTERRUPT_GATE, isr16);
+    idt_set_gate(17, INTERRUPT_GATE, isr17);
+    idt_set_gate(18, INTERRUPT_GATE, isr18);
+    idt_set_gate(19, INTERRUPT_GATE, isr19);
+    idt_set_gate(20, INTERRUPT_GATE, isr20);
+    idt_set_gate(21, INTERRUPT_GATE, isr21);
+    idt_set_gate(22, INTERRUPT_GATE, isr22);
+    idt_set_gate(23, INTERRUPT_GATE, isr23);
+    idt_set_gate(24, INTERRUPT_GATE, isr24);
+    idt_set_gate(25, INTERRUPT_GATE, isr25);
+    idt_set_gate(26, INTERRUPT_GATE, isr26);
+    idt_set_gate(27, INTERRUPT_GATE, isr27);
+    idt_set_gate(28, INTERRUPT_GATE, isr28);
+    idt_set_gate(29, INTERRUPT_GATE, isr29);
+    idt_set_gate(30, INTERRUPT_GATE, isr30);
+    idt_set_gate(31, INTERRUPT_GATE, isr31);
 
-    idt_set_gate(32, isr32);
-    idt_set_gate(33, isr33);
-    idt_set_gate(34, isr34);
-    idt_set_gate(35, isr35);
-    idt_set_gate(36, isr36);
-    idt_set_gate(37, isr37);
-    idt_set_gate(38, isr38);
-    idt_set_gate(39, isr39);
-    idt_set_gate(40, isr40);
-    idt_set_gate(41, isr41);
-    idt_set_gate(42, isr42);
-    idt_set_gate(43, isr43);
-    idt_set_gate(44, isr44);
-    idt_set_gate(45, isr45);
-    idt_set_gate(46, isr46);
-    idt_set_gate(47, isr47);
-
-    for (int i = 48; i < 256; i++)
-        idt_set_gate(i, isr255);
+    idt_set_gate(32, INTERRUPT_GATE, isr32);
+    idt_set_gate(33, INTERRUPT_GATE, isr33);
+    idt_set_gate(34, INTERRUPT_GATE, isr34);
+    idt_set_gate(35, INTERRUPT_GATE, isr35);
+    idt_set_gate(36, INTERRUPT_GATE, isr36);
+    idt_set_gate(37, INTERRUPT_GATE, isr37);
+    idt_set_gate(38, INTERRUPT_GATE, isr38);
+    idt_set_gate(39, INTERRUPT_GATE, isr39);
+    idt_set_gate(40, INTERRUPT_GATE, isr40);
+    idt_set_gate(41, INTERRUPT_GATE, isr41);
+    idt_set_gate(42, INTERRUPT_GATE, isr42);
+    idt_set_gate(43, INTERRUPT_GATE, isr43);
+    idt_set_gate(44, INTERRUPT_GATE, isr44);
+    idt_set_gate(45, INTERRUPT_GATE, isr45);
+    idt_set_gate(46, INTERRUPT_GATE, isr46);
+    idt_set_gate(47, INTERRUPT_GATE, isr47);
 }
