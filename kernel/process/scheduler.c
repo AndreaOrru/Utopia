@@ -1,5 +1,4 @@
 #include "gdt.h"
-#include "irq.h"
 #include "layout.h"
 #include "string.h"
 #include "vmem.h"

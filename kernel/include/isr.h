@@ -72,5 +72,3 @@ extern void isr46(void);
 extern void isr47(void);
 
 extern void isr128(void);
-
-extern void isr255(void);

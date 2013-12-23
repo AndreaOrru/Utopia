@@ -43,4 +43,3 @@ section .text
 %endrep
 
 isr 128
-isr 255
