@@ -9,6 +9,9 @@
 #define TSS       0x89
 #define TSS_DESC  0x28
 
+#define PROTECTED  (1 << 2)
+#define BLOCKS_4K  (1 << 3)
+
 typedef struct
 {
     uint32_t unused1;
@@ -32,12 +35,12 @@ typedef struct
 
 static GdtEntry gdt[] =
 {
-    {      0, 0, 0,             0,   0,   0, 0 },
-    { 0xFFFF, 0, 0, KERNEL | CODE, 0xF, 0xC, 0 },
-    { 0xFFFF, 0, 0, KERNEL | DATA, 0xF, 0xC, 0 },
-    { 0xFFFF, 0, 0,   USER | CODE, 0xF, 0xC, 0 },
-    { 0xFFFF, 0, 0,   USER | DATA, 0xF, 0xC, 0 },
-    {      0, 0, 0,           TSS,   0, 0x4, 0 },
+    {      0, 0, 0,             0,   0,                     0, 0 },
+    { 0xFFFF, 0, 0, KERNEL | CODE, 0xF, PROTECTED | BLOCKS_4K, 0 },
+    { 0xFFFF, 0, 0, KERNEL | DATA, 0xF, PROTECTED | BLOCKS_4K, 0 },
+    { 0xFFFF, 0, 0,   USER | CODE, 0xF, PROTECTED | BLOCKS_4K, 0 },
+    { 0xFFFF, 0, 0,   USER | DATA, 0xF, PROTECTED | BLOCKS_4K, 0 },
+    {      0, 0, 0,           TSS,   0, PROTECTED            , 0 },
 };
 
 static Tss tss;

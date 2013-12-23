@@ -1,8 +1,9 @@
 #include <stddef.h>
+#include "layout.h"
 #include "x86.h"
 #include "pmem.h"
 
-static uint16_t* stack = (uint16_t*)0x200000;
+static uint16_t* stack = (uint16_t*)FRAME_STACK;
 
 alwaysinline void* frame_alloc(void)
 {
@@ -23,7 +24,7 @@ void pmem_init(multiboot_info_t* info)
 
         uintptr_t start = entry->addr;
         uintptr_t   end = start + (size_t)entry->len;
-        start = (start >= 0x400000) ? start : 0x400000;
+        start = (start >= LOW_KERNEL_END) ? start : LOW_KERNEL_END;
 
         if (entry->type == MULTIBOOT_MEMORY_AVAILABLE)
             for (uintptr_t i = start; i < end; i += PAGE_SIZE)

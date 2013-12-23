@@ -1,4 +1,5 @@
 #include "exception.h"
+#include "layout.h"
 #include "string.h"
 #include "pmem.h"
 #include "term.h"
@@ -105,11 +106,11 @@ void* new_address_space(void)
 
     memset(extPD, 0, PAGE_SIZE);
 
-    unsigned kernelLow = PD_INDEX(0);
-    extPD[kernelLow] = PD[kernelLow];
+    unsigned lowKernel = PD_INDEX(LOW_KERNEL);
+    extPD[lowKernel] = PD[lowKernel];
 
-    unsigned kernelHigh = PD_INDEX(0xF0000000);
-    memcpy(&extPD[kernelHigh], &PD[kernelHigh], (1024 - kernelHigh) * sizeof(PEntry));
+    unsigned highKernel = PD_INDEX(HIGH_KERNEL);
+    memcpy(&extPD[highKernel], &PD[highKernel], (1024 - highKernel) * sizeof(PEntry));
 
     extPD[1023] = (PEntry)newPD | PAGE_PRESENT | PAGE_WRITE;
 

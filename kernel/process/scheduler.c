@@ -1,14 +1,15 @@
 #include "gdt.h"
 #include "irq.h"
+#include "layout.h"
 #include "string.h"
 #include "vmem.h"
 #include "scheduler.h"
 
 static uint16_t next_tid = 1;
 static uint16_t next_pid = 1;
-static Thread*    TCBs =  (Thread*)0xF0000000;
-static Process*   PCBs = (Process*)0xF8000000;
-static uint8_t* stacks = (uint8_t*)0xE0000000;
+static Thread*    TCBs =  (Thread*)TCB_START;
+static Process*   PCBs = (Process*)PCB_START;
+static uint8_t* stacks = (uint8_t*)USER_STACKS;
 
 static LIST(activeQueue);
 Process* volatile currentProcess = NULL;

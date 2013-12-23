@@ -1,5 +1,4 @@
 #pragma once
-#include <stdint.h>
 
 #define    USER_RPL   0b11
 #define KERNEL_CODE   0x08

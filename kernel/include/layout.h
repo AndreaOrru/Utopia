@@ -1,0 +1,15 @@
+#pragma once
+
+#define LOW_KERNEL       0x00000000
+#define FRAME_STACK      0x00200000
+#define LOW_KERNEL_END   0x00400000
+
+#define USERSPACE        0x00400000
+#define USER_STACKS      0xE0000000
+#define USERSPACE_END    0xF0000000
+
+#define HIGH_KERNEL      0xF0000000
+#define PCB_START        0xF0000000
+#define TCB_START        0xF8000000
+#define PAGING_STRUCTS   0xFFC00000
+#define HIGH_KERNEL_END  0xFFFFFFFF
