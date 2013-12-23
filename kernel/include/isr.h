@@ -17,7 +17,6 @@ typedef State* (*IsrHandler)(State*);
 
 void isr_init(void);
 void isr_register(uint8_t n, IsrHandler handler);
-void exception_register(uint8_t n, IsrHandler handler);
 void irq_register(uint8_t n, IsrHandler handler);
 void irq_mask(uint8_t irq);
 void irq_unmask(uint8_t irq);
@@ -38,7 +37,6 @@ extern void isr12(void);
 extern void isr13(void);
 extern void isr14(void);
 extern void isr15(void);
-
 extern void isr16(void);
 extern void isr17(void);
 extern void isr18(void);
@@ -55,6 +53,7 @@ extern void isr28(void);
 extern void isr29(void);
 extern void isr30(void);
 extern void isr31(void);
+
 extern void isr32(void);
 extern void isr33(void);
 extern void isr34(void);
@@ -73,3 +72,5 @@ extern void isr46(void);
 extern void isr47(void);
 
 extern void isr128(void);
+
+extern void isr255(void);
