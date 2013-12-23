@@ -1,4 +1,5 @@
-extern isrHandlers
+extern interruptHandlers
+extern syscallHandlers
 
 section .text
 %macro isr 1
@@ -17,7 +18,11 @@ section .text
         mov es, ax
 
         push esp
-        call [isrHandlers + (%1 * 4)]
+        %if (%1 == 128)
+            call [syscallHandlers + (eax * 4)]
+        %else
+            call [interruptHandlers + (%1 * 4)]
+        %endif
         mov esp, eax
 
         %if (%1 >= 32 && %1 < 32 + 16)

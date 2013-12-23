@@ -1,7 +1,8 @@
 #include "idt.h"
+#include "isr.h"
 #include "term.h"
 #include "x86.h"
-#include "isr.h"
+#include "interrupt.h"
 
 #define PIC1_CMD   0x20
 #define PIC2_CMD   0xA0
@@ -55,7 +56,7 @@ static const char* const interruptNames[] =
     "Secondary ATA Hard Disk"
 };
 
-static State* isr_unhandled(State* state)
+static State* interrupt_unhandled(State* state)
 {
     if (state->num < 32)
         printf("\n>>> Exception: %s.", interruptNames[state->num]);
@@ -66,16 +67,16 @@ static State* isr_unhandled(State* state)
     return state;
 }
 
-IsrHandler isrHandlers[32 + 16] = { [0 ... 47] = isr_unhandled };
+InterruptHandler interruptHandlers[32 + 16] = { [0 ... 47] = interrupt_unhandled };
 
-void isr_register(uint8_t n, IsrHandler handler)
+void interrupt_register(uint8_t n, InterruptHandler handler)
 {
-    isrHandlers[n] = handler;
+    interruptHandlers[n] = handler;
 }
 
-void irq_register(uint8_t n, IsrHandler handler)
+void irq_register(uint8_t n, InterruptHandler handler)
 {
-    isrHandlers[32 + n] = handler;
+    interruptHandlers[32 + n] = handler;
     irq_unmask(n);
 }
 
@@ -100,7 +101,7 @@ static void pic_remap(void)
     outb(PIC1_DATA,  0xFF);  outb(PIC2_DATA, 0xFF);
 }
 
-void isr_init(void)
+void interrupt_init(void)
 {
     pic_remap();
 

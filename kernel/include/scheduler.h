@@ -1,6 +1,6 @@
 #pragma once
-#include "isr.h"
 #include "elf.h"
+#include "interrupt.h"
 #include "list.h"
 #include "x86.h"
 

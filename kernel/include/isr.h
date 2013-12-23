@@ -1,25 +1,4 @@
 #pragma once
-#include <stdint.h>
-
-typedef struct
-{
-    uint32_t es, ds;
-    union
-    {
-        uint32_t regs[8];
-        uint32_t edi, esi, ebp, _esp, ebx, edx, ecx, eax;
-    };
-    uint32_t num, error;
-    uint32_t eip, cs, eflags, esp, ss;
-} __attribute__((packed)) State;
-
-typedef State* (*IsrHandler)(State*);
-
-void isr_init(void);
-void isr_register(uint8_t n, IsrHandler handler);
-void irq_register(uint8_t n, IsrHandler handler);
-void irq_mask(uint8_t irq);
-void irq_unmask(uint8_t irq);
 
 extern void isr0 (void);
 extern void isr1 (void);

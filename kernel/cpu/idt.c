@@ -1,5 +1,5 @@
 #include "gdt.h"
-#include "isr.h"
+#include "interrupt.h"
 #include "x86.h"
 #include "idt.h"
 
@@ -25,7 +25,7 @@ void idt_set_gate(uint8_t i, uint8_t flags, IsrStub offset)
 
 void idt_init(void)
 {
-    isr_init();
+    interrupt_init();
 
     idt_load(idt, sizeof(idt));
 }
