@@ -1,6 +1,5 @@
-#include "exception.h"
 #include "gdt.h"
-#include "irq.h"
+#include "isr.h"
 #include "x86.h"
 #include "idt.h"
 
@@ -28,8 +27,7 @@ void idt_set_gate(uint8_t i, IsrStub offset)
 
 void idt_init(void)
 {
-    exception_init();
-    irq_init();
+    isr_init();
 
     idt_load(idt, sizeof(idt));
 }
