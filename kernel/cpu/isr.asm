@@ -1,5 +1,6 @@
 extern interruptHandlers
-extern syscallHandlers
+extern syscall_handler
+extern state
 
 section .text
 %macro isr 1
@@ -10,34 +11,34 @@ section .text
         %endif
         push %1
         pusha
-        push ds
-        push es
+	    push ds
+	    push es
 
-        mov ax, 0x10
-        mov ds, ax
-        mov es, ax
+	    mov ax, 0x10
+	    mov ds, ax
+	    mov es, ax
 
-        push esp
-        %if (%1 == 128)
-            call [syscallHandlers + (eax * 4)]
-        %else
-            call [interruptHandlers + (%1 * 4)]
-        %endif
-        mov esp, eax
+	    mov [state], esp
+	    %if (%1 == 128)
+	        call syscall_handler
+	    %else
+	        call [interruptHandlers + (%1 * 4)]
+	    %endif
+	    mov esp, [state]
 
-        %if (%1 >= 32 && %1 < 32 + 16)
-            mov al, 0x20
-            %if (%1 - 32 >= 8)
-                out 0xA0, al
-            %endif
-            out 0x20, al
-        %endif
+	    %if (%1 >= 32 && %1 < 32 + 16)
+	        mov al, 0x20
+	        %if (%1 - 32 >= 8)
+	            out 0xA0, al
+	        %endif
+	        out 0x20, al
+	    %endif
 
-        pop es
-        pop ds
-        popa
-        add esp, 8
-        iret
+	    pop es
+	    pop ds
+	    popa
+	    add esp, 8
+	    iret
 %endmacro
 
 %assign i 0

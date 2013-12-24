@@ -9,6 +9,8 @@
 #define PIC1_DATA  0x21
 #define PIC2_DATA  0xA1
 
+State* state;
+
 static const char* const interruptNames[] =
 {
     "Division By Zero",
@@ -56,15 +58,16 @@ static const char* const interruptNames[] =
     "Secondary ATA Hard Disk"
 };
 
-static State* interrupt_unhandled(State* state)
+static void interrupt_unhandled(void)
 {
+    State* state = get_state();
+
     if (state->num < 32)
         printf("\n>>> Exception: %s.", interruptNames[state->num]);
     else if (state->num < 32 + 16)
         printf("\n>>> IRQ: %s", interruptNames[state->num]);
 
     hlt();
-    return state;
 }
 
 InterruptHandler interruptHandlers[32 + 16] = { [0 ... 47] = interrupt_unhandled };
@@ -99,6 +102,16 @@ static void pic_remap(void)
     outb(PIC1_DATA, 0b100);  outb(PIC2_DATA, 0b10);
     outb(PIC1_DATA,  0x01);  outb(PIC2_DATA, 0x01);
     outb(PIC1_DATA,  0xFF);  outb(PIC2_DATA, 0xFF);
+}
+
+alwaysinline State* get_state(void)
+{
+    return state;
+}
+
+alwaysinline void set_state(State* newState)
+{
+    state = newState;
 }
 
 void interrupt_init(void)

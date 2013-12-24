@@ -1,22 +1,19 @@
 #include "idt.h"
+#include "interrupt.h"
 #include "isr.h"
 #include "term.h"
-#include "x86.h"
 #include "syscall.h"
 
-static State* syscall_undefined(State* state)
+typedef uint32_t (*Syscall)();
+
+static void* syscallHandlers[] = { [0] = put };
+
+void syscall_handler(void)
 {
-    printf("\n>>> Undefined syscall %u.", state->eax);
+    State* state = get_state();
 
-    hlt();
-    return state;
-}
-
-InterruptHandler syscallHandlers[64] = { [0 ... 63] = syscall_undefined };
-
-void syscall_register(uint8_t n, InterruptHandler handler)
-{
-    syscallHandlers[n] = handler;
+    Syscall function = syscallHandlers[state->eax];
+    state->eax = function(state->ebx, state->ecx, state->edx);
 }
 
 void syscall_init(void)

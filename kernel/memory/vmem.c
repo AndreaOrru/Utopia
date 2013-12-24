@@ -76,8 +76,10 @@ void unmap(void* vAddr)
     invlpg(vAddr);
 }
 
-static State* page_fault(State* state)
+static void page_fault(void)
 {
+    State* state = get_state();
+
     printf("\n>>> Page Fault at address %x.\n", read_cr2());
 
     if (state->error & PAGE_USER)
@@ -96,7 +98,6 @@ static State* page_fault(State* state)
         printf("a non-present page.");
 
     hlt();
-    return state;
 }
 
 void* new_address_space(void)

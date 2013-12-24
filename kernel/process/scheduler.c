@@ -53,7 +53,7 @@ void create_thread(const void* entry)
     list_prepend(&activeQueue, &thread->queueLink);
 }
 
-static State* schedule(unused State* state)
+static void schedule(void)
 {
     currentThread = list_item(list_pop(&activeQueue), Thread, queueLink);
     list_append(&activeQueue, &currentThread->queueLink);
@@ -63,7 +63,7 @@ static State* schedule(unused State* state)
         write_cr3(currentProcess->PD);
 
     set_kernel_stack(&currentThread->state + 1);
-    return &currentThread->state;
+    set_state(&currentThread->state);
 }
 
 void scheduler_init(void)
