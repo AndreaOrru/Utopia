@@ -11,8 +11,8 @@ static Process*   PCBs = (Process*)PCB_START;
 static uint8_t* stacks = (uint8_t*)USER_STACKS;
 
 static LIST(activeQueue);
-Process* volatile currentProcess = NULL;
-Thread*  volatile currentThread  = NULL;
+Process* volatile currentProcess;
+Thread*  volatile currentThread;
 
 void create_process(ElfHeader* elf)
 {
