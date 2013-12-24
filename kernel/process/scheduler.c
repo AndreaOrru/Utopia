@@ -43,8 +43,6 @@ void create_thread(const void* entry)
 
     memset(&thread->state, 0, sizeof(State));
     thread->state.cs  = USER_CODE | USER_RPL;
-    thread->state.ds  = USER_DATA | USER_RPL;
-    thread->state.es  = USER_DATA | USER_RPL;
     thread->state.ss  = USER_DATA | USER_RPL;
     thread->state.eip = (uint32_t)entry;
     thread->state.esp = (uint32_t)stack;
