@@ -1,7 +1,8 @@
 Import('env')
 
 senv = env.Clone()
-senv.Append(CCFLAGS   = ['-ffreestanding'],
+senv.Append(CPPPATH   = ['#/lib/include'],
+            CCFLAGS   = ['-ffreestanding'],
             LINKFLAGS = ['-nostdlib', '-Tservers/link.ld'])
 Export('senv')
 

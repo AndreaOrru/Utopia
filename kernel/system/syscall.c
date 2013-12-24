@@ -5,7 +5,7 @@
 
 void* syscallHandlers[] =
 {
-    [0] = printf,
+    [0] = put,
 };
 
 void syscall_init(void)
