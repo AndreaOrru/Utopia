@@ -17,39 +17,48 @@ mkdir packages
 cd packages
 
 
+if [ "$1" != "-n" ]; then
+    wget -c $BINUTILS_URL
+    tar xjf binutils-$BINUTILS_VER.tar.bz2
 
-wget -c $BINUTILS_URL
-tar xjf binutils-$BINUTILS_VER.tar.bz2
+    pushd binutils-$BINUTILS_VER
+        patch -p1 < ../../patches/binutils-$BINUTILS_VER.patch
+    popd
 
-pushd binutils-$BINUTILS_VER
-    patch -p1 < ../../patches/binutils-$BINUTILS_VER.patch
-popd
+    mkdir build-binutils
+    pushd build-binutils
+        ../binutils-$BINUTILS_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls
+        make -j4
+        sudo make install
+    popd
 
-mkdir build-binutils
-pushd build-binutils
-    ../binutils-$BINUTILS_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls
-    make -j4
-    sudo make install
-popd
+    if [ "$1" = "-b" ]; then
+        exit 0
+    fi
 
 
 
-wget -c $GCC_URL
-tar xjf gcc-$GCC_VER.tar.bz2
+    wget -c $GCC_URL
+    tar xjf gcc-$GCC_VER.tar.bz2
 
-pushd gcc-$GCC_VER
-    patch -p1 < ../../patches/gcc-$GCC_VER.patch
-popd
+    pushd gcc-$GCC_VER
+        patch -p1 < ../../patches/gcc-$GCC_VER.patch
+    popd
 
-mkdir build-gcc
-pushd build-gcc
-    ../gcc-$GCC_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls \
-        --enable-languages=c --disable-libssp --with-newlib
-    make all-gcc -j4
-    make all-target-libgcc -j4
-    sudo make install-gcc
-    sudo make install-target-libgcc
-popd
+    mkdir build-gcc
+    pushd build-gcc
+        ../gcc-$GCC_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls \
+            --enable-languages=c --disable-libssp --with-newlib
+        make all-gcc -j4
+        make all-target-libgcc -j4
+        sudo make install-gcc
+        sudo make install-target-libgcc
+    popd
+
+    if [ "$1" = "-g" ]; then
+        exit 0
+    fi
+fi
 
 
 

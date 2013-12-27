@@ -15,18 +15,12 @@ void _exit(int rc)
     while (1);
 }
 
-int chown(const char* path, uid_t owner, gid_t group)
-{
-    errno = ENOSYS;
-    return -1;
-}
-
-int close(int file)
+int close(int fd)
 {
     return -1;
 }
 
-int execve(char* name, char** argv, char** env)
+int execve(const char* name, char* const argv[], char* const env[])
 {
     errno = ENOMEM;
     return -1;
@@ -38,9 +32,9 @@ int fork(void)
     return -1;
 }
 
-int fstat(int file, struct stat* st)
+int fstat(int fd, struct stat* pstat)
 {
-    st->st_mode = S_IFCHR;
+    pstat->st_mode = S_IFCHR;
     return 0;
 }
 
@@ -49,13 +43,7 @@ int getpid(void)
     return 1;
 }
 
-int gettimeofday(struct timeval* ptimeval, void* ptimezone)
-{
-    errno = ENOSYS;
-    return -1;
-}
-
-int isatty(int file)
+int isatty(int fd)
 {
     return 1;
 }
@@ -66,49 +54,37 @@ int kill(int pid, int sig)
     return -1;
 }
 
-int link(char* existing, char* new)
+int link(const char* old, const char* new)
 {
     errno = EMLINK;
     return -1;
 }
 
-int lseek(int file, int ptr, int dir)
+off_t lseek(int fd, off_t pos, int whence)
 {
     return 0;
 }
 
-int open(char* file, int flags, int mode)
+int open(const char* file, int flags, ...)
 {
     return -1;
 }
 
-int read(int file, char* ptr, int len)
+size_t read(int fd, void* buf, size_t cnt)
 {
     return 0;
 }
 
-int readlink(const char* path, char* buf, size_t bufsize)
-{
-    errno = ENOSYS;
-    return -1;
-}
-
-caddr_t sbrk(int incr)
+void* sbrk(ptrdiff_t incr)
 {
     errno = ENOMEM;
     return -1;
 }
 
-int stat(const char* file, struct stat* st)
+int stat(const char* file, struct stat* pstat)
 {
-    st->st_mode = S_IFCHR;
+    pstat->st_mode = S_IFCHR;
     return 0;
-}
-
-int symlink(const char* path1, const char* path2)
-{
-    errno = ENOSYS;
-    return -1;
 }
 
 clock_t times(struct tms* buf)
@@ -116,20 +92,28 @@ clock_t times(struct tms* buf)
     return -1;
 }
 
-int unlink(char* name)
+int unlink(const char* file)
 {
     errno = ENOENT;
     return -1;
 }
 
-int wait(int* status)
+pid_t wait(int* status)
 {
     errno = ECHILD;
     return -1;
 }
 
-int write(int file, char* ptr, int len)
+size_t write(int fd, const void* buf, size_t cnt)
 {
     errno = ENOSYS;
     return -1;
 }
+
+// chown
+// fcntl
+// gettimeofday
+// mkdir
+// readlink
+// rename
+// symlink
