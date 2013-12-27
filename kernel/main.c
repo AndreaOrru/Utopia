@@ -1,6 +1,7 @@
 #include "gdt.h"
 #include "idt.h"
 #include "pmem.h"
+#include "process.h"
 #include "scheduler.h"
 #include "syscall.h"
 #include "term.h"
@@ -23,7 +24,7 @@ void main(multiboot_info_t* info)
 
     multiboot_module_t* mods = (void*)info->mods_addr;
     for (unsigned i = 0; i < info->mods_count; i++)
-        create_process((ElfHeader*)mods[i].mod_start);
+        process_create((ElfHeader*)mods[i].mod_start);
 
     sti();
     while (true);
