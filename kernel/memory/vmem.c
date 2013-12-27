@@ -10,7 +10,7 @@ typedef uintptr_t PEntry;
 
 static PEntry* PD    = (PEntry*)0xFFFFF000;
 static PEntry* PTs   = (PEntry*)0xFFC00000;
-static PEntry* extPD = (PEntry*)0xFFBFF000;
+static PEntry* extPD = (PEntry*)TMP_MAP;
 
 #define PAGE_ALLOCATED  (1 << 9)
 
@@ -40,7 +40,7 @@ void map(void* vAddr, void* pAddr, uint16_t flags)
 
     if (! *pdEntry)
     {
-        *pdEntry = (PEntry)frame_alloc() | flags | PAGE_PRESENT | PAGE_WRITE;
+        *pdEntry = (PEntry)frame_alloc() | flags | PAGE_PRESENT | PAGE_WRITE | PAGE_USER;
         invlpg(ptEntry);
 
         memset(PAGE_BASE(ptEntry), 0, PAGE_SIZE);
@@ -50,6 +50,8 @@ void map(void* vAddr, void* pAddr, uint16_t flags)
     {
         if (!(*ptEntry & PAGE_ALLOCATED))
             *ptEntry = (PEntry)frame_alloc() | flags | PAGE_PRESENT | PAGE_ALLOCATED;
+        else
+            *ptEntry = (*ptEntry & ~0xFFF)   | flags | PAGE_PRESENT | PAGE_ALLOCATED;
     }
     else
     {
@@ -103,7 +105,7 @@ static void page_fault(void)
 void* new_address_space(void)
 {
     PEntry* newPD = frame_alloc();
-    map(extPD, newPD, PAGE_WRITE);
+    map(extPD, newPD, PAGE_WRITE | PAGE_GLOBAL);
 
     memset(extPD, 0, PAGE_SIZE);
 

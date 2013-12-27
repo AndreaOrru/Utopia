@@ -10,7 +10,7 @@ static Thread*    TCBs =  (Thread*)TCB_START;
 static Process*   PCBs = (Process*)PCB_START;
 static uint8_t* stacks = (uint8_t*)USER_STACKS;
 
-static LIST(activeQueue);
+static LIST(readyQueue);
 Process* volatile currentProcess;
 Thread*  volatile currentThread;
 
@@ -48,13 +48,13 @@ void create_thread(const void* entry)
     thread->context.esp = (uint32_t)stack;
     thread->context.eflags = 0x202;
 
-    list_prepend(&activeQueue, &thread->queueLink);
+    list_prepend(&readyQueue, &thread->queueLink);
 }
 
 static void schedule(void)
 {
-    currentThread = list_item(list_pop(&activeQueue), Thread, queueLink);
-    list_append(&activeQueue, &currentThread->queueLink);
+    currentThread = list_item(list_pop(&readyQueue), Thread, queueLink);
+    list_append(&readyQueue, &currentThread->queueLink);
 
     currentProcess = currentThread->process;
     if (read_cr3() != currentProcess->PD)
