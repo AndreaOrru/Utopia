@@ -78,21 +78,21 @@ void unmap(void* vAddr)
 
 static void page_fault(void)
 {
-    State* state = get_state();
+    Context* context = get_context();
 
     printf("\n>>> Page Fault at address %x.\n", read_cr2());
 
-    if (state->error & PAGE_USER)
+    if (context->error & PAGE_USER)
         printf(">>> An user process ");
     else
         printf(">>> The kernel ");
 
-    if (state->error & PAGE_WRITE)
+    if (context->error & PAGE_WRITE)
         printf("tried to write ");
     else
         printf("tried to read ");
 
-    if (state->error & PAGE_PRESENT)
+    if (context->error & PAGE_PRESENT)
         printf("causing a protection fault.");
     else
         printf("a non-present page.");

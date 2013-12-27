@@ -9,7 +9,7 @@
 #define PIC1_DATA  0x21
 #define PIC2_DATA  0xA1
 
-State* volatile state;
+Context* volatile context;
 
 static const char* const interruptNames[] =
 {
@@ -60,12 +60,12 @@ static const char* const interruptNames[] =
 
 static void interrupt_unhandled(void)
 {
-    State* state = get_state();
+    Context* context = get_context();
 
-    if (state->num < 32)
-        printf("\n>>> Exception: %s.", interruptNames[state->num]);
-    else if (state->num < 32 + 16)
-        printf("\n>>> IRQ: %s", interruptNames[state->num]);
+    if (context->num < 32)
+        printf("\n>>> Exception: %s.", interruptNames[context->num]);
+    else if (context->num < 32 + 16)
+        printf("\n>>> IRQ: %s", interruptNames[context->num]);
 
     hlt();
 }
@@ -104,14 +104,14 @@ static void pic_remap(void)
     outb(PIC1_DATA,  0xFF);  outb(PIC2_DATA, 0xFF);
 }
 
-alwaysinline State* get_state(void)
+alwaysinline Context* get_context(void)
 {
-    return state;
+    return context;
 }
 
-alwaysinline void set_state(State* newState)
+alwaysinline void set_context(Context* newContext)
 {
-    state = newState;
+    context = newContext;
 }
 
 void interrupt_init(void)

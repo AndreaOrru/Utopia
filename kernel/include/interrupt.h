@@ -10,7 +10,7 @@ typedef struct
     };
     uint32_t num, error;
     uint32_t eip, cs, eflags, esp, ss;
-} __attribute__((packed)) State;
+} __attribute__((packed)) Context;
 
 typedef void (*InterruptHandler)(void);
 
@@ -21,5 +21,5 @@ void irq_register(uint8_t n, InterruptHandler handler);
 void irq_mask  (uint8_t irq);
 void irq_unmask(uint8_t irq);
 
-void   set_state(State* newState);
-State* get_state(void);
+void     set_context(Context* newContext);
+Context* get_context(void);

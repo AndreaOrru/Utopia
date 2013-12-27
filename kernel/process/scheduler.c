@@ -41,12 +41,12 @@ void create_thread(const void* entry)
     thread->process = currentProcess;
     list_append(&currentProcess->threads, &thread->processLink);
 
-    memset(&thread->state, 0, sizeof(State));
-    thread->state.cs  = USER_CODE | USER_RPL;
-    thread->state.ss  = USER_DATA | USER_RPL;
-    thread->state.eip = (uint32_t)entry;
-    thread->state.esp = (uint32_t)stack;
-    thread->state.eflags = 0x202;
+    memset(&thread->context, 0, sizeof(Context));
+    thread->context.cs  = USER_CODE | USER_RPL;
+    thread->context.ss  = USER_DATA | USER_RPL;
+    thread->context.eip = (uint32_t)entry;
+    thread->context.esp = (uint32_t)stack;
+    thread->context.eflags = 0x202;
 
     list_prepend(&activeQueue, &thread->queueLink);
 }
@@ -60,8 +60,8 @@ static void schedule(void)
     if (read_cr3() != currentProcess->PD)
         write_cr3(currentProcess->PD);
 
-    set_kernel_stack(&currentThread->state + 1);
-    set_state(&currentThread->state);
+    set_kernel_stack(&currentThread->context + 1);
+    set_context(&currentThread->context);
 }
 
 void scheduler_init(void)

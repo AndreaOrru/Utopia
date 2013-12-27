@@ -24,8 +24,8 @@ typedef union
     };
     struct
     {
-        uint8_t kernelStack[PAGE_SIZE - sizeof(State)];
-        State state;
+        uint8_t kernelStack[PAGE_SIZE - sizeof(Context)];
+        Context context;
     };
 } Thread;
 

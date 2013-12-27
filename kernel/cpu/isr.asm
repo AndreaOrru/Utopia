@@ -1,6 +1,6 @@
 extern interruptHandlers
 extern syscallHandlers
-extern state
+extern context
 
 %define EXCEPTION(x)  (x <  32)
 %define NO_ERROR(x)   (x != 8 && !(x >= 10 && x <= 14) && x != 17)
@@ -23,7 +23,7 @@ section .text
         mov es, bp
 
         %if EXCEPTION(%1)
-            mov [state], esp
+            mov [context], esp
         %endif
         %if SYSCALL(%1)
             push ebx
@@ -34,7 +34,7 @@ section .text
         %else
             call [interruptHandlers + (%1 * 4)]
         %endif
-        mov esp, [state]
+        mov esp, [context]
 
         %if IRQ(%1)
             mov al, 0x20
