@@ -9,6 +9,7 @@ typedef struct
     uint16_t pid;
     void* PD;
 
+    uint16_t nextLocalTid;
     List threads;
 } Process;
 
@@ -19,6 +20,7 @@ typedef union
         uint16_t tid;
         Link queueLink;
 
+        uint16_t localTid;
         Process* process;
         Link processLink;
     };

@@ -6,10 +6,12 @@
 #define TMP_MAP           0x00800000
 #define PCB_START         0x01000000
 #define TCB_START         0x10000000
-#define KERNEL_SPACE_END  0x20000000
+#define KERNEL_UTCB       0x20000000
+#define KERNEL_SPACE_END  0x30000000
 
-#define USER_SPACE        0x20000000
-#define USER_STACKS       0x20000000
+#define USER_SPACE        0x30000000
+#define USER_STACKS       0x30000000
+#define USER_UTCB         0x38000000
 #define USER_TEXT         0x40000000
 #define USER_SPACE_END    0xFFC00000
 

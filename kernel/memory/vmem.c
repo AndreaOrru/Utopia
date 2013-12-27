@@ -8,9 +8,8 @@
 
 typedef uintptr_t PEntry;
 
-static PEntry* PD    = (PEntry*)0xFFFFF000;
-static PEntry* PTs   = (PEntry*)0xFFC00000;
-static PEntry* extPD = (PEntry*)TMP_MAP;
+static PEntry* const PD  = (PEntry*)0xFFFFF000;
+static PEntry* const PTs = (PEntry*)0xFFC00000;
 
 #define PAGE_ALLOCATED  (1 << 9)
 
@@ -104,9 +103,10 @@ static void page_fault(void)
 
 void* new_address_space(void)
 {
+    PEntry* extPD = (PEntry*)TMP_MAP;
     PEntry* newPD = frame_alloc();
-    map(extPD, newPD, PAGE_WRITE | PAGE_GLOBAL);
 
+    map(extPD, newPD, PAGE_WRITE | PAGE_GLOBAL);
     memset(extPD, 0, PAGE_SIZE);
 
     unsigned kSpace = PD_INDEX(KERNEL_SPACE_END);
