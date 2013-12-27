@@ -1,0 +1,66 @@
+diff -rupN original/config.sub new/config.sub
+--- original/config.sub	2013-01-11 14:02:58.000000000 +0100
++++ new/config.sub	2013-12-25 18:04:56.221250711 +0100
+@@ -1358,7 +1358,7 @@ case $os in
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+ 	      | -sym* | -kopensolaris* | -plan9* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* \
++	      | -aos* | -aros* | -utopia* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+diff -rupN original/gcc/config/utopia.h new/gcc/config/utopia.h
+--- original/gcc/config/utopia.h	1970-01-01 01:00:00.000000000 +0100
++++ new/gcc/config/utopia.h	2013-12-25 18:27:44.173839876 +0100
+@@ -0,0 +1,8 @@
++#undef TARGET_OS_CPP_BUILTINS
++#define TARGET_OS_CPP_BUILTINS()         \
++    do {                                 \
++      builtin_define_std ("utopia");     \
++      builtin_define_std ("unix");       \
++      builtin_assert ("system=utopia");  \
++      builtin_assert ("system=unix");    \
++    } while(0);
+diff -rupN original/gcc/config.gcc new/gcc/config.gcc
+--- original/gcc/config.gcc	2013-10-03 02:47:24.000000000 +0200
++++ new/gcc/config.gcc	2013-12-25 19:44:50.135445557 +0100
+@@ -746,6 +746,12 @@ case ${target} in
+ *-*-rdos*)
+   use_gcc_stdint=wrap
+   ;;
++*-*-utopia*)
++  extra_parts="crtbegin.o crtend.o"
++  gas=yes
++  gnu_ld=yes
++  default_use_cxa_atexit=yes
++  ;;
+ *-*-solaris2*)
+   # i?86-*-solaris2* needs to insert headers between cpu default and
+   # Solaris 2 specific ones.
+@@ -1215,6 +1221,11 @@ i[34567]86-*-elf*)
+ x86_64-*-elf*)
+ 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h newlib-stdint.h i386/i386elf.h i386/x86-64.h"
+ 	;;
++i[34567]86-*-utopia*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h utopia.h"
++	tmake_file="i386/t-i386elf t-svr4"
++	use_fixproto=yes
++	;;
+ i[34567]86-*-rdos*)
+     tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h newlib-stdint.h i386/i386elf.h i386/rdos.h"
+     ;;
+diff -rupN original/libgcc/config.host new/libgcc/config.host
+--- original/libgcc/config.host	2013-07-09 23:35:57.000000000 +0200
++++ new/libgcc/config.host	2013-12-25 19:45:36.631860331 +0100
+@@ -501,6 +501,10 @@ i[34567]86-*-elf*)
+ x86_64-*-elf*)
+ 	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
+ 	;;
++i[34567]86-*-utopia*)
++	extra_parts="crtbegin.o crtend.o"
++	tmake_file="$tmake_file i386/t-crtstuff"
++	;;
+ i[34567]86-*-freebsd*)
+ 	tmake_file="${tmake_file} i386/t-freebsd i386/t-crtstuff"
+ 	;;

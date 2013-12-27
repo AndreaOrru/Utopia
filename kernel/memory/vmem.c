@@ -107,11 +107,8 @@ void* new_address_space(void)
 
     memset(extPD, 0, PAGE_SIZE);
 
-    unsigned lowKernel = PD_INDEX(LOW_KERNEL);
-    extPD[lowKernel] = PD[lowKernel];
-
-    unsigned highKernel = PD_INDEX(HIGH_KERNEL);
-    memcpy(&extPD[highKernel], &PD[highKernel], (1024 - highKernel) * sizeof(PEntry));
+    unsigned kSpace = PD_INDEX(KERNEL_SPACE_END);
+    memcpy(extPD, PD, kSpace * sizeof(PEntry));
 
     extPD[1023] = (PEntry)newPD | PAGE_PRESENT | PAGE_WRITE;
 

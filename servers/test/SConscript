@@ -1,4 +1,4 @@
 Import('senv')
 
-test = senv.Program('test.elf', 'main.c')
+test = senv.Program('test.elf', Glob('*.c'))
 Return('test')

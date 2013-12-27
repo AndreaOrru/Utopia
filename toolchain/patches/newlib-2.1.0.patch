@@ -1,0 +1,37 @@
+diff -rupN original/config.sub new/config.sub
+--- original/config.sub	2013-04-29 17:13:53.000000000 +0200
++++ new/config.sub	2013-12-27 03:18:31.924865126 +0100
+@@ -1354,7 +1354,7 @@ case $os in
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+ 	      | -sym* | -kopensolaris* | -plan9* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* \
++	      | -aos* | -aros* | -utopia* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
+diff -rupN original/newlib/configure.host new/newlib/configure.host
+--- original/newlib/configure.host	2013-12-20 11:27:49.000000000 +0100
++++ new/newlib/configure.host	2013-12-27 03:19:45.017802212 +0100
+@@ -435,6 +435,10 @@ case "${host}" in
+   h8500-*-elf*)
+ 	sys_dir=h8500hms
+ 	;;
++  i[34567]86-*-utopia*)
++	sys_dir=utopia
++	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
++	;;
+   i[34567]86-*-rdos*)
+ 	sys_dir=rdos
+ 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
+diff -rupN original/newlib/libc/sys/configure.in new/newlib/libc/sys/configure.in
+--- original/newlib/libc/sys/configure.in	2012-02-21 23:34:31.000000000 +0100
++++ new/newlib/libc/sys/configure.in	2013-12-27 03:18:31.928198441 +0100
+@@ -45,6 +45,7 @@ if test -n "${sys_dir}"; then
+ 	sysvi386) AC_CONFIG_SUBDIRS(sysvi386) ;;
+ 	sysvnecv70) AC_CONFIG_SUBDIRS(sysvnecv70) ;;
+ 	tic80) AC_CONFIG_SUBDIRS(tic80) ;;
++	utopia) AC_CONFIG_SUBDIRS(utopia) ;;
+ 	w65) AC_CONFIG_SUBDIRS(w65) ;;
+ 	z8ksim) AC_CONFIG_SUBDIRS(z8ksim) ;;
+   esac;

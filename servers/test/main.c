@@ -1,8 +1,11 @@
-#include <syscall.h>
+#include <string.h>
 
-void main(void)
+int main(void)
 {
-    put('A');
+    int a[10];
+    int b[10];
 
-    while (1);
+    memcpy(b, a, 10 * sizeof(char));
+
+    return 0;
 }

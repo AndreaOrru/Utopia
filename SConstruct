@@ -8,7 +8,7 @@ env = Environment(ENV        = {'PATH': environ['PATH']},
                   AS         = 'nasm',
                   ASFLAGS    = ['-felf'] + (['-Fdwarf', '-g'] if DEBUG else []),
 
-                  CC         = 'i586-elf-gcc',
+                  CC         = 'i586-pc-utopia-gcc',
                   CFLAGS     = ['-std=gnu11'],
                   CCFLAGS    = CCFLAGS,
                   CPPFLAGS   = ['-Wall', '-Wextra'],

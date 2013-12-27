@@ -24,7 +24,7 @@ void pmem_init(multiboot_info_t* info)
 
         uintptr_t start = entry->addr;
         uintptr_t   end = start + (size_t)entry->len;
-        start = (start >= LOW_KERNEL_END) ? start : LOW_KERNEL_END;
+        start = (start >= FRAME_STACK_END) ? start : FRAME_STACK_END;
 
         if (entry->type == MULTIBOOT_MEMORY_AVAILABLE)
             for (uintptr_t i = start; i < end; i += PAGE_SIZE)

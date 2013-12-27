@@ -1,4 +1,5 @@
-.sconsign.dblite
 *.elf
 *.o
 *.a
+.sconsign.dblite
+toolchain/packages
