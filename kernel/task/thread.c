@@ -7,22 +7,29 @@
 #include "thread.h"
 
 static Thread* const TCBs = (Thread*)TCB_START;
-UTCB* const kernelUTCBs = (UTCB*)KERNEL_UTCB;
-UTCB* const   userUTCBs = (UTCB*)USER_UTCB;
+static UTCB* const kernelUTCBs = (UTCB*)KERNEL_UTCB;
+static UTCB* const   userUTCBs = (UTCB*)USER_UTCB;
 
-extern Process* volatile currentProcess;
 static uint16_t next_tid = 1;
 
-void thread_create(const void* entry)
+alwaysinline Thread* thread_get(uint16_t tid)
+{
+    return &TCBs[tid];
+}
+
+void thread_create(const void* entry, Process* process)
 {
     Thread* thread = &TCBs[next_tid];
     map(thread, NULL, PAGE_WRITE | PAGE_GLOBAL);
 
-    thread->tid      = next_tid++;
-    thread->state    = NEW;
-    thread->process  = currentProcess;
-    thread->localTid = thread->process->nextLocalTid++;
-    list_append(&currentProcess->threads, &thread->processLink);
+    thread->tid         = next_tid++;
+    thread->state       = NEW;
+    thread->listeningTo = 0;
+    list_init(&thread->waitingList);
+
+    thread->process  = process;
+    thread->localTid = process->nextLocalTid++;
+    list_append(&process->threads, &thread->processLink);
 
     void* stack = (void*)USER_STACKS + (thread->localTid * PAGE_SIZE) - 4;
     map(stack, NULL, PAGE_WRITE | PAGE_USER);
@@ -37,5 +44,5 @@ void thread_create(const void* entry)
     thread->context.esp = (uint32_t)stack;
     thread->context.eflags = 0x202;
 
-    switch_to(thread);
+    scheduler_add(thread);
 }

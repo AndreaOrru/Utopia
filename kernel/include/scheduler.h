@@ -2,4 +2,6 @@
 #include "thread.h"
 
 void scheduler_init(void);
-void switch_to(Thread* thread);
+void scheduler_add(Thread* thread);
+Thread* scheduler_current(void);
+Thread* scheduler_pop(void);

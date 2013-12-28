@@ -5,8 +5,6 @@
 #include "process.h"
 
 static Process* const PCBs = (Process*)PCB_START;
-extern Process* volatile currentProcess;
-
 static uint16_t next_pid = 1;
 
 void process_create(ElfHeader* elf)
@@ -20,7 +18,5 @@ void process_create(ElfHeader* elf)
     list_init(&process->threads);
 
     write_cr3(process->PD);
-    currentProcess = process;
-
-    thread_create(elf_load(elf));
+    thread_create(elf_load(elf), process);
 }
