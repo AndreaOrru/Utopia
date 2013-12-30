@@ -10,6 +10,6 @@ typedef struct
         uint32_t n;
     } tag;
     uint32_t regs[64];
-} UTCB;
+} VRegs;
 
 void send_receive(uint16_t to, uint16_t from);

@@ -3,6 +3,7 @@
 #include "layout.h"
 #include "scheduler.h"
 #include "string.h"
+#include "pmem.h"
 #include "vmem.h"
 #include "thread.h"
 
@@ -34,8 +35,9 @@ void thread_create(const void* entry, Process* process)
     void* stack = (void*)USER_STACKS + (thread->localTid * PAGE_SIZE) - 4;
     map(stack, NULL, PAGE_WRITE | PAGE_USER);
 
-    map(&kernelUTCBs[thread->tid],      NULL, PAGE_WRITE | PAGE_GLOBAL);
-    map(  &userUTCBs[thread->localTid], NULL, PAGE_WRITE | PAGE_USER);
+    void* UTCB = frame_alloc();
+    map(&kernelUTCBs[thread->tid],    UTCB, PAGE_WRITE | PAGE_GLOBAL);
+    map(&userUTCBs[thread->localTid], UTCB, PAGE_WRITE | PAGE_USER);
 
     memset(&thread->context, 0, sizeof(Context));
     thread->context.cs  = USER_CODE | USER_RPL;

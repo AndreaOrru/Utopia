@@ -40,7 +40,7 @@ static GdtEntry gdt[] =
     { 0xFFFF, 0, 0, KERNEL | DATA, 0xF, PROTECTED | BLOCKS_4K, 0 },
     { 0xFFFF, 0, 0,   USER | CODE, 0xF, PROTECTED | BLOCKS_4K, 0 },
     { 0xFFFF, 0, 0,   USER | DATA, 0xF, PROTECTED | BLOCKS_4K, 0 },
-    {      0, 0, 0,           TSS,   0, PROTECTED            , 0 },
+    {      0, 0, 0,           TSS,   0, PROTECTED            , 0 }
 };
 
 static Tss tss;

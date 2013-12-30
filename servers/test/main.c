@@ -1,11 +1,12 @@
-#include <string.h>
-
 int main(void)
 {
-    int a[10];
-    int b[10];
+    unsigned* utcb = *(unsigned**)0x802000;
 
-    memcpy(b, a, 10 * sizeof(char));
+    int ret;
+    utcb[0] = 1;
+    utcb[1] = 10;
+
+    asm volatile ("int $0x80" : "=a" (ret) : "0" (1), "c" (2), "d" (2));
 
     return 0;
 }
