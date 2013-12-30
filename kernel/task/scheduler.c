@@ -21,10 +21,7 @@ static inline void switch_to(Thread* thread)
 static void schedule(void)
 {
     if (list_empty(&readyQueue))
-    {
-        printf("\n>>> No more threads.");
-        hlt();
-    }
+        ERROR("No more threads to schedule.");
 
     scheduler_add(list_item(list_pop(&readyQueue), Thread, queueLink));
     switch_to(scheduler_current());

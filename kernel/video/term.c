@@ -1,15 +1,17 @@
 #include <stdarg.h>
 #include "string.h"
-#include "x86.h"
 #include "term.h"
 
-#define SIZE_X  80
-#define SIZE_Y  25
-#define BG      0
-#define FG      7
+#define SIZE_X     80
+#define SIZE_Y     25
+#define DEFAULT_BG  0
+#define DEFAULT_FG  7
 
 static uint16_t* const VRAM = (uint16_t*)0xB8000;
 static int cursor = 0;
+
+static uint8_t bg = DEFAULT_BG;
+static uint8_t fg = DEFAULT_FG;
 
 static void update_cursor(void)
 {
@@ -30,10 +32,10 @@ inline void put(char c)
             VRAM[i] = VRAM[i + SIZE_X];
 
         for (int i = 0; i < SIZE_X; i++)
-            VRAM[i + cursor] = ' ';
+            VRAM[i + cursor] = (bg << 12) | ' ';
     }
 
-    VRAM[cursor++] = (BG << 12) | (FG << 8) | c;
+    VRAM[cursor++] = ((bg << 4 | (fg & 0x0F)) << 8) | c;
 }
 
 static void write(const char* s)
@@ -45,7 +47,7 @@ static void write(const char* s)
 void clear_screen(void)
 {
     for (int i = 0; i < SIZE_X * SIZE_Y; i++)
-        VRAM[i] = ' ';
+        VRAM[i] = (bg << 12) | ' ';
 
     cursor = 0;
     update_cursor();
@@ -55,11 +57,10 @@ void printf(const char* format, ...)
 {
     static char buf[35];
 
-    if (!format)
-        return;
-
     va_list args;
     va_start(args, format);
+
+    uint8_t saved_bg = bg, saved_fg = fg;
 
     for (int i = 0; format[i] != '\0'; i++)
         switch (format[i])
@@ -74,6 +75,27 @@ void printf(const char* format, ...)
                 do
                     put(' ');
                 while (cursor % 4);
+                break;
+
+            case '\e':
+                switch (format[i+1])
+                {
+                    case 'B':
+                        bg = format[i+2] == '1' ? format[i+3] + 0xA : format[i+3];
+                        i += 3;
+                        break;
+
+                    case 'F':
+                        fg = format[i+2] == '1' ? format[i+3] + 0xA : format[i+3];
+                        i += 3;
+                        break;
+
+                    default:
+                        bg = format[i+1] == '1' ? format[i+2] + 0xA : format[i+2];
+                        fg = format[i+3] == '1' ? format[i+4] + 0xA : format[i+4];
+                        i += 4;
+                        break;
+                }
                 break;
 
             case '%':
@@ -96,6 +118,7 @@ void printf(const char* format, ...)
                 break;
         }
 
+    bg = saved_bg; fg = saved_fg;
     update_cursor();
 
     va_end(args);

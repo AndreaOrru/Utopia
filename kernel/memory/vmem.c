@@ -3,7 +3,6 @@
 #include "string.h"
 #include "pmem.h"
 #include "term.h"
-#include "x86.h"
 #include "vmem.h"
 
 typedef uintptr_t PEntry;
@@ -81,22 +80,21 @@ static void page_fault(void)
 {
     Context* context = get_context();
 
-    printf("\n>>> Page Fault at address %x.\n", read_cr2());
-
+    ALERT("Page fault at address %x.", read_cr2());
     if (context->error & PAGE_USER)
-        printf(">>> An user process ");
+        ALERT("  DPL: userspace  ");
     else
-        printf(">>> The kernel ");
+        ALERT("  DPL: kernel     ");
 
     if (context->error & PAGE_WRITE)
-        printf("tried to write ");
+        ALERT("  OP:  write      ");
     else
-        printf("tried to read ");
+        ALERT("  OP:  read       ");
 
     if (context->error & PAGE_PRESENT)
-        printf("causing a protection fault.");
+        ALERT("  ERR: protection ");
     else
-        printf("a non-present page.");
+        ALERT("  ERR: non-present");
 
     hlt();
 }

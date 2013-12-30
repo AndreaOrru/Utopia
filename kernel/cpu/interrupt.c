@@ -1,7 +1,6 @@
 #include "idt.h"
 #include "isr.h"
 #include "term.h"
-#include "x86.h"
 #include "interrupt.h"
 
 #define PIC1_CMD   0x20
@@ -63,11 +62,9 @@ static void interrupt_unhandled(void)
     Context* context = get_context();
 
     if (context->num < 32)
-        printf("\n>>> Exception: %s.", interruptNames[context->num]);
+        ERROR("Exception: %s.", interruptNames[context->num]);
     else if (context->num < 32 + 16)
-        printf("\n>>> IRQ: %s", interruptNames[context->num]);
-
-    hlt();
+        ERROR("IRQ: %s", interruptNames[context->num]);
 }
 
 InterruptHandler interruptHandlers[32 + 16] = { [0 ... 47] = interrupt_unhandled };
