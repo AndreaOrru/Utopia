@@ -1,6 +1,6 @@
 int main(void)
 {
-    unsigned* utcb = *(unsigned**)0x802000;
+    unsigned* utcb = *(unsigned**)0x600000;
 
     int ret;
     utcb[0] = 1;

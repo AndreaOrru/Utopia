@@ -1,7 +1,6 @@
 #include "layout.h"
 #include "thread.h"
 #include "vmem.h"
-#include "x86.h"
 #include "process.h"
 
 static Process* const PCBs = (Process*)PCB_START;

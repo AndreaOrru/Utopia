@@ -1,5 +1,4 @@
 #include "gdt.h"
-#include "ipc.h"
 #include "layout.h"
 #include "scheduler.h"
 #include "string.h"
@@ -8,10 +7,10 @@
 #include "thread.h"
 
 static Thread* const TCBs = (Thread*)TCB_START;
+static uint16_t next_tid = 1;
+
 static UTCB* const kernelUTCBs = (UTCB*)KERNEL_UTCB;
 static UTCB* const   userUTCBs = (UTCB*)USER_UTCB;
-
-static uint16_t next_tid = 1;
 
 alwaysinline Thread* thread_get(uint16_t tid)
 {

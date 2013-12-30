@@ -3,9 +3,9 @@
 #define KERNEL_SPACE      0x00000000
 #define FRAME_STACK       0x00200000
 #define FRAME_STACK_END   0x00400000
-#define TMP_MAP           0x00800000
-#define UTCB_PTR          0x00802000
-#define PCB_START         0x01000000
+#define TMP_MAP           0x00500000
+#define UTCB_PTR          0x00600000
+#define PCB_START         0x00700000
 #define TCB_START         0x10000000
 #define KERNEL_UTCB       0x20000000
 #define KERNEL_SPACE_END  0x30000000
