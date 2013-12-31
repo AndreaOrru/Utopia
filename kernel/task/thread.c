@@ -9,8 +9,8 @@
 static Thread* const TCBs = (Thread*)TCB_START;
 static uint16_t next_tid = 1;
 
-static UTCB* const kernelUTCBs = (UTCB*)KERNEL_UTCB;
-static UTCB* const   userUTCBs = (UTCB*)USER_UTCB;
+static TLS* const kernelTLSs = (TLS*)KERNEL_TLS;
+static TLS* const   userTLSs = (TLS*)USER_TLS;
 
 alwaysinline Thread* thread_get(uint16_t tid)
 {
@@ -34,9 +34,9 @@ void thread_create(const void* entry, Process* process)
     void* stack = (void*)USER_STACKS + (thread->localTid * PAGE_SIZE) - 4;
     map(stack, NULL, PAGE_WRITE | PAGE_USER);
 
-    void* UTCB = frame_alloc();
-    map(&kernelUTCBs[thread->tid],    UTCB, PAGE_WRITE | PAGE_GLOBAL);
-    map(&userUTCBs[thread->localTid], UTCB, PAGE_WRITE | PAGE_USER);
+    void* TLS = frame_alloc();
+    map(&kernelTLSs[thread->tid],    TLS, PAGE_WRITE | PAGE_GLOBAL);
+    map(&userTLSs[thread->localTid], TLS, PAGE_WRITE | PAGE_USER);
 
     memset(&thread->context, 0, sizeof(Context));
     thread->context.cs  = USER_CODE | USER_RPL;

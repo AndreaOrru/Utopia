@@ -1,12 +1,11 @@
+#include <utopia.h>
+
 int main(void)
 {
-    unsigned* utcb = *(unsigned**)0x600000;
+    MBOX->tag.n  = 0;
+    MBOX->reg[0] = 10;
 
-    int ret;
-    utcb[0] = 1;
-    utcb[1] = 10;
-
-    asm volatile ("int $0x80" : "=a" (ret) : "0" (1), "c" (2), "d" (2));
+    send_receive(2, 2);
 
     return 0;
 }

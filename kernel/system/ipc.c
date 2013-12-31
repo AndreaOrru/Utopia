@@ -3,7 +3,7 @@
 #include "string.h"
 #include "ipc.h"
 
-static UTCB* const kernelUTCBs = (UTCB*)KERNEL_UTCB;
+static TLS* const kernelTLSs = (TLS*)KERNEL_TLS;
 
 static void wait(Thread* waiter, uint16_t tid, State reason)
 {
@@ -30,11 +30,11 @@ static alwaysinline void unblock(Thread* thread)
 
 static inline void deliver(Thread* sender, Thread* receiver)
 {
-    VRegs*   senderBox = &kernelUTCBs[  sender->tid].vRegs;
-    VRegs* receiverBox = &kernelUTCBs[receiver->tid].vRegs;
+    MsgBox*   senderBox = &kernelTLSs[  sender->tid].box;
+    MsgBox* receiverBox = &kernelTLSs[receiver->tid].box;
 
     receiverBox->tag.n = senderBox->tag.n;
-    memcpy(receiverBox->regs, senderBox->regs, senderBox->tag.n * sizeof(uint32_t));
+    memcpy(receiverBox->reg, senderBox->reg, senderBox->tag.n * sizeof(uint32_t));
 }
 
 void send_receive(uint16_t to, uint16_t from)
@@ -48,7 +48,7 @@ void send_receive(uint16_t to, uint16_t from)
         if (receiver->state != WAIT_RECEIVING)
             return wait(current, to, WAIT_SENDING);
 
-        if (!(receiver->listeningTo == EVERYONE || receiver->listeningTo == current->tid))
+        if (!(receiver->listeningTo == (uint16_t)-1 || receiver->listeningTo == current->tid))
             return;
 
         deliver(current, receiver);

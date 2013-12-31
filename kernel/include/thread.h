@@ -6,9 +6,9 @@
 
 typedef struct
 {
-    VRegs vRegs;
-    uint8_t tls[PAGE_SIZE - sizeof(VRegs)];
-} UTCB;
+    MsgBox box;
+    uint8_t mem[PAGE_SIZE - sizeof(MsgBox)];
+} TLS;
 
 typedef enum { NEW, READY, WAIT_SENDING, WAIT_RECEIVING } State;
 

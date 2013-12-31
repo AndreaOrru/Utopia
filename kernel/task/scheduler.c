@@ -6,14 +6,14 @@
 #include "vmem.h"
 
 static LIST(readyQueue);
-static UTCB** const UTCBPtr = (UTCB**)UTCB_PTR;
+static TLS* volatile* const TLSPtr = (TLS**)TLS_PTR;
 
 static inline void switch_to(Thread* thread)
 {
     if (thread->process->PD != read_cr3())
         write_cr3(thread->process->PD);
 
-    *UTCBPtr = (UTCB*)USER_UTCB + thread->localTid;
+    *TLSPtr = (TLS*)USER_TLS + thread->localTid;
     set_kernel_stack(&thread->context + 1);
     set_context(&thread->context);
 }
@@ -48,7 +48,7 @@ alwaysinline Thread* scheduler_current(void)
 
 void scheduler_init(void)
 {
-    map(UTCBPtr, NULL, PAGE_WRITE | PAGE_USER | PAGE_GLOBAL);
+    map((void*)TLSPtr, NULL, PAGE_WRITE | PAGE_USER | PAGE_GLOBAL);
 
     irq_register(0, schedule);
 }
