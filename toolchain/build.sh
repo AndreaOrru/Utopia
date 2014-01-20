@@ -1,12 +1,33 @@
 #!/bin/sh
 
+if [ "$(uname)" == "Darwin" ]; then
+    export CC=/usr/local/bin/gcc-4.8
+    export CXX=/usr/local/bin/g++-4.8
+    export CPP=/usr/local/bin/cpp-4.8
+    export LD=/usr/local/bin/gcc-4.8
+
+    BINUTILS_CFLAGS="-Wno-error=deprecated-declarations"
+    NEWLIB_AUTOMAKE="automake112"
+    NEWLIB_ACLOCAL="aclocal112"
+else
+    NEWLIB_AUTOMAKE="automake-1.12"
+    NEWLIB_ACLOCAL="aclocal-1.12"
+fi
+
 BINUTILS_VER=2.24
-BINUTILS_URL=http://ftp.gnu.org/gnu/binutils/binutils-$BINUTILS_VER.tar.bz2
-
+GMP_VER=5.1.3
+MPFR_VER=3.1.2
+MPC_VER=1.0.2
+ICONV_VER=1.14
 GCC_VER=4.8.2
-GCC_URL=http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VER/gcc-$GCC_VER.tar.bz2
-
 NEWLIB_VER=2.1.0
+
+BINUTILS_URL=http://ftp.gnu.org/gnu/binutils/binutils-$BINUTILS_VER.tar.bz2
+GMP_URL=https://gmplib.org/download/gmp/gmp-$GMP_VER.tar.bz2
+MPFR_URL=http://www.mpfr.org/mpfr-current/mpfr-$MPFR_VER.tar.bz2
+MPC_URL=http://multiprecision.org/mpc/download/mpc-$MPC_VER.tar.gz
+ICONV_URL=http://ftp.gnu.org/gnu/libiconv/libiconv-$ICONV_VER.tar.gz
+GCC_URL=http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VER/gcc-$GCC_VER.tar.bz2
 NEWLIB_URL=ftp://sourceware.org/pub/newlib/newlib-$NEWLIB_VER.tar.gz
 
 export TARGET=i586-pc-utopia
@@ -27,7 +48,7 @@ if [ "$1" != "-n" ]; then
 
     mkdir build-binutils
     pushd build-binutils
-        ../binutils-$BINUTILS_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls
+        CFLAGS="$BINUTILS_CFLAGS" ../binutils-$BINUTILS_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls
         make -j4
         sudo make install
     popd
@@ -38,10 +59,23 @@ if [ "$1" != "-n" ]; then
 
 
 
+    wget -c $GMP_URL
+    wget -c $MPFR_URL
+    wget -c $MPC_URL
+    wget -c $ICONV_URL
     wget -c $GCC_URL
+
+    tar xjf gmp-$GMP_VER.tar.bz2
+    tar xjf mpfr-$MPFR_VER.tar.bz2
+    tar xzf mpc-$MPC_VER.tar.gz
+    tar xzf libiconv-$ICONV_VER.tar.gz
     tar xjf gcc-$GCC_VER.tar.bz2
 
     pushd gcc-$GCC_VER
+        mv ../gmp-$GMP_VER gmp
+        mv ../mpfr-$MPFR_VER mpfr
+        mv ../mpc-$MPC_VER mpc
+        mv ../libiconv-$ICONV_VER libiconv
         patch -p1 < ../../patches/gcc-$GCC_VER.patch
     popd
 
@@ -71,7 +105,7 @@ pushd newlib-$NEWLIB_VER
     pushd newlib/libc/sys
         autoconf
         pushd utopia
-            AUTOMAKE=automake-1.12 ACLOCAL=aclocal-1.12 autoreconf
+            AUTOMAKE="$NEWLIB_AUTOMAKE" ACLOCAL="$NEWLIB_ACLOCAL" autoreconf
         popd
     popd
 popd
