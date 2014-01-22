@@ -1,10 +1,23 @@
 #include "layout.h"
-#include "thread.h"
+#include "scheduler.h"
 #include "vmem.h"
 #include "process.h"
 
 static Process* const PCBs = (Process*)PCB_START;
 static uint16_t next_pid = 1;
+
+void* sbrk(size_t incr)
+{
+    Process* current = scheduler_current()->process;
+
+    void* ret = (void*)USER_HEAP + current->heapSize;
+    current->heapSize += incr;
+    
+    for (void* i = PAGE_BASE(ret); i < PAGE_ALIGN(ret + current->heapSize); i += PAGE_SIZE)
+        map(i, NULL, PAGE_WRITE | PAGE_USER);
+
+    return ret;
+}
 
 void process_create(ElfHeader* elf)
 {
@@ -13,6 +26,7 @@ void process_create(ElfHeader* elf)
 
     process->pid = next_pid++;
     process->PD  = new_address_space();
+    process->heapSize = 0;
     process->nextLocalTid = 1;
     list_init(&process->threads);
 

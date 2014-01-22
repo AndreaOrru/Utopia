@@ -12,7 +12,8 @@
 
 #define USER_SPACE        0x30000000
 #define USER_STACKS       0x30000000
-#define USER_TLS          0x38000000
+#define USER_TLS          0x34000000
+#define USER_HEAP         0x38000000
 #define USER_TEXT         0x40000000
 #define USER_SPACE_END    0xFFC00000
 

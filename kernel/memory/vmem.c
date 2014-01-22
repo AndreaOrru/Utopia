@@ -46,10 +46,10 @@ void map(void* vAddr, void* pAddr, uint16_t flags)
 
     if (pAddr == NULL)
     {
-        if (!(*ptEntry & PAGE_ALLOCATED))
-            *ptEntry = (PEntry)frame_alloc() | flags | PAGE_PRESENT | PAGE_ALLOCATED;
-        else
+        if (*ptEntry & PAGE_ALLOCATED)
             *ptEntry = (*ptEntry & ~0xFFF)   | flags | PAGE_PRESENT | PAGE_ALLOCATED;
+        else
+            *ptEntry = (PEntry)frame_alloc() | flags | PAGE_PRESENT | PAGE_ALLOCATED;
     }
     else
     {

@@ -20,6 +20,7 @@ MPFR_VER=3.1.2
 MPC_VER=1.0.2
 ICONV_VER=1.14
 GCC_VER=4.8.2
+GDB_VER=7.6.2
 NEWLIB_VER=2.1.0
 
 BINUTILS_URL=http://ftp.gnu.org/gnu/binutils/binutils-$BINUTILS_VER.tar.bz2
@@ -28,6 +29,7 @@ MPFR_URL=http://www.mpfr.org/mpfr-current/mpfr-$MPFR_VER.tar.bz2
 MPC_URL=http://multiprecision.org/mpc/download/mpc-$MPC_VER.tar.gz
 ICONV_URL=http://ftp.gnu.org/gnu/libiconv/libiconv-$ICONV_VER.tar.gz
 GCC_URL=http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VER/gcc-$GCC_VER.tar.bz2
+GDB_URL=http://ftp.gnu.org/gnu/gdb/gdb-$GDB_VER.tar.bz2
 NEWLIB_URL=ftp://sourceware.org/pub/newlib/newlib-$NEWLIB_VER.tar.gz
 
 export TARGET=i586-pc-utopia
@@ -52,10 +54,6 @@ if [ "$1" != "-n" ]; then
         make -j4
         sudo make install
     popd
-
-    if [ "$1" = "-b" ]; then
-        exit 0
-    fi
 
 
 
@@ -89,9 +87,17 @@ if [ "$1" != "-n" ]; then
         sudo make install-target-libgcc
     popd
 
-    if [ "$1" = "-g" ]; then
-        exit 0
-    fi
+
+
+    wget -c $GDB_URL
+    tar xjf gdb-$GDB_VER.tar.bz2
+
+    mkdir build-gdb
+    pushd build-gdb
+       ../gdb-$GDB_VER/configure --target=i586-elf --prefix="$PREFIX" --disable-nls 
+       make -j4
+       sudo make install
+    popd
 fi
 
 

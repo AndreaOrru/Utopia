@@ -1,4 +1,5 @@
 #pragma once
+#include <stddef.h>
 #include <stdint.h>
 #include "_syscall.h"
 
@@ -24,3 +25,4 @@ extern _TLS* volatile* const _TLSPtr;
 
 _SYSCALL_1(0, put, char);
 _SYSCALL_2(1, send_receive, uint16_t, uint16_t);
+_SYSCALL_1(2, _sbrk, size_t);
