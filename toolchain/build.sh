@@ -7,9 +7,11 @@ if [ "$(uname)" == "Darwin" ]; then
     export LD=/usr/local/bin/gcc-4.8
 
     BINUTILS_CFLAGS="-Wno-error=deprecated-declarations"
+    AUTOCONF_264="autoconf264"
     NEWLIB_AUTOMAKE="automake112"
     NEWLIB_ACLOCAL="aclocal112"
 else
+    AUTOCONF_264="autoconf-2.64"
     NEWLIB_AUTOMAKE="automake-1.12"
     NEWLIB_ACLOCAL="aclocal-1.12"
 fi
@@ -75,12 +77,15 @@ if [ "$1" != "-n" ]; then
         mv ../mpc-$MPC_VER mpc
         mv ../libiconv-$ICONV_VER libiconv
         patch -p1 < ../../patches/gcc-$GCC_VER.patch
+        pushd libstdc++-v3
+            $AUTOCONF_264
+        popd
     popd
 
     mkdir build-gcc
     pushd build-gcc
         ../gcc-$GCC_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls \
-            --enable-languages=c --disable-libssp --with-newlib
+            --enable-languages=c,c++ --disable-libssp --with-newlib
         make all-gcc -j4
         make all-target-libgcc -j4
         sudo make install-gcc
@@ -120,5 +125,10 @@ mkdir build-newlib
 pushd build-newlib
     ../newlib-$NEWLIB_VER/configure --target=$TARGET --prefix="$PREFIX"
     make -j4
+    sudo make install
+popd
+
+pushd build-gcc
+    make
     sudo make install
 popd

@@ -13,7 +13,6 @@ env = Environment(ENV        = {'PATH': environ['PATH']},
                   CCFLAGS    = CCFLAGS,
                   CPPFLAGS   = ['-Wall', '-Wextra'],
                   LINKFLAGS  = CCFLAGS,
-                  LIBS       = ['gcc'],
 
                   ASCOMSTR   = 'AS\t$SOURCES -> $TARGETS',
                   CCCOMSTR   = 'CC\t$SOURCES -> $TARGETS',

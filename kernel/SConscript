@@ -3,7 +3,8 @@ Import('env')
 kenv = env.Clone()
 kenv.Append(CPPPATH   = ['include'],
             CCFLAGS   = ['-ffreestanding'],
-            LINKFLAGS = ['-nostdlib', '-Tkernel/link.ld'])
+            LINKFLAGS = ['-nostdlib', '-Tkernel/link.ld'],
+            LIBS      = ['gcc'])
 
 kernel = kenv.Program('kernel.elf', Glob('*.c')   + Glob('*.asm') +
                                     Glob('*/*.c') + Glob('*/*.asm'))
