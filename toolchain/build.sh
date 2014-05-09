@@ -47,14 +47,14 @@ if [ "$1" != "-n" ]; then
     tar xjf binutils-$BINUTILS_VER.tar.bz2
 
     pushd binutils-$BINUTILS_VER
-        patch -p1 < ../../patches/binutils-$BINUTILS_VER.patch
+        patch -p1 < ../../patches/binutils-$BINUTILS_VER.patch || exit 1
     popd
 
     mkdir build-binutils
     pushd build-binutils
-        CFLAGS="$BINUTILS_CFLAGS" ../binutils-$BINUTILS_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls
-        make -j4
-        sudo make install
+        CFLAGS="$BINUTILS_CFLAGS" ../binutils-$BINUTILS_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls || exit 1
+        make -j4 || exit 1
+        sudo make install || exit 1
     popd
 
 
@@ -76,20 +76,20 @@ if [ "$1" != "-n" ]; then
         mv ../mpfr-$MPFR_VER mpfr
         mv ../mpc-$MPC_VER mpc
         mv ../libiconv-$ICONV_VER libiconv
-        patch -p1 < ../../patches/gcc-$GCC_VER.patch
+        patch -p1 < ../../patches/gcc-$GCC_VER.patch || exit 1
         pushd libstdc++-v3
-            $AUTOCONF_264
+            $AUTOCONF_264 || exit 1
         popd
     popd
 
     mkdir build-gcc
     pushd build-gcc
         ../gcc-$GCC_VER/configure --target=$TARGET --prefix="$PREFIX" --disable-nls \
-            --enable-languages=c,c++ --disable-libssp --with-newlib
-        make all-gcc -j4
-        make all-target-libgcc -j4
-        sudo make install-gcc
-        sudo make install-target-libgcc
+            --enable-languages=c,c++ --disable-libssp --with-newlib || exit 1
+        make all-gcc -j4 || exit 1
+        make all-target-libgcc -j4 || exit 1
+        sudo make install-gcc || exit 1
+        sudo make install-target-libgcc || exit 1
     popd
 
 
@@ -99,9 +99,9 @@ if [ "$1" != "-n" ]; then
 
     mkdir build-gdb
     pushd build-gdb
-       ../gdb-$GDB_VER/configure --target=i686-elf --prefix="$PREFIX" --disable-nls 
-       make -j4
-       sudo make install
+       ../gdb-$GDB_VER/configure --target=i686-elf --prefix="$PREFIX" --disable-nls || exit 1
+       make -j4 || exit 1
+       sudo make install || exit 1
     popd
 fi
 
@@ -111,24 +111,24 @@ wget -c $NEWLIB_URL
 tar xzf newlib-$NEWLIB_VER.tar.gz
 
 pushd newlib-$NEWLIB_VER
-    patch -p1 < ../../patches/newlib-$NEWLIB_VER.patch
+    patch -p1 < ../../patches/newlib-$NEWLIB_VER.patch || exit 1
     cp -a ../../newlib-utopia newlib/libc/sys/utopia
     pushd newlib/libc/sys
-        autoconf
+        autoconf || exit 1
         pushd utopia
-            AUTOMAKE="$NEWLIB_AUTOMAKE" ACLOCAL="$NEWLIB_ACLOCAL" autoreconf
+            AUTOMAKE="$NEWLIB_AUTOMAKE" ACLOCAL="$NEWLIB_ACLOCAL" autoreconf || exit 1
         popd
     popd
 popd
 
 mkdir build-newlib
 pushd build-newlib
-    ../newlib-$NEWLIB_VER/configure --target=$TARGET --prefix="$PREFIX"
-    make -j4
-    sudo make install
+    ../newlib-$NEWLIB_VER/configure --target=$TARGET --prefix="$PREFIX" || exit 1
+    make -j4 || exit 1
+    sudo make install || exit 1
 popd
 
 pushd build-gcc
-    make
-    sudo make install
+    make || exit 1
+    sudo make install || exit 1
 popd
