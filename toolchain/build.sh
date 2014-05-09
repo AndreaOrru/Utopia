@@ -1,10 +1,10 @@
 #!/bin/sh
 
 if [ "$(uname)" == "Darwin" ]; then
-    export CC=/usr/local/bin/gcc-4.8
-    export CXX=/usr/local/bin/g++-4.8
-    export CPP=/usr/local/bin/cpp-4.8
-    export LD=/usr/local/bin/gcc-4.8
+    export CC=/usr/local/bin/gcc-4.9
+    export CXX=/usr/local/bin/g++-4.9
+    export CPP=/usr/local/bin/cpp-4.9
+    export LD=/usr/local/bin/gcc-4.9
 
     BINUTILS_CFLAGS="-Wno-error=deprecated-declarations"
     AUTOCONF_264="autoconf264"
@@ -17,12 +17,12 @@ else
 fi
 
 BINUTILS_VER=2.24
-GMP_VER=5.1.3
+GMP_VER="6.0.0a"
 MPFR_VER=3.1.2
 MPC_VER=1.0.2
 ICONV_VER=1.14
-GCC_VER=4.8.2
-GDB_VER=7.6.2
+GCC_VER=4.9.0
+GDB_VER=7.7.1
 NEWLIB_VER=2.1.0
 
 BINUTILS_URL=http://ftp.gnu.org/gnu/binutils/binutils-$BINUTILS_VER.tar.bz2
@@ -34,7 +34,7 @@ GCC_URL=http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VER/gcc-$GCC_VER.tar.bz2
 GDB_URL=http://ftp.gnu.org/gnu/gdb/gdb-$GDB_VER.tar.bz2
 NEWLIB_URL=ftp://sourceware.org/pub/newlib/newlib-$NEWLIB_VER.tar.gz
 
-export TARGET=i586-pc-utopia
+export TARGET=i686-pc-utopia
 export PREFIX=/usr/local/utopia
 export PATH="$PREFIX/bin:$PATH"
 
@@ -99,7 +99,7 @@ if [ "$1" != "-n" ]; then
 
     mkdir build-gdb
     pushd build-gdb
-       ../gdb-$GDB_VER/configure --target=i586-elf --prefix="$PREFIX" --disable-nls 
+       ../gdb-$GDB_VER/configure --target=i686-elf --prefix="$PREFIX" --disable-nls 
        make -j4
        sudo make install
     popd

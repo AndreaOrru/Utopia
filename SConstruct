@@ -3,12 +3,13 @@ from os import environ
 DEBUG = int(ARGUMENTS.get('debug', 1))
 CCFLAGS = (['-gdwarf-2'] if DEBUG else ['-flto', '-fno-use-linker-plugin', '-O2']),
 
-env = Environment(ENV        = {'PATH': environ['PATH']},
+env = Environment(ENV        = {'PATH': environ['PATH'],
+                                'GCC_COLORS': '1'},
 
                   AS         = 'nasm',
                   ASFLAGS    = ['-felf'] + (['-Fdwarf', '-g'] if DEBUG else []),
 
-                  CC         = 'i586-pc-utopia-gcc',
+                  CC         = 'i686-pc-utopia-gcc',
                   CFLAGS     = ['-std=gnu11'],
                   CCFLAGS    = CCFLAGS,
                   CPPFLAGS   = ['-Wall', '-Wextra'],
