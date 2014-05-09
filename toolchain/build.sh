@@ -6,7 +6,7 @@ if [ "$(uname)" == "Darwin" ]; then
     export CPP=/usr/local/bin/cpp-4.9
     export LD=/usr/local/bin/gcc-4.9
 
-    BINUTILS_CFLAGS="-Wno-error=deprecated-declarations"
+    BINUTILS_CFLAGS="-Wno-error=deprecated-declarations -Wno-error=unused-value"
     AUTOCONF_264="autoconf264"
     NEWLIB_AUTOMAKE="automake112"
     NEWLIB_ACLOCAL="aclocal112"
@@ -17,7 +17,7 @@ else
 fi
 
 BINUTILS_VER=2.24
-GMP_VER="6.0.0a"
+GMP_VER=5.1.3
 MPFR_VER=3.1.2
 MPC_VER=1.0.2
 ICONV_VER=1.14
