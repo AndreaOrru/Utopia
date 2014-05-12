@@ -5,29 +5,6 @@
 
 static TLS* const kernelTLSs = (TLS*)KERNEL_TLS;
 
-static void wait(Thread* waiter, uint16_t tid, State reason)
-{
-    scheduler_remove(waiter);
-
-    if (reason == WAIT_SENDING)
-    {
-        waiter->state = WAIT_SENDING;
-        list_append(&thread_get(tid)->waitingList, &waiter->queueLink);
-    }
-
-    else if (reason == WAIT_RECEIVING)
-    {
-        waiter->state = WAIT_RECEIVING;
-        waiter->listeningTo = tid;
-    }
-}
-
-static alwaysinline void unblock(Thread* thread)
-{
-    thread->state = READY;
-    scheduler_add(thread);
-}
-
 static inline void deliver(Thread* sender, Thread* receiver)
 {
     MsgBox*   senderBox = &kernelTLSs[  sender->tid].box;
@@ -35,6 +12,8 @@ static inline void deliver(Thread* sender, Thread* receiver)
 
     receiverBox->tag.n = senderBox->tag.n;
     memcpy(receiverBox->reg, senderBox->reg, senderBox->tag.n * sizeof(uint32_t));
+
+    scheduler_unblock(receiver);
 }
 
 void send_receive(uint16_t to, uint16_t from)
@@ -46,13 +25,12 @@ void send_receive(uint16_t to, uint16_t from)
         receiver = thread_get(to);
 
         if (receiver->state != WAIT_RECEIVING)
-            return wait(current, to, WAIT_SENDING);
+            return scheduler_wait(to, WAIT_SENDING);
 
-        if (!(receiver->listeningTo == (uint16_t)-1 || receiver->listeningTo == current->tid))
+        if (!(receiver->waitingFor == (uint16_t)-1 || receiver->waitingFor == current->tid))
             return;
 
         deliver(current, receiver);
-        unblock(receiver);
     }
 
     if (from)
@@ -61,10 +39,9 @@ void send_receive(uint16_t to, uint16_t from)
         {
             sender = list_item(list_pop(&current->waitingList), Thread, queueLink);
             deliver(sender, current);
-            unblock(sender);
         }
         else
-            wait(current, from, WAIT_RECEIVING);
+            scheduler_wait(from, WAIT_RECEIVING);
     }
 
     return;

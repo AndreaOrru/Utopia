@@ -22,9 +22,9 @@ void thread_create(const void* entry, Process* process)
     Thread* thread = &TCBs[next_tid];
     map(thread, NULL, PAGE_WRITE | PAGE_GLOBAL);
 
-    thread->tid         = next_tid++;
-    thread->state       = NEW;
-    thread->listeningTo = 0;
+    thread->tid        = next_tid++;
+    thread->state      = NEW;
+    thread->waitingFor = 0;
     list_init(&thread->waitingList);
 
     thread->process  = process;

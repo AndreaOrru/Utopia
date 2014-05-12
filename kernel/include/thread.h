@@ -21,7 +21,7 @@ typedef union
         Link queueLink;
 
         State state;
-        uint16_t listeningTo;
+        uint16_t waitingFor;
         List waitingList;
 
         Process* process;

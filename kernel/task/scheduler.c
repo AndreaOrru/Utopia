@@ -32,7 +32,7 @@ alwaysinline void scheduler_add(Thread* thread)
     list_insert_before(&scheduler_current()->queueLink, &thread->queueLink);
 }
 
-alwaysinline void scheduler_remove(Thread* thread)
+inline void scheduler_remove(Thread* thread)
 {
     bool current = (list_last(&readyQueue) == &thread->queueLink);
 
@@ -44,6 +44,30 @@ alwaysinline void scheduler_remove(Thread* thread)
 alwaysinline Thread* scheduler_current(void)
 {
     return list_item(list_last(&readyQueue), Thread, queueLink);
+}
+
+void scheduler_wait(uint16_t waitFor, State reason)
+{
+    Thread* thread = scheduler_current();
+    scheduler_remove(thread);
+
+    if (reason == WAIT_SENDING)
+    {
+        thread->state = WAIT_SENDING;
+        list_append(&thread_get(waitFor)->waitingList, &thread->queueLink);
+    }
+
+    else if (reason == WAIT_RECEIVING)
+    {
+        thread->state = WAIT_RECEIVING;
+        thread->waitingFor = waitFor;
+    }
+}
+
+inline void scheduler_unblock(Thread* thread)
+{
+    thread->state = READY;
+    scheduler_add(thread);
 }
 
 void scheduler_init(void)
