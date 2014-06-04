@@ -23,13 +23,13 @@ static void schedule(void)
     if (list_empty(&readyQueue))
         ERROR("No more threads to schedule.");
 
-    scheduler_add(list_item(list_pop(&readyQueue), Thread, queueLink));
+    list_append(&readyQueue, list_pop(&readyQueue));
     switch_to(scheduler_current());
 }
 
 alwaysinline void scheduler_add(Thread* thread)
 {
-    list_insert_before(&scheduler_current()->queueLink, &thread->queueLink);
+    list_prepend(&readyQueue, &thread->queueLink);
 }
 
 inline void scheduler_remove(Thread* thread)

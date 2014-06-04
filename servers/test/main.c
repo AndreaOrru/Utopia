@@ -3,11 +3,19 @@
 
 int main(void)
 {
-    MBOX->tag.n  = 1;
-    MBOX->reg[0] = 10;
+    irq_subscribe(1);
+
+    //MBOX->tag.n  = 1;
+    //MBOX->reg[0] = 10;
 
     //send_receive(2, 2);
-    printf("Ciao!");
+    while(1)
+    {
+        irq_wait(1);
+
+        printf("%d ", inb(0x60));
+        fflush(stdout);
+    }
 
     return 0;
 }

@@ -24,6 +24,7 @@ void thread_create(const void* entry, Process* process)
 
     thread->tid        = next_tid++;
     thread->state      = NEW;
+    thread->waitingIrq = -1;
     thread->waitingFor = 0;
     list_init(&thread->waitingList);
 

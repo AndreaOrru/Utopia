@@ -22,6 +22,7 @@ typedef union
 
         State state;
         uint16_t waitingFor;
+        int8_t waitingIrq;
         List waitingList;
 
         Process* process;

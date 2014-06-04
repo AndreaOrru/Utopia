@@ -26,3 +26,6 @@ extern _TLS* volatile* const _TLSPtr;
 _SYSCALL_1(0, put, char);
 _SYSCALL_2(1, send_receive, uint16_t, uint16_t);
 _SYSCALL_1(2, _sbrk, size_t);
+_SYSCALL_1(3, irq_subscribe, uint8_t);
+_SYSCALL_1(4, irq_wait, uint8_t);
+_SYSCALL_1(5, inb, uint16_t);
