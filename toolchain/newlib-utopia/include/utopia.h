@@ -30,3 +30,4 @@ _SYSCALL_1(3, irq_subscribe, uint8_t);
 _SYSCALL_1(4, irq_wait, uint8_t);
 _SYSCALL_1(5, inb, uint16_t);
 _SYSCALL_1(6, thread_create, void*);
+_SYSCALL_0(7, process_exit);

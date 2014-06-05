@@ -50,10 +50,8 @@ void thread_create(const void* entry, Process* process)
     scheduler_add(thread);
 }
 
-void thread_exit(void)
+void thread_exit(Thread* thread)
 {
-    Thread* thread = scheduler_current();
-
     list_remove(&thread->processLink);
     unmap((void*)USER_STACKS + ((thread->localTid - 1) * PAGE_SIZE));
 
@@ -62,5 +60,6 @@ void thread_exit(void)
     unmap(&userTLSs[thread->localTid]);
 
     thread->state = DYING;
-    schedule();
+    if (scheduler_current() == thread)
+        schedule();
 }

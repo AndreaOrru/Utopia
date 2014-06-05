@@ -11,5 +11,7 @@ int main(void)
 {
     thread_create(thread);
 
+    while(1);
+
     return 0;
 }

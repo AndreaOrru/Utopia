@@ -38,5 +38,5 @@ typedef union
 } Thread;
 
 void thread_create(const void* entry, Process* process);
-void thread_exit(void);
+void thread_exit(Thread* thread);
 Thread* thread_get(uint16_t tid);

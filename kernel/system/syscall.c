@@ -21,7 +21,8 @@ void* syscallHandlers[] =
     [3] = irq_subscribe,
     [4] = irq_wait,
     [5] = inb,
-    [6] = _thread_create
+    [6] = _thread_create,
+    [7] = process_exit
 };
 
 void syscall_init(void)

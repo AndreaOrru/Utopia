@@ -33,3 +33,13 @@ void process_create(ElfHeader* elf)
     write_cr3(process->PD);
     thread_create(elf_load(elf), process);
 }
+
+void process_exit(void)
+{
+    Process* process = scheduler_current()->process;
+
+    while (!list_empty(&process->threads))
+        thread_exit(list_item(list_pop(&process->threads), Thread, processLink));
+
+    unmap(process);
+}

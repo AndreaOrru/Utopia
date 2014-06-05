@@ -128,7 +128,9 @@ pushd build-newlib
     sudo make install || exit 1
 popd
 
-pushd build-gcc
-    make || exit 1
-    sudo make install || exit 1
-popd
+if [ "$1" != "-n" ]; then
+    pushd build-gcc
+        make || exit 1
+        sudo make install || exit 1
+    popd
+fi

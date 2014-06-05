@@ -1,9 +1,9 @@
 #include "interrupt.h"
 #include "layout.h"
-#include "string.h"
 #include "pmem.h"
+#include "scheduler.h"
+#include "string.h"
 #include "term.h"
-#include "thread.h"
 #include "vmem.h"
 
 typedef uintptr_t PEntry;
@@ -81,7 +81,7 @@ static void page_fault(void)
 {
     void* cr2 = read_cr2();
     if (cr2 == THREAD_MAGIC)
-        return thread_exit();
+        return thread_exit(scheduler_current());
 
     Context* context = get_context();
 
@@ -118,6 +118,31 @@ void* new_address_space(void)
     extPD[1023] = (PEntry)newPD | PAGE_PRESENT | PAGE_WRITE;
 
     return newPD;
+}
+
+void destroy_address_space(void)
+{
+    PEntry* physPD = read_cr3();
+    frame_free(physPD);
+
+    for (uint32_t i = PD_INDEX(USER_SPACE);
+                  i < PD_INDEX(USER_SPACE_END);
+                  i++)
+    {
+        if (PD[i])
+        {
+            frame_free((void*) (PD[i] & ~0xFFF));
+
+            for (PEntry* ptEntry =  PT_ENTRY(0x400000*i);
+                         ptEntry < (PT_ENTRY(0x400000*i) + 0x400);
+                         ptEntry++)
+            {
+                if (*ptEntry & PAGE_ALLOCATED)
+                    frame_free((void*) *ptEntry);
+                *ptEntry = 0;
+            }
+        }
+    }
 }
 
 void vmem_init(void)

@@ -12,5 +12,6 @@ typedef struct
     List threads;
 } Process;
 
-void process_create(ElfHeader* elf);
+void  process_create(ElfHeader* elf);
+void  process_exit(void);
 void* sbrk(size_t incr);
