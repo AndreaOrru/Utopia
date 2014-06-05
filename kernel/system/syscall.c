@@ -3,9 +3,15 @@
 #include "ipc.h"
 #include "isr.h"
 #include "process.h"
+#include "scheduler.h"
 #include "term.h"
 #include "x86.h"
 #include "syscall.h"
+
+void _thread_create(void* entry)
+{
+    thread_create(entry, scheduler_current()->process);
+}
 
 void* syscallHandlers[] =
 {
@@ -14,7 +20,8 @@ void* syscallHandlers[] =
     [2] = sbrk,
     [3] = irq_subscribe,
     [4] = irq_wait,
-    [5] = inb
+    [5] = inb,
+    [6] = _thread_create
 };
 
 void syscall_init(void)

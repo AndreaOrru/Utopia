@@ -18,12 +18,20 @@ static inline void switch_to(Thread* thread)
     set_context(&thread->context);
 }
 
-static void schedule(void)
+void schedule(void)
 {
+  retry:
     if (list_empty(&readyQueue))
         ERROR("No more threads to schedule.");
 
-    list_append(&readyQueue, list_pop(&readyQueue));
+    Thread* new = list_item(list_pop(&readyQueue), Thread, queueLink);
+    if (new->state == DYING)
+    {
+        unmap(new);
+        goto retry;
+    }
+
+    list_append(&readyQueue, &new->queueLink);
     switch_to(scheduler_current());
 }
 

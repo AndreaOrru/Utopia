@@ -3,6 +3,7 @@
 #include "string.h"
 #include "pmem.h"
 #include "term.h"
+#include "thread.h"
 #include "vmem.h"
 
 typedef uintptr_t PEntry;
@@ -78,9 +79,13 @@ void unmap(void* vAddr)
 
 static void page_fault(void)
 {
+    void* cr2 = read_cr2();
+    if (cr2 == THREAD_MAGIC)
+        return thread_exit();
+
     Context* context = get_context();
 
-    ALERT("Page fault at address %x.", read_cr2());
+    ALERT("Page fault at address %x.", cr2);
     if (context->error & PAGE_USER)
         ALERT("  DPL: userspace  ");
     else

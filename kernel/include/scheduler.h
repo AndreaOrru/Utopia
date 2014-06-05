@@ -7,3 +7,4 @@ void scheduler_remove(Thread* thread);
 Thread* scheduler_current(void);
 void scheduler_wait(uint16_t waitFor, State reason);
 void scheduler_unblock(Thread* thread);
+void schedule(void);

@@ -1,9 +1,15 @@
 #include <utopia.h>
 
+void thread(void)
+{
+    put('A');
+
+    return;
+}
+
 int main(void)
 {
-    //send_receive(0, 1);
-    while(1);
+    thread_create(thread);
 
     return 0;
 }

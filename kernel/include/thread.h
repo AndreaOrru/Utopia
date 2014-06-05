@@ -4,13 +4,15 @@
 #include "process.h"
 #include "x86.h"
 
+#define THREAD_MAGIC  ((void*)0xDEADC0DE)
+
 typedef struct
 {
     MsgBox box;
     uint8_t mem[PAGE_SIZE - sizeof(MsgBox)];
 } TLS;
 
-typedef enum { NEW, READY, WAIT_SENDING, WAIT_RECEIVING } State;
+typedef enum { READY, DYING, WAIT_SENDING, WAIT_RECEIVING } State;
 
 typedef union
 {
@@ -22,7 +24,7 @@ typedef union
 
         State state;
         uint16_t waitingFor;
-        int8_t waitingIrq;
+        uint8_t waitingIrq;
         List waitingList;
 
         Process* process;
@@ -36,4 +38,5 @@ typedef union
 } Thread;
 
 void thread_create(const void* entry, Process* process);
+void thread_exit(void);
 Thread* thread_get(uint16_t tid);

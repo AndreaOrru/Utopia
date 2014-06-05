@@ -25,6 +25,7 @@ static void irq_notify(void)
 
 void irq_subscribe(uint8_t irq)
 {
+    if (irq == 0) return;
     Thread* current = scheduler_current();
 
     if (!irqThread[irq])

@@ -23,8 +23,8 @@ void thread_create(const void* entry, Process* process)
     map(thread, NULL, PAGE_WRITE | PAGE_GLOBAL);
 
     thread->tid        = next_tid++;
-    thread->state      = NEW;
-    thread->waitingIrq = -1;
+    thread->state      = READY;
+    thread->waitingIrq = 0;
     thread->waitingFor = 0;
     list_init(&thread->waitingList);
 
@@ -34,6 +34,7 @@ void thread_create(const void* entry, Process* process)
 
     void* stack = (void*)USER_STACKS + (thread->localTid * PAGE_SIZE) - 4;
     map(stack, NULL, PAGE_WRITE | PAGE_USER);
+    *(void**)stack = THREAD_MAGIC;
 
     void* TLS = frame_alloc();
     map(&kernelTLSs[thread->tid],    TLS, PAGE_WRITE | PAGE_GLOBAL);
@@ -47,4 +48,19 @@ void thread_create(const void* entry, Process* process)
     thread->context.eflags = 0x202;
 
     scheduler_add(thread);
+}
+
+void thread_exit(void)
+{
+    Thread* thread = scheduler_current();
+
+    list_remove(&thread->processLink);
+    unmap((void*)USER_STACKS + ((thread->localTid - 1) * PAGE_SIZE));
+
+    frame_free(vmem_to_phys(&kernelTLSs[thread->tid]));
+    unmap(&kernelTLSs[thread->tid]);
+    unmap(&userTLSs[thread->localTid]);
+
+    thread->state = DYING;
+    schedule();
 }
