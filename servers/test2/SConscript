@@ -1,4 +1,0 @@
-Import('senv')
-
-test2 = senv.Program('test2.elf', Glob('*.c'))
-Return('test2')

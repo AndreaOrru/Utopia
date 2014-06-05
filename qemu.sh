@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SERVERS="servers/test/test.elf,servers/test2/test2.elf"
+SERVERS="servers/keyboard/keyboard.elf,servers/test/test.elf"
 
 if [ "$1" = "-g" ]; then
     qemu-system-i386 -s -S -kernel kernel/kernel.elf -initrd $SERVERS &

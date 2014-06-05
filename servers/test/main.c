@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <utopia.h>
 
+void thread(void)
+{
+    printf(">>> ");
+    fflush(stdout);
+
+    return;
+}
+
 int main(void)
 {
-    irq_subscribe(1);
+    thread_create(thread);
 
-    while(1)
-    {
-        irq_wait(1);
-
-        printf("%d ", inb(0x60));
-        fflush(stdout);
-    }
+    while(1);
 
     return 0;
 }
