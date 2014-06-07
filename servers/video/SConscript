@@ -1,0 +1,4 @@
+Import('senv')
+
+video = senv.Program('video.elf', Glob('*.c'))
+Return('video')

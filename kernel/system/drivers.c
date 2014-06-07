@@ -1,5 +1,6 @@
 #include "interrupt.h"
 #include "scheduler.h"
+#include "vmem.h"
 #include "drivers.h"
 
 static bool    irqPending[32] = { [0 ... 31] = false };
@@ -47,4 +48,10 @@ void irq_wait(uint8_t irq)
         current->waitingIrq = irq;
         scheduler_wait(0, WAIT_RECEIVING);
     }
+}
+
+void memory_map(void* vAddr, void* pAddr, size_t size, bool writable)
+{
+    for (size_t i = 0; i < size; i += PAGE_SIZE)
+        map(vAddr + i, pAddr + i, PAGE_USER | (writable ? PAGE_WRITE : 0));
 }

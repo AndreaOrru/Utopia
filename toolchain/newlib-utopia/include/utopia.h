@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include "_syscall.h"
@@ -31,3 +32,6 @@ _SYSCALL_1(4, irq_wait, uint8_t);
 _SYSCALL_1(5, inb, uint16_t);
 _SYSCALL_1(6, thread_create, void*);
 _SYSCALL_0(7, process_exit);
+_SYSCALL_4(8, _memory_map, void*, void*, size_t, bool);
+
+void* memory_map(void* pAddr, size_t size, bool writable);

@@ -102,7 +102,10 @@ int main(void)
             if (code & 0x80) continue;
 
             int key = scancodeTable[code];
-            put((char)key);
+            //put((char)key);
+            MBOX->tag.n  = 1;
+            MBOX->reg[0] = (char)key;
+            send_receive(2, 0);
         }
     }
 

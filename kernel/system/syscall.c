@@ -5,6 +5,7 @@
 #include "process.h"
 #include "scheduler.h"
 #include "term.h"
+#include "vmem.h"
 #include "x86.h"
 #include "syscall.h"
 
@@ -22,7 +23,8 @@ void* syscallHandlers[] =
     [4] = irq_wait,
     [5] = inb,
     [6] = _thread_create,
-    [7] = process_exit
+    [7] = process_exit,
+    [8] = memory_map
 };
 
 void syscall_init(void)

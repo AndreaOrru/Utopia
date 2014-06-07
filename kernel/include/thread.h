@@ -4,7 +4,7 @@
 #include "process.h"
 #include "x86.h"
 
-#define THREAD_MAGIC  ((void*)0xDEADC0DE)
+#define THREAD_MAGIC  0xDEADC0DE
 
 typedef struct
 {

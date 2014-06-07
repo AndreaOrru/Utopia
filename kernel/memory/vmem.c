@@ -80,10 +80,17 @@ void unmap(void* vAddr)
 static void page_fault(void)
 {
     void* cr2 = read_cr2();
-    if (cr2 == THREAD_MAGIC)
+    if (cr2 == (void*)THREAD_MAGIC)
         return thread_exit(scheduler_current());
 
     Context* context = get_context();
+    Process* process = scheduler_current()->process;
+    if ((context->error & (PAGE_USER | ~PAGE_PRESENT)) &&
+        cr2 >= (void*)USER_HEAP &&
+        cr2 <  (void*)USER_HEAP + process->heapSize)
+    {
+        return map(cr2, NULL, PAGE_WRITE | PAGE_USER);
+    }
 
     ALERT("Page fault at address %x.", cr2);
     if (context->error & PAGE_USER)

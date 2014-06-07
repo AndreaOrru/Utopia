@@ -13,9 +13,6 @@ void* sbrk(size_t incr)
     void* ret = (void*)USER_HEAP + current->heapSize;
     current->heapSize += incr;
 
-    for (void* i = PAGE_BASE(ret); i < PAGE_ALIGN(ret + current->heapSize); i += PAGE_SIZE)
-        map(i, NULL, PAGE_WRITE | PAGE_USER);
-
     return ret;
 }
 

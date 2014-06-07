@@ -34,7 +34,7 @@ void thread_create(const void* entry, Process* process)
 
     void* stack = (void*)USER_STACKS + (thread->localTid * PAGE_SIZE) - 4;
     map(stack, NULL, PAGE_WRITE | PAGE_USER);
-    *(void**)stack = THREAD_MAGIC;
+    *(void**)stack = (void*)THREAD_MAGIC;
 
     void* TLS = frame_alloc();
     map(&kernelTLSs[thread->tid],    TLS, PAGE_WRITE | PAGE_GLOBAL);

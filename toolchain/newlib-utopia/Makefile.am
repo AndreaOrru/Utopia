@@ -8,7 +8,8 @@ noinst_LIBRARIES = lib.a
 
 lib_a_SOURCES = close.c environ.c execve.c _exit.c fork.c fstat.c \
 	getpid.c isatty.c kill.c link.c lseek.c open.c read.c sbrk.c  \
-	stat.c times.c unlink.c wait.c write.c crt0.S
+	stat.c times.c unlink.c wait.c write.c                        \
+	crt0.S memory_map.c
 lib_a_CCASFLAGS = $(AM_CCASFLAGS)
 lib_a_CFLAGS = $(AM_CFLAGS)
 
