@@ -84,10 +84,9 @@ static void page_fault(void)
         return thread_exit(scheduler_current());
 
     Context* context = get_context();
-    Process* process = scheduler_current()->process;
     if ((context->error & (PAGE_USER | ~PAGE_PRESENT)) &&
         cr2 >= (void*)USER_HEAP &&
-        cr2 <  (void*)USER_HEAP + process->heapSize)
+        cr2 <  (void*)USER_HEAP + scheduler_current()->process->heapSize)
     {
         return map(cr2, NULL, PAGE_WRITE | PAGE_USER);
     }

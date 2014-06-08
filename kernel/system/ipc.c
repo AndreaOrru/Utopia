@@ -10,10 +10,11 @@ static inline void deliver(Thread* sender, Thread* receiver)
     MsgBox*   senderBox = &kernelTLSs[  sender->tid].box;
     MsgBox* receiverBox = &kernelTLSs[receiver->tid].box;
 
-    receiverBox->tag.n = senderBox->tag.n;
-    memcpy(receiverBox->reg, senderBox->reg, senderBox->tag.n * sizeof(uint32_t));
+    receiverBox->tag.pid = sender->process->pid;
+    receiverBox->tag.tid = sender->tid;
+    receiverBox->tag.n   = senderBox->tag.n;
 
-    scheduler_unblock(receiver);
+    memcpy(receiverBox->reg, senderBox->reg, senderBox->tag.n * sizeof(uint32_t));
 }
 
 void send_receive(uint16_t to, uint16_t from)
@@ -31,6 +32,7 @@ void send_receive(uint16_t to, uint16_t from)
             return;
 
         deliver(current, receiver);
+        scheduler_unblock(receiver);
     }
 
     if (from)
@@ -39,6 +41,7 @@ void send_receive(uint16_t to, uint16_t from)
         {
             sender = list_item(list_pop(&current->waitingList), Thread, queueLink);
             deliver(sender, current);
+            scheduler_unblock(sender);
         }
         else
             scheduler_wait(from, WAIT_RECEIVING);

@@ -11,10 +11,12 @@ typedef struct
 {
     struct
     {
+        uint16_t pid;
+        uint16_t tid;
         uint32_t n;
     } tag;
     uint32_t reg[64];
-} _MsgBox;
+} __attribute__((packed)) _MsgBox;
 
 typedef struct
 {
