@@ -39,12 +39,13 @@ void send_receive(uint16_t to, uint16_t from)
         scheduler_unblock(receiver);
     }
 
-    else if (from)
+    if (from)
     {
         if (!list_empty(&current->waitingList))
         {
             sender = list_item(list_pop(&current->waitingList), Thread, queueLink);
             deliver(sender, current);
+
             if (sender->state == WAIT_SENDING)
                 scheduler_unblock(sender);
             else
