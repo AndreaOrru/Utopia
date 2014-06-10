@@ -9,7 +9,8 @@ int main(void)
 
     while(1)
     {
-        send_receive(0, -1);
+        MBOX->tag.n = 0;
+        send_receive(1, 1);
         video[i++] = ((char) MBOX->reg[0]) | 0xF000;
     }
 

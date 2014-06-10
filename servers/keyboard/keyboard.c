@@ -99,13 +99,14 @@ int main(void)
         if (inb(0x64) & 1)
         {
             int code = inb(0x60);
-            if (code & 0x80) continue;
-
+            if (code & 0x80)
+                continue;
             int key = scancodeTable[code];
-            //put((char)key);
+
+            send_receive(0, -1);
             MBOX->tag.n  = 1;
             MBOX->reg[0] = (char)key;
-            send_receive(2, 0);
+            send_receive(MBOX->tag.tid, 0);
         }
     }
 

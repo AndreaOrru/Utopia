@@ -12,7 +12,7 @@ typedef struct
     uint8_t mem[PAGE_SIZE - sizeof(MsgBox)];
 } TLS;
 
-typedef enum { READY, DYING, WAIT_SENDING, WAIT_RECEIVING } State;
+typedef enum { READY, DYING, WAIT_SENDING, WAIT_RECEIVING, WAIT_SEND_RECV } State;
 
 typedef union
 {

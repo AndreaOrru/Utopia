@@ -59,16 +59,18 @@ void scheduler_wait(uint16_t waitFor, State reason)
     Thread* thread = scheduler_current();
     scheduler_remove(thread);
 
+    thread->state = reason;
+
     if (reason == WAIT_SENDING)
-    {
-        thread->state = WAIT_SENDING;
         list_append(&thread_get(waitFor)->waitingList, &thread->queueLink);
-    }
 
     else if (reason == WAIT_RECEIVING)
-    {
-        thread->state = WAIT_RECEIVING;
         thread->waitingFor = waitFor;
+
+    else
+    {
+        thread->waitingFor = waitFor;
+        list_append(&thread_get(waitFor)->waitingList, &thread->queueLink);
     }
 }
 

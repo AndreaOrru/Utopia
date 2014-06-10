@@ -25,23 +25,30 @@ void send_receive(uint16_t to, uint16_t from)
     {
         receiver = thread_get(to);
 
-        if (receiver->state != WAIT_RECEIVING)
-            return scheduler_wait(to, WAIT_SENDING);
-
-        if (!(receiver->waitingFor == (uint16_t)-1 || receiver->waitingFor == current->tid))
-            return;
+        if (receiver->state != WAIT_RECEIVING ||
+            !(receiver->waitingFor == (uint16_t)-1 ||
+              receiver->waitingFor == current->tid))
+        {
+            if (from)
+                return scheduler_wait(to, WAIT_SEND_RECV);
+            else
+                return scheduler_wait(to, WAIT_SENDING);
+        }
 
         deliver(current, receiver);
         scheduler_unblock(receiver);
     }
 
-    if (from)
+    else if (from)
     {
         if (!list_empty(&current->waitingList))
         {
             sender = list_item(list_pop(&current->waitingList), Thread, queueLink);
             deliver(sender, current);
-            scheduler_unblock(sender);
+            if (sender->state == WAIT_SENDING)
+                scheduler_unblock(sender);
+            else
+                sender->state = WAIT_RECEIVING;
         }
         else
             scheduler_wait(from, WAIT_RECEIVING);
