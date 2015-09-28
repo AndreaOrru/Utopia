@@ -1,0 +1,31 @@
+.section .text
+
+.global gdt_load
+.type gdt_load, @function
+gdt_load:
+    mov 4(%esp), %eax
+    lgdt (%eax)
+
+    mov $0x10, %ax
+    mov %ax, %ds
+    mov %ax, %es
+    mov %ax, %fs
+    mov %ax, %gs
+    mov %ax, %ss
+    jmpl $0x08, $.reload_cs
+    .reload_cs:
+        ret
+
+.global tss_load
+.type tss_load, @function
+tss_load:
+    mov 4(%esp), %ax
+    ltr %ax
+    ret
+
+.global idt_load
+.type idt_load, @function
+idt_load:
+    mov 4(%esp), %eax
+    lidt (%eax)
+    ret

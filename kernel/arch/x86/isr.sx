@@ -1,0 +1,91 @@
+#define EXCEPTION(x)  (x <  32)
+#define NO_ERROR(x)   (x !=  8  &&  !(x >= 10 && x <= 14) && x != 17)
+#define IRQ(x)        (x >= 32  &&  x < 32 + 16)
+#define IRQ_SLAVE(x)  (x -  32  >=  8)
+
+.macro generate_isr n
+    .global isr\n
+    .type isr\n, @function
+    isr\n:
+        .if NO_ERROR(\n)
+            push $0
+        .endif
+        push $\n
+        pusha
+
+        mov $0x10, %bp
+        mov %bp, %ds
+        mov %bp, %es
+
+        .if EXCEPTION(\n)
+            mov %esp, (context)
+        .endif
+        call (interrupt_handlers + (\n * 4))
+        mov (context), %esp
+
+        .if IRQ(\n)
+            mov $0x20, %al
+            .if IRQ_SLAVE(\n)
+                out %al, $0xA0
+            .endif
+            out %al, $0x20
+        .endif
+
+        mov $0x23, %bp
+        mov %bp, %ds
+        mov %bp, %es
+
+        popa
+        add $8, %esp
+        iret
+.endm
+
+generate_isr 0
+generate_isr 1
+generate_isr 2
+generate_isr 3
+generate_isr 4
+generate_isr 5
+generate_isr 6
+generate_isr 7
+generate_isr 8
+generate_isr 9
+generate_isr 10
+generate_isr 11
+generate_isr 12
+generate_isr 13
+generate_isr 14
+generate_isr 15
+generate_isr 16
+generate_isr 17
+generate_isr 18
+generate_isr 19
+generate_isr 20
+generate_isr 21
+generate_isr 22
+generate_isr 23
+generate_isr 24
+generate_isr 25
+generate_isr 26
+generate_isr 27
+generate_isr 28
+generate_isr 29
+generate_isr 30
+generate_isr 31
+
+generate_isr 32
+generate_isr 33
+generate_isr 34
+generate_isr 35
+generate_isr 36
+generate_isr 37
+generate_isr 38
+generate_isr 39
+generate_isr 40
+generate_isr 41
+generate_isr 42
+generate_isr 43
+generate_isr 44
+generate_isr 45
+generate_isr 46
+generate_isr 47
