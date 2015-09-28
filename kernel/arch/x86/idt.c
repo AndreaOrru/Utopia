@@ -14,7 +14,7 @@ typedef struct
     uint16_t selector;
     uint8_t  zero;
     uint8_t  flags;
-    uint8_t  offset_high;
+    uint16_t offset_high;
 } __attribute__((packed)) IDTEntry;
 
 static IDTEntry idt[256];

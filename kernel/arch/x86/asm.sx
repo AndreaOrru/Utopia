@@ -1,31 +1,32 @@
-.section .text
+.intel_syntax noprefix
+.text
 
 .global gdt_load
 .type gdt_load, @function
 gdt_load:
-    mov 4(%esp), %eax
-    lgdt (%eax)
+    mov eax, [esp + 4]
+    lgdt [eax]
 
-    mov $0x10, %ax
-    mov %ax, %ds
-    mov %ax, %es
-    mov %ax, %fs
-    mov %ax, %gs
-    mov %ax, %ss
-    jmpl $0x08, $.reload_cs
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+    jmp 0x08:.reload_cs
     .reload_cs:
         ret
 
 .global tss_load
 .type tss_load, @function
 tss_load:
-    mov 4(%esp), %ax
-    ltr %ax
+    mov ax, [esp + 4]
+    ltr ax
     ret
 
 .global idt_load
 .type idt_load, @function
 idt_load:
-    mov 4(%esp), %eax
-    lidt (%eax)
+    mov eax, [esp + 4]
+    lidt [eax]
     ret

@@ -1,11 +1,8 @@
-#include <stdarg.h>
-#include <stdio.h>
+#include "arch/x86/asm.h"
 #include "debug.h"
 
-void error(const char* format, ...)
+inline void hang(void)
 {
-    va_list args;
-    va_start(args, format);
-
-    printf(format, args);
+    cli();
+    hlt();
 }

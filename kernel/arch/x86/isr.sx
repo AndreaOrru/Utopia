@@ -1,42 +1,45 @@
+.intel_syntax noprefix
+
 #define EXCEPTION(x)  (x <  32)
 #define NO_ERROR(x)   (x !=  8  &&  !(x >= 10 && x <= 14) && x != 17)
 #define IRQ(x)        (x >= 32  &&  x < 32 + 16)
 #define IRQ_SLAVE(x)  (x -  32  >=  8)
 
 .macro generate_isr n
+    .align 4
     .global isr\n
     .type isr\n, @function
     isr\n:
         .if NO_ERROR(\n)
-            push $0
+            push 0
         .endif
-        push $\n
+        push \n
         pusha
 
-        mov $0x10, %bp
-        mov %bp, %ds
-        mov %bp, %es
+        mov bp, 0x10
+        mov ds, bp
+        mov es, bp
 
         .if EXCEPTION(\n)
-            mov %esp, (context)
+            mov [context], esp
         .endif
-        call (interrupt_handlers + (\n * 4))
-        mov (context), %esp
+        call [interrupt_handlers + (\n * 4)]
+        mov esp, [context]
 
         .if IRQ(\n)
-            mov $0x20, %al
+            mov al, 0x20
             .if IRQ_SLAVE(\n)
-                out %al, $0xA0
+                out 0xA0, al
             .endif
-            out %al, $0x20
+            out 0x20, al
         .endif
 
-        mov $0x23, %bp
-        mov %bp, %ds
-        mov %bp, %es
+        mov bp, 0x23
+        mov ds, bp
+        mov es, bp
 
         popa
-        add $8, %esp
+        add esp, 8
         iret
 .endm
 

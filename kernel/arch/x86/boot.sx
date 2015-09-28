@@ -1,3 +1,5 @@
+.intel_syntax noprefix
+
 #define ALIGN     (1 << 0)
 #define MEMINFO   (1 << 1)
 #define FLAGS     (ALIGN | MEMINFO)
@@ -10,13 +12,13 @@
     .long FLAGS
     .long CHECKSUM
 
-.section .text
+.text
 .global boot
 .type boot, @function
 boot:
-    mov $0x7C00, %esp
+    mov esp, 0x7C00
 
-    push %ebx
+    push ebx
     call main
 
     cli

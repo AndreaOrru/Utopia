@@ -8,4 +8,6 @@ void main(void* multiboot __attribute__((unused)))
     arch_init();
 
     printf("Hello world!");
+
+    int a = 5 / 0;
 }

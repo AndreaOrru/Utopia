@@ -73,9 +73,9 @@ static void interrupt_unhandled(void)
     Context* context = context_get();
 
     if (context->int_n < 32)
-        error("Exception: %s.", interrupt_names[context->int_n]);
+        ERROR("Exception: %s.", interrupt_names[context->int_n]);
     else if (context->int_n < 32 + 16)
-        error("IRQ: %s", interrupt_names[context->int_n]);
+        ERROR("IRQ: %s", interrupt_names[context->int_n]);
 }
 
 InterruptHandler interrupt_handlers[32 + 16] = { [0 ... 47] = interrupt_unhandled };

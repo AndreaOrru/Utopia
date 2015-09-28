@@ -1,3 +1,10 @@
 #pragma once
+#include <stdio.h>
 
-void error(const char* format, ...);
+void hang(void);
+
+#define ERROR(message...)       \
+({                              \
+    printf("\n\e0415" message); \
+    hang();                     \
+})
