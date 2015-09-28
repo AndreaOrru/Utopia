@@ -1,23 +1,27 @@
 from os import environ
 
-DEBUG = int(ARGUMENTS.get('debug', 1))
-CCFLAGS = ['-fdiagnostics-color=always'] + (['-gdwarf-2'] if DEBUG else ['-flto', '-fno-use-linker-plugin', '-O2']),
+DEBUG = int(ARGUMENTS.get('DEBUG', 1))
+if DEBUG:
+    ASFLAGS = CCFLAGS = LINKFLAGS = ['-ggdb3']
+else:
+    ASFLAGS = []
+    CCFLAGS = LINKFLAGS = ['-Os', '-flto']
+    LINKFLAGS += ['-s']
+
+ARCH = ARGUMENTS.get('ARCH', 'x86')
+if ARCH == 'x86':
+    TRIPLET = 'i686-elf'
 
 env = Environment(ENV        = {'PATH': environ['PATH']},
+                  CC         = '%s-gcc' % TRIPLET,
 
-                  AS         = 'nasm',
-                  ASFLAGS    = ['-felf'] + (['-Fdwarf', '-g'] if DEBUG else []),
+                  ASFLAGS    = ASFLAGS,
+                  CCFLAGS    = ['-Wall', '-Wextra', '-fno-asynchronous-unwind-tables', '-fdiagnostics-color'] + CCFLAGS,
+                  LINKFLAGS  = LINKFLAGS,
 
-                  CC         = 'i686-pc-utopia-gcc',
-                  CFLAGS     = ['-std=gnu11'],
-                  CCFLAGS    = CCFLAGS,
-                  CPPFLAGS   = ['-Wall', '-Wextra'],
-                  LINKFLAGS  = CCFLAGS,
+                  ASPPCOMSTR = 'AS    $TARGETS <- $SOURCES',
+                  CCCOMSTR   = 'CC    $TARGETS <- $SOURCES',
+                  LINKCOMSTR = 'LD    $TARGETS <- $SOURCES')
+Export('env', 'ARCH')
 
-                  ASCOMSTR   = 'AS\t$SOURCES -> $TARGETS',
-                  CCCOMSTR   = 'CC\t$SOURCES -> $TARGETS',
-                  LINKCOMSTR = 'LD\t$SOURCES -> $TARGETS')
-Export('env')
-
-kernel  = SConscript('kernel/SConscript')
-servers = SConscript('servers/SConscript')
+kernel = SConscript('kernel/SConscript')

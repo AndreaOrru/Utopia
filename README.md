@@ -1,4 +1,4 @@
 Utopia
 ======
 
-The OS for my thesis.
+An operating system possessing highly desirable, near perfect qualities.

@@ -1,7 +1,0 @@
-Import('senv')
-
-env = senv.Clone()
-env.Append(CPPFLAGS = ['-Wno-multichar'])
-
-keyboard = env.Program('keyboard.elf', Glob('*.c'))
-Return('keyboard')

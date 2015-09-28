@@ -1,13 +1,14 @@
-Import('env')
+from os import popen
+Import('env', 'ARCH')
 
 kenv = env.Clone()
-kenv.Append(CPPPATH   = ['include'],
-            CCFLAGS   = ['-ffreestanding'],
-            LINKFLAGS = ['-nostdlib', '-Tkernel/link.ld'],
-            LIBS      = ['gcc'])
+kenv.AppendUnique(CPPPATH   = ['include'],
+                  CPPFLAGS  = [('-isystem', 'kernel/include/lib')],
+                  CCFLAGS   = ['-ffreestanding', '-fbuiltin'],
+                  LINKFLAGS = ['-nostdlib', '-Tkernel/arch/%s/linker.ld' % ARCH],
+                  LIBS      = ['gcc'])
 
-kernel = kenv.Program('kernel.elf', Glob('*.c')   + Glob('*.asm') +
-                                    Glob('*/*.c') + Glob('*/*.asm'))
-
-Depends(kernel, 'link.ld')
+kernel = kenv.Program('kernel.elf', Glob('*.c') + Glob('*/*.c') + Glob('*.sx') + Glob('*/*.sx') +
+                                    Glob('arch/%s/*.c'  % ARCH) + Glob('arch/%s/*/*.c'  % ARCH)  +
+                                    Glob('arch/%s/*.sx' % ARCH) + Glob('arch/%s/*/*.sx' % ARCH))
 Return('kernel')
