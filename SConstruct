@@ -21,9 +21,9 @@ env = Environment(ENV        = {'PATH': environ['PATH']},
                   CPPFLAGS   = CPPFLAGS,
                   LINKFLAGS  = LINKFLAGS,
 
-                  ASPPCOMSTR = 'AS    $TARGETS <- $SOURCES',
-                  CCCOMSTR   = 'CC    $TARGETS <- $SOURCES',
-                  LINKCOMSTR = 'LD    $TARGETS <- $SOURCES')
+                  ASPPCOMSTR = 'AS    $TARGETS <= $SOURCES',
+                  CCCOMSTR   = 'CC    $TARGETS <= $SOURCES',
+                  LINKCOMSTR = 'LD    $TARGETS <= $SOURCES')
 Export('env', 'ARCH')
 
 kernel = SConscript('kernel/SConscript')

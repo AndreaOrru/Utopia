@@ -16,6 +16,6 @@ void main(unsigned long magic, const multiboot_info_t* const info)
     printf("\eF09Initializing the microkernel:\n");
 
     arch_init();
-    STEP(pmem_init(info), "Initializing Physical Memory...");
-    STEP(vmem_init(),      "Initializing Virtual Memory...");
+    STEP(pmem_init(info), "Initializing the Physical Memory Manager...");
+    STEP(vmem_init(),     "Initializing the Virtual Memory Manager...");
 }

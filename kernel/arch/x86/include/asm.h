@@ -18,6 +18,11 @@ static inline void sti(void)
 
 extern void paging_enable(void* pd);
 
+static inline void invlpg(void* v_addr)
+{
+    asm volatile ("invlpg (%0)" :: "r" (v_addr) : "memory");
+}
+
 static inline void* cr2_read(void)
 {
     void* cr2;
