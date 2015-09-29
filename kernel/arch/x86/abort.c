@@ -1,4 +1,4 @@
-#include "arch/x86/asm.h"  // cli, hlt.
+#include <asm.h>     // cli, hlt.
 #include <stdlib.h>
 
 inline void abort(void)

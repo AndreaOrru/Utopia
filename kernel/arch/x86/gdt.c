@@ -1,5 +1,5 @@
 #include <stdint.h>        // uint*_t.
-#include "arch/x86/gdt.h"
+#include <gdt.h>
 
 #define KERNEL  0x90
 #define USER    0xF0
@@ -52,7 +52,7 @@ static GDTEntry gdt[] =
 static GDTR gdtr = { sizeof(gdt), gdt };
 static TSS tss;
 
-extern void gdt_load(GDTR* gdtr);
+extern void gdt_load(const GDTR* gdtr);
 extern void tss_load(uint8_t segment);
 
 static void tss_init(void)

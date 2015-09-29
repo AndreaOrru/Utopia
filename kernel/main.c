@@ -1,11 +1,12 @@
+#include <arch.h>       // arch_init.
 #include <assert.h>     // assert.
 #include <stdio.h>      // printf.
-#include "arch.h"       // arch_init.
+#include <vmem.h>       // vmem_init.
 #include "multiboot.h"  // multiboot_info_t, MULTIBOOT_BOOTLOADER_MAGIC.
 #include "pmem.h"       // pmem_init.
 #include "tty.h"        // tty_init, STEP.
 
-void main(unsigned long magic, multiboot_info_t* info)
+void main(unsigned long magic, const multiboot_info_t* const info)
 {
     tty_init();
 
@@ -16,4 +17,5 @@ void main(unsigned long magic, multiboot_info_t* info)
 
     arch_init();
     STEP(pmem_init(info), "Initializing Physical Memory...");
+    STEP(vmem_init(),      "Initializing Virtual Memory...");
 }

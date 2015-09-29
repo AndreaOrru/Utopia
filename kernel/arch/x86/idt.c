@@ -1,8 +1,8 @@
-#include <assert.h>              // assert.
-#include <stddef.h>              // NULL.
-#include "arch/x86/gdt.h"        // KERNEL_CODE.
-#include "arch/x86/interrupt.h"  // interrupt_init.
-#include "arch/x86/idt.h"
+#include <assert.h>     // assert.
+#include <gdt.h>        // KERNEL_CODE.
+#include <interrupt.h>  // interrupt_init.
+#include <stddef.h>     // NULL.
+#include <idt.h>
 
 typedef struct
 {
@@ -22,7 +22,7 @@ typedef struct
 static IDTEntry idt[256];
 static IDTR idtr = { sizeof(idt), idt };
 
-extern void idt_load(IDTR* idtr);
+extern void idt_load(const IDTR* idtr);
 
 void idt_gate_set(uint8_t i, uint8_t flags, ISRStub offset)
 {

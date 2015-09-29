@@ -1,10 +1,10 @@
-#include <assert.h>              // assert.
-#include <stddef.h>              // NULL.
-#include "tty.h"                 // ERROR.
-#include "arch/x86/asm.h"        // inb, outb.
-#include "arch/x86/idt.h"        // idt_gate_set, INTERRUPT_GATE.
-#include "arch/x86/isr.h"        // isr*.
-#include "arch/x86/interrupt.h"
+#include <asm.h>        // inb, outb.
+#include <assert.h>     // assert.
+#include <idt.h>        // idt_gate_set, INTERRUPT_GATE.
+#include <isr.h>        // isr*.
+#include <stddef.h>     // NULL.
+#include "tty.h"        // ERROR.
+#include <interrupt.h>
 
 #define N_EXCEPTION  32
 #define N_IRQ        16

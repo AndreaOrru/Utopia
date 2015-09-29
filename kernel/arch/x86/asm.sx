@@ -31,3 +31,19 @@ idt_load:
     mov eax, [esp + 4]
     lidt [eax]
     ret
+
+.global paging_enable
+.type pagine_enable, @function
+paging_enable:
+    mov eax, [esp + 4]
+    mov cr3, eax
+
+    mov eax, cr4
+    or eax, 0b10010000
+    mov cr4, eax
+
+    mov eax, cr0
+    or eax, (1 << 31)
+    mov cr0, eax
+
+    ret

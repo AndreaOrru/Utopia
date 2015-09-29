@@ -16,6 +16,15 @@ static inline void sti(void)
     asm volatile ("sti");
 }
 
+extern void paging_enable(void* pd);
+
+static inline void* cr2_read(void)
+{
+    void* cr2;
+    asm volatile ("mov %%cr2, %0" : "=r" (cr2));
+    return cr2;
+}
+
 static inline uint8_t inb(uint16_t port)
 {
     uint8_t val;

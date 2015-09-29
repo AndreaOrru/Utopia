@@ -1,7 +1,7 @@
-#include "arch/x86/gdt.h"  // gdt_init.
-#include "arch/x86/idt.h"  // idt_init.
-#include "tty.h"           // STEP.
-#include "arch.h"
+#include <gdt.h>   // gdt_init.
+#include <idt.h>   // idt_init.
+#include "tty.h"   // STEP.
+#include <arch.h>
 
 void arch_init(void)
 {

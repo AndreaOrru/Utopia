@@ -3,7 +3,8 @@ Import('env', 'ARCH')
 
 kenv = env.Clone()
 kenv.AppendUnique(CPPPATH   = ['include'],
-                  CPPFLAGS  = [('-isystem', 'kernel/include/lib')],
+                  CPPFLAGS  = [('-isystem', 'kernel/arch/%s/include' % ARCH),
+                               ('-isystem', 'kernel/lib/include')],
                   CCFLAGS   = ['-ffreestanding', '-fbuiltin'],
                   LINKFLAGS = ['-nostdlib', '-Tkernel/arch/%s/linker.ld' % ARCH],
                   LIBS      = ['gcc'])

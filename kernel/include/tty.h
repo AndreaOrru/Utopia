@@ -8,10 +8,13 @@ void tty_clear(void);
 void tty_putchar(char c);
 void tty_puts(const char* str);
 
-#define ERROR(message...)       \
-({                              \
-    printf("\n\e0415" message); \
-    abort();                    \
+#define ALERT(message...) \
+    printf("\n\e0415" message)
+
+#define ERROR(message...) \
+({                        \
+    ALERT(message);       \
+    abort();              \
 })
 
 #define STEP(call, message...)         \

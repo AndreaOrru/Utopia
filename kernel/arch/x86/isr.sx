@@ -5,7 +5,7 @@
 #define IRQ(x)        (x >= 32  &&  x < 32 + 16)
 #define IRQ_SLAVE(x)  (x -  32  >=  8)
 
-.macro generate_isr n
+.macro isr_generate n
     .align 4
     .global isr\n
     .type isr\n, @function
@@ -43,52 +43,52 @@
         iret
 .endm
 
-generate_isr 0
-generate_isr 1
-generate_isr 2
-generate_isr 3
-generate_isr 4
-generate_isr 5
-generate_isr 6
-generate_isr 7
-generate_isr 8
-generate_isr 9
-generate_isr 10
-generate_isr 11
-generate_isr 12
-generate_isr 13
-generate_isr 14
-generate_isr 15
-generate_isr 16
-generate_isr 17
-generate_isr 18
-generate_isr 19
-generate_isr 20
-generate_isr 21
-generate_isr 22
-generate_isr 23
-generate_isr 24
-generate_isr 25
-generate_isr 26
-generate_isr 27
-generate_isr 28
-generate_isr 29
-generate_isr 30
-generate_isr 31
+isr_generate 0
+isr_generate 1
+isr_generate 2
+isr_generate 3
+isr_generate 4
+isr_generate 5
+isr_generate 6
+isr_generate 7
+isr_generate 8
+isr_generate 9
+isr_generate 10
+isr_generate 11
+isr_generate 12
+isr_generate 13
+isr_generate 14
+isr_generate 15
+isr_generate 16
+isr_generate 17
+isr_generate 18
+isr_generate 19
+isr_generate 20
+isr_generate 21
+isr_generate 22
+isr_generate 23
+isr_generate 24
+isr_generate 25
+isr_generate 26
+isr_generate 27
+isr_generate 28
+isr_generate 29
+isr_generate 30
+isr_generate 31
 
-generate_isr 32
-generate_isr 33
-generate_isr 34
-generate_isr 35
-generate_isr 36
-generate_isr 37
-generate_isr 38
-generate_isr 39
-generate_isr 40
-generate_isr 41
-generate_isr 42
-generate_isr 43
-generate_isr 44
-generate_isr 45
-generate_isr 46
-generate_isr 47
+isr_generate 32
+isr_generate 33
+isr_generate 34
+isr_generate 35
+isr_generate 36
+isr_generate 37
+isr_generate 38
+isr_generate 39
+isr_generate 40
+isr_generate 41
+isr_generate 42
+isr_generate 43
+isr_generate 44
+isr_generate 45
+isr_generate 46
+isr_generate 47
