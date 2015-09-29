@@ -6,6 +6,11 @@
 #include "arch/x86/isr.h"        // isr*.
 #include "arch/x86/interrupt.h"
 
+#define N_EXCEPTION  32
+#define N_IRQ        16
+#define N_ISR        (N_EXCEPTION + N_IRQ)
+#define IRQ(irq)     (N_EXCEPTION + irq)
+
 #define PIC1_CMD   0x20
 #define PIC2_CMD   0xA0
 #define PIC1_DATA  0x21
@@ -76,10 +81,11 @@ static void interrupt_unhandled(void)
 {
     Context* context = context_get();
     assert(context != NULL);
+    assert(context->int_n < N_ISR);
 
-    if (context->int_n < 32)
+    if (context->int_n < N_EXCEPTION)
         ERROR("Exception: %s.", interrupt_names[context->int_n]);
-    else if (context->int_n < 32 + 16)
+    else
         ERROR("IRQ: %s", interrupt_names[context->int_n]);
 }
 
@@ -87,7 +93,7 @@ InterruptHandler interrupt_handlers[32 + 16] = { [0 ... 47] = interrupt_unhandle
 
 void interrupt_register(uint8_t n, InterruptHandler handler)
 {
-    assert(n < 48);
+    assert(n < N_ISR);
     assert(handler != NULL);
 
     interrupt_handlers[n] = handler;
@@ -95,16 +101,16 @@ void interrupt_register(uint8_t n, InterruptHandler handler)
 
 void irq_register(uint8_t irq, InterruptHandler handler)
 {
-    assert(irq < 16);
+    assert(irq < N_IRQ);
     assert(handler != NULL);
 
-    interrupt_handlers[32 + irq] = handler;
+    interrupt_handlers[IRQ(0) + irq] = handler;
     irq_unmask(irq);
 }
 
 void irq_mask(uint8_t irq)
 {
-    assert(irq < 16);
+    assert(irq < N_IRQ);
 
     uint16_t port = (irq < 8) ? PIC1_DATA : PIC2_DATA;
     outb(port, inb(port) | (1 << irq%8));
@@ -112,7 +118,7 @@ void irq_mask(uint8_t irq)
 
 void irq_unmask(uint8_t irq)
 {
-    assert(irq < 16);
+    assert(irq < N_IRQ);
 
     uint16_t port = (irq < 8) ? PIC1_DATA : PIC2_DATA;
     outb(port, inb(port) & ~(1 << irq%8));
@@ -121,7 +127,7 @@ void irq_unmask(uint8_t irq)
 static void pic_remap(void)
 {
     outb(PIC1_CMD,    0x11);  outb(PIC2_CMD,    0x11);
-    outb(PIC1_DATA,     32);  outb(PIC2_DATA,     40);
+    outb(PIC1_DATA, IRQ(0));  outb(PIC2_DATA, IRQ(8));
     outb(PIC1_DATA, 1 << 2);  outb(PIC2_DATA, 1 << 1);
     outb(PIC1_DATA,   0x01);  outb(PIC2_DATA,   0x01);
     outb(PIC1_DATA,   0xFF);  outb(PIC2_DATA,   0xFF);

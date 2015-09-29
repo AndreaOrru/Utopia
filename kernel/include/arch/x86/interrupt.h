@@ -1,8 +1,6 @@
 #pragma once
 #include <stdint.h>  // uint*_t.
 
-#define IRQ(interrupt)  (interrupt - 32)
-
 typedef struct
 {
     union
