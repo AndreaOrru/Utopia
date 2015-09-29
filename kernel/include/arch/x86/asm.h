@@ -1,5 +1,5 @@
 #pragma once
-#include <stdint.h>
+#include <stdint.h>  // uint*_t.
 
 static inline void hlt(void)
 {

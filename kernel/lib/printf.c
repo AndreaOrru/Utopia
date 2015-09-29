@@ -1,14 +1,15 @@
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdlib.h>
+#include <assert.h>  // assert.
+#include <stdarg.h>  // va_*.
+#include <stdlib.h>  // NULL, size_t, itoa.
+#include "tty.h"     // tty_put*.
+#include "vga.h"     // VGAColor.
 #include <stdio.h>
-#include "tty.h"
-#include "vga.h"
 
 extern VGAColor tty_fg, tty_bg;
 
 void printf(const char* format, ...)
 {
+    assert(format != NULL);
     static char buf[35];
 
     va_list args;

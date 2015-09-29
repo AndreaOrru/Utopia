@@ -1,7 +1,9 @@
-#include "debug.h"
-#include "arch/x86/asm.h"
-#include "arch/x86/idt.h"
-#include "arch/x86/isr.h"
+#include <assert.h>              // assert.
+#include <stddef.h>              // NULL.
+#include "tty.h"                 // ERROR.
+#include "arch/x86/asm.h"        // inb, outb.
+#include "arch/x86/idt.h"        // idt_gate_set, INTERRUPT_GATE.
+#include "arch/x86/isr.h"        // isr*.
 #include "arch/x86/interrupt.h"
 
 #define PIC1_CMD   0x20
@@ -13,6 +15,8 @@ Context* volatile context;
 
 void context_set(Context* new_context)
 {
+    assert(new_context != NULL);
+
     context = new_context;
 }
 
@@ -71,6 +75,7 @@ static const char* const interrupt_names[] =
 static void interrupt_unhandled(void)
 {
     Context* context = context_get();
+    assert(context != NULL);
 
     if (context->int_n < 32)
         ERROR("Exception: %s.", interrupt_names[context->int_n]);
@@ -82,23 +87,33 @@ InterruptHandler interrupt_handlers[32 + 16] = { [0 ... 47] = interrupt_unhandle
 
 void interrupt_register(uint8_t n, InterruptHandler handler)
 {
+    assert(n < 48);
+    assert(handler != NULL);
+
     interrupt_handlers[n] = handler;
 }
 
 void irq_register(uint8_t irq, InterruptHandler handler)
 {
+    assert(irq < 16);
+    assert(handler != NULL);
+
     interrupt_handlers[32 + irq] = handler;
     irq_unmask(irq);
 }
 
 void irq_mask(uint8_t irq)
 {
+    assert(irq < 16);
+
     uint16_t port = (irq < 8) ? PIC1_DATA : PIC2_DATA;
     outb(port, inb(port) | (1 << irq%8));
 }
 
 void irq_unmask(uint8_t irq)
 {
+    assert(irq < 16);
+
     uint16_t port = (irq < 8) ? PIC1_DATA : PIC2_DATA;
     outb(port, inb(port) & ~(1 << irq%8));
 }

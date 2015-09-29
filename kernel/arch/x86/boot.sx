@@ -19,6 +19,7 @@ boot:
     mov esp, 0x7C00
 
     push ebx
+    push eax
     call main
 
     cli

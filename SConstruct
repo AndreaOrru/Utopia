@@ -2,9 +2,10 @@ from os import environ
 
 DEBUG = int(ARGUMENTS.get('DEBUG', 1))
 if DEBUG:
-    ASFLAGS = CCFLAGS = LINKFLAGS = ['-ggdb3']
+    CPPFLAGS = ['-DDEBUG']
+    ASFLAGS  = CCFLAGS = LINKFLAGS = ['-ggdb3']
 else:
-    ASFLAGS = []
+    ASFLAGS = CPPFLAGS = []
     CCFLAGS = LINKFLAGS = ['-Os', '-flto']
     LINKFLAGS += ['-s']
 
@@ -17,6 +18,7 @@ env = Environment(ENV        = {'PATH': environ['PATH']},
 
                   ASFLAGS    = ASFLAGS,
                   CCFLAGS    = ['-Wall', '-Wextra', '-fno-asynchronous-unwind-tables', '-fdiagnostics-color'] + CCFLAGS,
+                  CPPFLAGS   = CPPFLAGS,
                   LINKFLAGS  = LINKFLAGS,
 
                   ASPPCOMSTR = 'AS    $TARGETS <- $SOURCES',

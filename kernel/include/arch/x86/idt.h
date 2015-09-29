@@ -1,5 +1,5 @@
 #pragma once
-#include <stdint.h>
+#include <stdint.h>  // uint*_t.
 
 #define INTERRUPT_GATE  0x8E
 

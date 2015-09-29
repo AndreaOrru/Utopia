@@ -1,5 +1,7 @@
-#include "arch/x86/gdt.h"
-#include "arch/x86/interrupt.h"
+#include <assert.h>              // assert.
+#include <stddef.h>              // NULL.
+#include "arch/x86/gdt.h"        // KERNEL_CODE.
+#include "arch/x86/interrupt.h"  // interrupt_init.
 #include "arch/x86/idt.h"
 
 typedef struct
@@ -24,6 +26,8 @@ extern void idt_load(IDTR* idtr);
 
 void idt_gate_set(uint8_t i, uint8_t flags, ISRStub offset)
 {
+    assert(offset != NULL);
+
     idt[i].offset_low  = (uintptr_t) offset  & 0xFFFF;
     idt[i].offset_high = (uintptr_t) offset >> 16;
     idt[i].selector    = KERNEL_CODE;

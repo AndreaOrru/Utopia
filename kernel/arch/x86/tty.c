@@ -1,6 +1,6 @@
-#include <stddef.h>
-#include "arch/x86/asm.h"
-#include "vga.h"
+#include <stddef.h>        // size_t.
+#include "arch/x86/asm.h"  // outb.
+#include "vga.h"           // VGAColor, VGAEntry.
 #include "tty.h"
 
 static VGAEntry* const vram = (VGAEntry*) 0xB8000;

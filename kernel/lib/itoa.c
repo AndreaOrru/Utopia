@@ -1,13 +1,11 @@
+#include <assert.h>  // assert.
+#include <string.h>  // strcpy.
 #include <stdlib.h>
-#include <string.h>
 
 char* itoa(unsigned val, char* buf, int base)
 {
-    if ((base < 2 || base > 36) && base != -10)
-    {
-        *buf = '\0';
-        return buf;
-    }
+    assert(buf != NULL);
+    assert((base >= 2 && base <= 36) || base == -10);
 
     char* ptr = buf;
     switch (base)

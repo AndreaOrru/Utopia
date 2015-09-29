@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <stdint.h>        // uint*_t.
 #include "arch/x86/gdt.h"
 
 #define KERNEL  0x90
