@@ -1,0 +1,14 @@
+Import('env', 'ARCH')
+
+senv = env.Clone()
+senv.AppendUnique(CCFLAGS   = ['-ffreestanding', '-fbuiltin'],
+                  LINKFLAGS = ['-nostdlib', '-Tservers/arch/%s/linker.ld' % ARCH],
+                  LIBS      = ['gcc'])
+Export('senv')
+
+servers = []
+for server in Glob('*/SConscript'):
+    servers += SConscript(server)
+Depends(servers, 'arch/%s/linker.ld' % ARCH)
+
+Return('servers')

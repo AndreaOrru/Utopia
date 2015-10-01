@@ -2,6 +2,7 @@
 #include <stdint.h>  // uint*_t.
 
 #define INTERRUPT_GATE  0x8E
+#define SYSCALL_GATE    0xEE
 
 typedef void (*ISRStub)(void);
 

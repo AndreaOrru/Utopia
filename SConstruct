@@ -13,17 +13,22 @@ ARCH = ARGUMENTS.get('ARCH', 'x86')
 if ARCH == 'x86':
     TRIPLET = 'i686-elf'
 
-env = Environment(ENV        = {'PATH': environ['PATH']},
-                  CC         = '%s-gcc' % TRIPLET,
+env = Environment(ENV    = {'PATH': environ['PATH']},
+                  CC     = '%s-gcc' % TRIPLET,
+                  AR     = '%s-gcc-ar' % TRIPLET,
+                  RANLIB = '%s-gcc-ranlib' % TRIPLET,
 
-                  ASFLAGS    = ASFLAGS,
-                  CCFLAGS    = ['-Wall', '-Wextra', '-fno-asynchronous-unwind-tables', '-fdiagnostics-color'] + CCFLAGS,
-                  CPPFLAGS   = CPPFLAGS,
-                  LINKFLAGS  = LINKFLAGS,
+                  ASFLAGS   = ASFLAGS,
+                  CCFLAGS   = ['-Wall', '-Wextra', '-fno-asynchronous-unwind-tables', '-fdiagnostics-color'] + CCFLAGS,
+                  CPPFLAGS  = CPPFLAGS,
+                  LINKFLAGS = LINKFLAGS,
 
-                  ASPPCOMSTR = 'AS    $TARGETS <= $SOURCES',
-                  CCCOMSTR   = 'CC    $TARGETS <= $SOURCES',
-                  LINKCOMSTR = 'LD    $TARGETS <= $SOURCES')
+                  ASPPCOMSTR   = 'AS      $TARGETS <= $SOURCES',
+                  CCCOMSTR     = 'CC      $TARGETS <= $SOURCES',
+                  LINKCOMSTR   = 'LD      $TARGETS <= $SOURCES',
+                  ARCOMSTR     = 'AR      $TARGETS <= $SOURCES',
+                  RANLIBCOMSTR = 'RANLIB  $TARGETS <= $SOURCES')
 Export('env', 'ARCH')
 
-kernel = SConscript('kernel/SConscript')
+kernel  = SConscript('kernel/SConscript')
+servers = SConscript('servers/SConscript')

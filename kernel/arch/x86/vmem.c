@@ -5,6 +5,7 @@
 #include <stdint.h>     // uint*_t.
 #include <string.h>     // memset.
 #include "pmem.h"       // frame_alloc.
+#include "thread.h"     // thread_exit.
 #include "tty.h"        // ALERT.
 #include "vmem.h"
 
@@ -130,6 +131,10 @@ void* addrspace_current(void)
 static void page_fault(void)
 {
     void* cr2 = cr2_read();
+
+    if (cr2 == (void*) THREAD_EXIT)
+        return thread_exit(NULL);
+
     Context* context = context_get();
 
     ALERT("Page fault at address %x.", cr2);

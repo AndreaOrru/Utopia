@@ -12,4 +12,6 @@ kenv.AppendUnique(CPPPATH   = ['include'],
 kernel = kenv.Program('kernel.elf', Glob('*.c') + Glob('*/*.c') + Glob('*.sx') + Glob('*/*.sx') +
                                     Glob('arch/%s/*.c'  % ARCH) + Glob('arch/%s/*/*.c'  % ARCH) +
                                     Glob('arch/%s/*.sx' % ARCH) + Glob('arch/%s/*/*.sx' % ARCH))
+Depends(kernel, 'arch/%s/linker.ld' % ARCH)
+
 Return('kernel')

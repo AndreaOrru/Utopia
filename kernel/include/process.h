@@ -13,3 +13,4 @@ typedef struct
 } Process;
 
 void process_create(ELFHeader* elf);
+void process_exit(void);

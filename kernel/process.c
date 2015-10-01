@@ -5,6 +5,8 @@
 #include "thread.h"   // thread_create.
 #include "process.h"
 
+extern Process* current_process;
+
 static Process* const PCBs = (Process*) PCB_START;
 static uint16_t next_pid = 1;
 
@@ -20,6 +22,14 @@ void process_create(ELFHeader* elf)
     process->next_local_tid = 1;
     list_init(&process->threads);
 
+    current_process = process;
     addrspace_switch(process->addrspace);
-    thread_create(elf_load(elf), process);
+
+    thread_create(elf_load(elf));
+}
+
+void process_exit(void)
+{
+    while (!list_empty(&current_process->threads))
+        thread_exit(list_item(list_pop(&current_process->threads), Thread, process_link));
 }

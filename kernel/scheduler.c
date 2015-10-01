@@ -1,19 +1,24 @@
 #include <assert.h>     // assert.
 #include <stddef.h>     // NULL.
-#include <vmem.h>       // addrspace_*.
+#include <vmem.h>       // addrspace_switch.
 #include "list.h"       // LIST, list_*.
+#include "process.h"    // Process.
 #include "timer.h"      // timer_handler_set.
 #include "tty.h"        // ERROR.
 #include "scheduler.h"
 
 static LIST(ready_queue);
+Process* current_process;
 
 static inline void thread_switch(Thread* thread)
 {
     assert(thread != NULL);
 
-    if (thread->process->addrspace != addrspace_current())
-        addrspace_switch(thread->process->addrspace);
+    if (thread->process != current_process)
+    {
+        current_process = thread->process;
+        addrspace_switch(current_process->addrspace);
+    }
 
     context_set(&thread->context);
 }

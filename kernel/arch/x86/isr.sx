@@ -2,10 +2,11 @@
 
 .intel_syntax noprefix
 
-#define EXCEPTION(x)     (x <  32)
-#define NO_ERROR(x)      (x !=  8  &&  !(x >= 10 && x <= 14) && x != 17)
-#define IRQ(x)           (x >= 32  &&  x < 32 + 16)
-#define IRQ_SLAVE(x)     (x -  32  >=  8)
+#define EXCEPTION(n)     (n <  32)
+#define NO_ERROR(n)      (n !=  8  &&  !(n >= 10 && n <= 14) && n != 17)
+#define IRQ(n)           (n >= 32  &&  n < 32 + 16)
+#define IRQ_SLAVE(n)     (n -  32  >=  8)
+#define SYSCALL(n)       (n == 0x80)
 
 .text
 .macro isr_generate n
@@ -27,7 +28,16 @@
             mov [context], esp
         .endif
         mov esp, INTERRUPT_STACK - 4
-        call [interrupt_handlers + (\n * 4)]
+
+        .if SYSCALL(\n)
+            push ebx
+            push edx
+            push ecx
+            call [syscallHandlers + (eax * 4)]
+            mov [esp + 40], eax
+        .else
+            call [interrupt_handlers + (\n * 4)]
+        .endif
         mov esp, [context]
 
         .if IRQ(\n)
@@ -96,3 +106,5 @@ isr_generate 44
 isr_generate 45
 isr_generate 46
 isr_generate 47
+
+isr_generate 128
