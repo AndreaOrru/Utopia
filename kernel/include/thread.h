@@ -17,5 +17,5 @@ typedef struct
     Link process_link;
 } Thread;
 
-void thread_create(const void* entry);
+Thread* thread_create(const void* entry);
 void thread_exit(Thread* thread);

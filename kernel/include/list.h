@@ -72,6 +72,8 @@ static inline void list_remove(Link* entry)
 {
     entry->next->prev = entry->prev;
     entry->prev->next = entry->next;
+
+    entry->prev = entry->next = entry;
 }
 
 static inline Link* list_pop(List* list)

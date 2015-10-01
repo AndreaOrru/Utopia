@@ -10,9 +10,12 @@
 static LIST(ready_queue);
 Process* current_process;
 
-static inline void thread_switch(Thread* thread)
+inline void schedule_to(Thread* thread)
 {
     assert(thread != NULL);
+
+    list_remove(&thread->queue_link);
+    list_append(&ready_queue, &thread->queue_link);
 
     if (thread->process != current_process)
     {
@@ -28,17 +31,7 @@ void schedule(void)
     if (list_empty(&ready_queue))
         ERROR("No more threads to schedule.");
 
-    Thread* next = list_item(list_pop(&ready_queue), Thread, queue_link);
-    list_append(&ready_queue, &next->queue_link);
-
-    thread_switch(scheduler_current());
-}
-
-inline void scheduler_add(Thread* thread)
-{
-    assert(thread != NULL);
-
-    list_prepend(&ready_queue, &thread->queue_link);
+    schedule_to(list_item(list_first(&ready_queue), Thread, queue_link));
 }
 
 inline void scheduler_remove(Thread* thread)

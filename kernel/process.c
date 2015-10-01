@@ -1,8 +1,9 @@
-#include <assert.h>   // assert.
-#include <layout.h>   // PCB_START.
-#include <stddef.h>   // NULL.
-#include <vmem.h>     // map, addrspace_*, PAGE_*.
-#include "thread.h"   // thread_create.
+#include <assert.h>     // assert.
+#include <layout.h>     // PCB_START.
+#include <stddef.h>     // NULL.
+#include <vmem.h>       // map, addrspace_*, PAGE_*.
+#include "scheduler.h"  // schedule_to.
+#include "thread.h"     // thread_create.
 #include "process.h"
 
 extern Process* current_process;
@@ -25,7 +26,8 @@ void process_create(ELFHeader* elf)
     current_process = process;
     addrspace_switch(process->addrspace);
 
-    thread_create(elf_load(elf));
+    Thread* thread = thread_create(elf_load(elf));
+    schedule_to(thread);
 }
 
 void process_exit(void)

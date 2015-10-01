@@ -10,7 +10,7 @@ extern Process* current_process;
 static Thread* const TCBs = (Thread*) TCB_START;
 static uint16_t next_tid = 1;
 
-void thread_create(const void* entry)
+Thread* thread_create(const void* entry)
 {
     assert(entry != NULL);
 
@@ -28,7 +28,7 @@ void thread_create(const void* entry)
 
     context_init(&thread->context, entry, stack);
 
-    scheduler_add(thread);
+    return thread;
 }
 
 void thread_exit(Thread* thread)
@@ -36,14 +36,11 @@ void thread_exit(Thread* thread)
     if (thread == NULL)
         thread = scheduler_current();
 
-    list_remove(&thread->queue_link);
+    scheduler_remove(thread);
     list_remove(&thread->process_link);
 
     if (list_empty(&current_process->threads))
         unmap(current_process);
     unmap((void*) USER_STACKS + 2*((thread->local_tid - 1) * PAGE_SIZE));
     unmap(thread);
-
-    if (thread == scheduler_current())
-        schedule();
 }

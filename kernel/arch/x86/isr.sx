@@ -2,11 +2,11 @@
 
 .intel_syntax noprefix
 
-#define EXCEPTION(n)     (n <  32)
-#define NO_ERROR(n)      (n !=  8  &&  !(n >= 10 && n <= 14) && n != 17)
-#define IRQ(n)           (n >= 32  &&  n < 32 + 16)
-#define IRQ_SLAVE(n)     (n -  32  >=  8)
-#define SYSCALL(n)       (n == 0x80)
+#define EXCEPTION(n)  (n <  32)
+#define NO_ERROR(n)   (n !=  8  &&  !(n >= 10 && n <= 14) && n != 17)
+#define IRQ(n)        (n >= 32  &&  n < 32 + 16)
+#define IRQ_SLAVE(n)  (n -  32  >=  8)
+#define SYSCALL(n)    (n == 0x80)
 
 .text
 .macro isr_generate n

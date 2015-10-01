@@ -1,9 +1,9 @@
 #pragma once
-#include "thread.h"
+#include "thread.h"  // Thread.
 
 void scheduler_init(void);
 
-void scheduler_add(Thread* thread);
+void schedule_to(Thread* thread);
 void scheduler_remove(Thread* thread);
 Thread* scheduler_current(void);
 
