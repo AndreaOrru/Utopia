@@ -1,3 +1,5 @@
+#include <layout.h>
+
 .intel_syntax noprefix
 
 #define ALIGN     (1 << 0)
@@ -16,7 +18,7 @@
 .global boot
 .type boot, @function
 boot:
-    mov esp, 0x7C00
+    mov esp, INIT_STACK
 
     push ebx
     push eax

@@ -1,11 +1,10 @@
 #include <arch.h>    // PAGE_ALIGN, PAGE_BASE, PAGE_SIZE.
 #include <assert.h>  // assert.
+#include <layout.h>  // FRAME_STACK.
 #include <stddef.h>  // NULL, size_t.
 #include <stdint.h>  // uint*_t.
 #include "tty.h"     // ERROR.
 #include "pmem.h"
-
-#define FRAME_STACK  0x200000
 
 static void** stack = (void**) FRAME_STACK;
 static size_t free_memory = 0;

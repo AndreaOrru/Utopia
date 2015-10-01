@@ -1,8 +1,10 @@
 #include <asm.h>        // inb, outb.
 #include <assert.h>     // assert.
+#include <gdt.h>        // USER_CODE, USER_DATA, USER_RPL.
 #include <idt.h>        // idt_gate_set, INTERRUPT_GATE.
 #include <isr.h>        // isr*.
 #include <stddef.h>     // NULL.
+#include <string.h>     // memset.
 #include "tty.h"        // ERROR.
 #include <interrupt.h>
 
@@ -28,6 +30,16 @@ void context_set(Context* new_context)
 Context* context_get(void)
 {
     return context;
+}
+
+void context_init(Context* context, const void* entry, const void* stack)
+{
+    memset(context, 0, sizeof(Context));
+    context->cs  = USER_CODE | USER_RPL;
+    context->ss  = USER_DATA | USER_RPL;
+    context->eip = (uint32_t) entry;
+    context->esp = (uint32_t) stack;
+    context->eflags = 0x202;
 }
 
 static const char* const interrupt_names[] =

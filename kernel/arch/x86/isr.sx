@@ -1,10 +1,13 @@
+#include <layout.h>
+
 .intel_syntax noprefix
 
-#define EXCEPTION(x)  (x <  32)
-#define NO_ERROR(x)   (x !=  8  &&  !(x >= 10 && x <= 14) && x != 17)
-#define IRQ(x)        (x >= 32  &&  x < 32 + 16)
-#define IRQ_SLAVE(x)  (x -  32  >=  8)
+#define EXCEPTION(x)     (x <  32)
+#define NO_ERROR(x)      (x !=  8  &&  !(x >= 10 && x <= 14) && x != 17)
+#define IRQ(x)           (x >= 32  &&  x < 32 + 16)
+#define IRQ_SLAVE(x)     (x -  32  >=  8)
 
+.text
 .macro isr_generate n
     .align 4
     .global isr\n
@@ -23,6 +26,7 @@
         .if EXCEPTION(\n)
             mov [context], esp
         .endif
+        mov esp, INTERRUPT_STACK - 4
         call [interrupt_handlers + (\n * 4)]
         mov esp, [context]
 

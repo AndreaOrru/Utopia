@@ -1,5 +1,6 @@
 #include <asm.h>     // outb.
-#include <stddef.h>  // size_t.
+#include <assert.h>  // assert.
+#include <stddef.h>  // NULL, size_t.
 #include "vga.h"     // VGAColor, VGAEntry.
 #include "tty.h"
 
@@ -55,4 +56,12 @@ void tty_putchar(char c)
         default:
             vram[cursor++] = (VGAEntry) { c, tty_fg, tty_bg };
     }
+}
+
+void tty_puts(const char* str)
+{
+    assert(str != NULL);
+
+    for (size_t i = 0; str[i] != '\0'; i++)
+        tty_putchar(str[i]);
 }

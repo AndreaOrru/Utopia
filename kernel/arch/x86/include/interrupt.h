@@ -21,5 +21,6 @@ void irq_register(uint8_t irq, InterruptHandler handler);
 void irq_mask    (uint8_t irq);
 void irq_unmask  (uint8_t irq);
 
-void     context_set(Context* new_context);
-Context* context_get(void);
+void     context_set (Context* new_context);
+Context* context_get (void);
+void     context_init(Context* context, const void* entry, const void* stack);

@@ -30,6 +30,18 @@ static inline void* cr2_read(void)
     return cr2;
 }
 
+static inline void* cr3_read(void)
+{
+    void* cr3;
+    asm volatile ("mov %%cr3, %0" : "=r" (cr3));
+    return cr3;
+}
+
+static inline void cr3_write(void* cr3)
+{
+    asm volatile ("mov %0, %%cr3" :: "r" (cr3));
+}
+
 static inline uint8_t inb(uint16_t port)
 {
     uint8_t val;
