@@ -1,4 +1,4 @@
 Utopia
 ======
 
-The OS for my thesis.
+Utopia is an UNIX-like operating system built around a microkernel, with a focus on code clarity.
